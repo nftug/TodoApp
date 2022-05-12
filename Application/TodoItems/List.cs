@@ -33,7 +33,7 @@ namespace Application.TodoItems
             public async Task<Pagination<TodoItemDTO>> Handle
                 (Query request, CancellationToken cancellationToken)
             {
-                var query = _context.TodoItems as IQueryable<TodoItem>;
+                var query = _context.TodoItems.Include(x => x.Comments).AsQueryable();
                 return await query.GetQueryResultsAsync(request.Param);
             }
         }

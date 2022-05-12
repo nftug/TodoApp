@@ -16,7 +16,6 @@ namespace Domain
                 Id = Id,
                 Content = Content,
                 CreatedAt = CreatedAt,
-                TodoItem = TodoItem,
                 TodoItemId = TodoItemId
             };
 
@@ -27,7 +26,6 @@ namespace Domain
         public Guid Id { get; set; }
         public string Content { get; set; } = string.Empty;
         public DateTime? CreatedAt { get; set; }
-        public TodoItem? TodoItem { get; set; }
         public Guid TodoItemId { get; set; }
     }
 }

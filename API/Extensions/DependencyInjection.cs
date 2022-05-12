@@ -26,6 +26,10 @@ namespace API.Extensions
                     policy.AllowAnyMethod().AllowAnyHeader().WithOrigins("http://localhost:3000");
                 });
             });
+            services.AddControllers().AddNewtonsoftJson(settings =>
+            {
+                settings.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
+            });
 
             services.AddMediatR(typeof(List.Handler).Assembly);
             return services;

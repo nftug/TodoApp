@@ -14,7 +14,8 @@ namespace Application.TodoItems.Query
             {
                 var paramLower = param.q.ToLower();
                 query = query.Where(x =>
-                    x.Name.ToLower().Contains(paramLower)
+                    x.Name.ToLower().Contains(paramLower) ||
+                    x.Comments.Select(x => x.Content).Where(x => x.ToLower().Contains(paramLower)).Any()
                 );
             }
 
@@ -25,6 +26,21 @@ namespace Application.TodoItems.Query
                 query = query.Where(x =>
                     x.Name.ToLower().Contains(paramLower)
                 );
+            }
+
+            // コメントでの絞り込み
+            if (!string.IsNullOrEmpty(param.Comment))
+            {
+                var paramLower = param.Comment.ToLower();
+                query = query.Where(x =>
+                    x.Comments.Select(x => x.Content).Where(x => x.ToLower().Contains(paramLower)).Any()
+                );
+            }
+
+            // 状態での絞り込み
+            if (param.IsComplete != null)
+            {
+                query = query.Where(x => x.IsComplete == param.IsComplete);
             }
 
             return query;
