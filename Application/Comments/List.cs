@@ -33,7 +33,7 @@ namespace Application.Comments
             public async Task<Pagination<CommentDTO>> Handle
                 (Query request, CancellationToken cancellationToken)
             {
-                var query = _context.Comments as IQueryable<Comment>;
+                var query = _context.Comments.AsQueryable();
                 return await query.GetQueryResultsAsync(request.Param);
             }
         }

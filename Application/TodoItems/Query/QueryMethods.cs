@@ -1,5 +1,6 @@
 using Domain;
 using Pagination.EntityFrameworkCore.Extensions;
+using Microsoft.EntityFrameworkCore;
 using Application.Core.Query;
 
 namespace Application.TodoItems.Query
@@ -9,13 +10,15 @@ namespace Application.TodoItems.Query
         private static IQueryable<TodoItem> GetFilteredQuery
             (this IQueryable<TodoItem> query, QueryParameter param)
         {
+            query = query.Include(x => x.Comments);
+
             // qの絞り込み
             if (!string.IsNullOrEmpty(param.q))
             {
                 var paramLower = param.q.ToLower();
                 query = query.Where(x =>
                     x.Name.ToLower().Contains(paramLower) ||
-                    x.Comments.Select(x => x.Content).Where(x => x.ToLower().Contains(paramLower)).Any()
+                    x.Comments.Where(x => x.Content.ToLower().Contains(paramLower)).Any()
                 );
             }
 
@@ -33,7 +36,7 @@ namespace Application.TodoItems.Query
             {
                 var paramLower = param.Comment.ToLower();
                 query = query.Where(x =>
-                    x.Comments.Select(x => x.Content).Where(x => x.ToLower().Contains(paramLower)).Any()
+                    x.Comments.Where(x => x.Content.ToLower().Contains(paramLower)).Any()
                 );
             }
 

@@ -2,7 +2,6 @@ using MediatR;
 using Domain;
 using Persistence;
 using Pagination.EntityFrameworkCore.Extensions;
-using Microsoft.EntityFrameworkCore;
 using Application.TodoItems.Query;
 
 namespace Application.TodoItems
@@ -33,7 +32,7 @@ namespace Application.TodoItems
             public async Task<Pagination<TodoItemDTO>> Handle
                 (Query request, CancellationToken cancellationToken)
             {
-                var query = _context.TodoItems.Include(x => x.Comments).AsQueryable();
+                var query = _context.TodoItems.AsQueryable();
                 return await query.GetQueryResultsAsync(request.Param);
             }
         }
