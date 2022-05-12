@@ -9,13 +9,13 @@ namespace Application.Comments
 {
     public class Edit
     {
-        public class Command : IRequest
+        public class Command : IRequest<CommentDTO>
         {
             public Comment Comment { get; set; }
             public Guid Id { get; set; }
         }
 
-        public class Handler : IRequestHandler<Command>
+        public class Handler : IRequestHandler<Command, CommentDTO>
         {
             private readonly TodoContext _context;
 
@@ -24,7 +24,7 @@ namespace Application.Comments
                 _context = context;
             }
 
-            public async Task<Unit> Handle(Command request, CancellationToken cancellationToken)
+            public async Task<CommentDTO> Handle(Command request, CancellationToken cancellationToken)
             {
                 if (request.Id != request.Comment.Id)
                     throw new BadRequestException();
@@ -39,7 +39,7 @@ namespace Application.Comments
 
                 await _context.SaveChangesAsync();
 
-                return Unit.Value;
+                return item.ItemToDTO();
             }
         }
     }

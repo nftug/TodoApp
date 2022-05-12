@@ -48,7 +48,8 @@ namespace API.Controllers
         {
             try
             {
-                await Mediator.Send(new Edit.Command { Id = id, TodoItem = todoItem });
+                var result = await Mediator.Send(new Edit.Command { Id = id, TodoItem = todoItem });
+                return AcceptedAtAction(nameof(GetTodoItem), new { id = todoItem.Id }, result);
             }
             catch (BadRequestException)
             {
@@ -58,8 +59,6 @@ namespace API.Controllers
             {
                 return NotFound();
             }
-
-            return AcceptedAtAction(nameof(GetTodoItem), new { id = todoItem.Id }, todoItem.ItemToDTO());
         }
 
         // POST: api/TodoItems
