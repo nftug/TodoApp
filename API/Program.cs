@@ -1,4 +1,7 @@
 using API.Extensions;
+using Persistence;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -7,6 +10,19 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
 IConfiguration config = builder.Configuration;
 builder.Services.AddApplications(config);
+
+var services = builder.Services.BuildServiceProvider();
+try
+{
+    var context = services.GetRequiredService<TodoContext>();
+    await context.Database.MigrateAsync();
+    //await Seed.SeedData(context);
+}
+catch (Exception exc)
+{
+    var logger = services.GetRequiredService<ILogger<Program>>();
+    logger.LogError(exc, "An Error occurred during migration");
+}
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();

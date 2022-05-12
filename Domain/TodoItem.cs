@@ -6,8 +6,9 @@ namespace Domain
     {
         public Guid Id { get; set; }
         public string Name { get; set; } = string.Empty;
-        public DateTime? DueDate { get; set; } = null;
+        public DateTime? DueDateTime { get; set; } = null;
         public bool? IsComplete { get; set; } = false;
+        public List<Comment>? Comments { get; set; }
         public DateTime? CreatedAt { get; set; }
 
         // Secret Fields
@@ -18,8 +19,9 @@ namespace Domain
             {
                 Id = Id,
                 Name = Name,
-                DueDate = DueDate,
+                DueDateTime = DueDateTime,
                 IsComplete = IsComplete,
+                Comments = Comments,
                 CreatedAt = CreatedAt
             };
     }
@@ -28,8 +30,9 @@ namespace Domain
     {
         public Guid Id { get; set; }
         public string Name { get; set; } = string.Empty;
-        public DateTime? DueDate { get; set; } = null;
+        public DateTime? DueDateTime { get; set; } = null;
         public bool? IsComplete { get; set; } = false;
+        public List<Comment>? Comments { get; set; }
         public DateTime? CreatedAt { get; set; }
     }
 }

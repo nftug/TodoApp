@@ -16,7 +16,8 @@ namespace API.Extensions
             });
             services.AddDbContext<TodoContext>(opt =>
             {
-                opt.UseInMemoryDatabase("TodoList");
+                // opt.UseInMemoryDatabase("TodoList");
+                opt.UseSqlite(config.GetConnectionString("DefaultConnection"));
             });
             services.AddCors(opt =>
             {

@@ -11,5 +11,15 @@ namespace Persistence
         }
 
         public DbSet<TodoItem> TodoItems { get; set; } = null!;
+        public DbSet<Comment> Comments { get; set; } = null!;
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<Comment>()
+                        .HasOne(comment => comment.TodoItem)
+                        .WithMany(todoItem => todoItem.Comments)
+                        .HasForeignKey(comment => comment.TodoItemId)
+                        .OnDelete(DeleteBehavior.Cascade);
+        }
     }
 }
