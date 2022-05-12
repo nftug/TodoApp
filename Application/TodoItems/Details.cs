@@ -26,9 +26,7 @@ namespace Application.TodoItems
                 var todoItem = await _context.TodoItems.FindAsync(request.Id);
 
                 if (todoItem == null)
-                {
                     throw new NotFoundException();
-                }
 
                 return todoItem.ItemToDTO();
             }

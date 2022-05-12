@@ -24,9 +24,7 @@ namespace API.Controllers
         public async Task<ActionResult<Pagination<TodoItemDTO>>>
             GetTodoItems([FromQuery] QueryParameter param)
         {
-            return await Mediator.Send(
-                new List.Query(param)
-            );
+            return await Mediator.Send(new List.Query(param));
         }
 
         // GET: api/TodoItems/5

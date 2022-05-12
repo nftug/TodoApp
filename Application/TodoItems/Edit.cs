@@ -27,17 +27,14 @@ namespace Application.TodoItems
             public async Task<Unit> Handle(Command request, CancellationToken cancellationToken)
             {
                 if (request.Id != request.TodoItem.Id)
-                {
                     throw new BadRequestException();
-                }
 
                 _context.Entry(request.TodoItem).State = EntityState.Modified;
 
                 var item = await _context.TodoItems.FindAsync(request.Id);
                 if (item == null)
-                {
                     throw new NotFoundException();
-                }
+
                 request.TodoItem.CreatedAt = item.CreatedAt;
 
                 await _context.SaveChangesAsync();

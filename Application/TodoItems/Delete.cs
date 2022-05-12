@@ -24,9 +24,7 @@ namespace Application.TodoItems
             {
                 var todoItem = await _context.TodoItems.FindAsync(request.Id);
                 if (todoItem == null)
-                {
                     throw new NotFoundException();
-                }
 
                 _context.TodoItems.Remove(todoItem);
                 await _context.SaveChangesAsync();
