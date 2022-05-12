@@ -18,7 +18,7 @@ namespace Application.TodoItems.Query
                 var paramLower = param.q.ToLower();
                 query = query.Where(x =>
                     x.Name.ToLower().Contains(paramLower) ||
-                    x.Comments.Where(x => x.Content.ToLower().Contains(paramLower)).Any()
+                    x.Comments.Any(x => x.Content.ToLower().Contains(paramLower))
                 );
             }
 
@@ -36,7 +36,7 @@ namespace Application.TodoItems.Query
             {
                 var paramLower = param.Comment.ToLower();
                 query = query.Where(x =>
-                    x.Comments.Where(x => x.Content.ToLower().Contains(paramLower)).Any()
+                    x.Comments.Any(x => x.Content.ToLower().Contains(paramLower))
                 );
             }
 
