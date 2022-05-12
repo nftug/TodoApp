@@ -3,6 +3,7 @@ using Application.TodoItems;
 using Application.Core.Exceptions;
 using Persistence;
 using Domain;
+using Application.TodoItems.Query;
 using Pagination.EntityFrameworkCore.Extensions;
 
 namespace API.Controllers
@@ -20,10 +21,11 @@ namespace API.Controllers
 
         // GET: api/TodoItems
         [HttpGet]
-        public async Task<ActionResult<Pagination<TodoItemDTO>>> GetTodoItems(int? page, int? limit)
+        public async Task<ActionResult<Pagination<TodoItemDTO>>>
+            GetTodoItems([FromQuery] QueryParameter param)
         {
             return await Mediator.Send(
-                new List.Query { Page = page ??= 1, Limit = limit ??= 10 }
+                new List.Query(param)
             );
         }
 

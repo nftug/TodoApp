@@ -3,6 +3,7 @@ using Domain;
 using Persistence;
 using Pagination.EntityFrameworkCore.Extensions;
 using Microsoft.EntityFrameworkCore;
+using Application.TodoItems.Query;
 
 namespace Application.TodoItems
 {
@@ -10,8 +11,14 @@ namespace Application.TodoItems
     {
         public class Query : IRequest<Pagination<TodoItemDTO>>
         {
-            public int Page { get; set; }
-            public int Limit { get; set; }
+            public QueryParameter Param { get; set; } = new QueryParameter();
+
+            public Query(QueryParameter param)
+            {
+                Param = param;
+                Param.Page ??= 1;
+                Param.Limit ??= 10;
+            }
         }
 
         public class Handler : IRequestHandler<Query, Pagination<TodoItemDTO>>
@@ -23,17 +30,11 @@ namespace Application.TodoItems
                 _context = context;
             }
 
-            public async Task<Pagination<TodoItemDTO>> Handle(Query request, CancellationToken cancellationToken)
+            public async Task<Pagination<TodoItemDTO>> Handle
+                (Query request, CancellationToken cancellationToken)
             {
-                var query = _context.TodoItems;
-
-                var results = await query
-                                    .Select(x => x.ItemToDTO())
-                                    .Skip((request.Page - 1) * request.Limit).Take(request.Limit)
-                                    .ToListAsync();
-                var count = query.Count();
-
-                return new Pagination<TodoItemDTO>(results, count, request.Page, request.Limit);
+                var query = _context.TodoItems as IQueryable<TodoItem>;
+                return await query.GetQueryResultsAsync(request.Param);
             }
         }
     }
