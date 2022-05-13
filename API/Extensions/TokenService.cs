@@ -20,7 +20,7 @@ namespace API.Extensions
             _config = config;
         }
 
-        public string CreateToken(User user)
+        public string CreateToken(ApplicationUser user)
         {
             var settings = new JwtSettings();
             var section = _config.GetSection(nameof(JwtSettings));

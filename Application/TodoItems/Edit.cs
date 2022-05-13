@@ -13,6 +13,7 @@ namespace Application.TodoItems
         {
             public TodoItemDTO TodoItemDTO { get; set; }
             public Guid Id { get; set; }
+            public string UserId { get; set; }
         }
 
         public class Handler : IRequestHandler<Command, TodoItemDTO>
@@ -35,11 +36,15 @@ namespace Application.TodoItems
 
                 var item = await _context.TodoItems
                                          .Include(x => x.Comments)
-                                         .FirstOrDefaultAsync(x => x.Id == request.Id);
+                                         .FirstOrDefaultAsync(
+                                                 x => x.Id == request.Id &&
+                                                 x.CreatedById == request.UserId
+                                         );
                 if (item == null)
                     throw new NotFoundException();
 
                 inputItem.CreatedAt = item.CreatedAt;
+                inputItem.CreatedById = request.UserId;
 
                 await _context.SaveChangesAsync();
 

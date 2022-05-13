@@ -11,12 +11,14 @@ namespace Application.TodoItems
         public class Query : IRequest<Pagination<TodoItemDTO>>
         {
             public QueryParameter Param { get; set; } = new QueryParameter();
+            public string UserId { get; set; }
 
-            public Query(QueryParameter param)
+            public Query(QueryParameter param, string userId)
             {
                 Param = param;
                 Param.Page ??= 1;
                 Param.Limit ??= 10;
+                UserId = userId;
             }
         }
 
@@ -33,6 +35,7 @@ namespace Application.TodoItems
                 (Query request, CancellationToken cancellationToken)
             {
                 var query = _context.TodoItems.AsQueryable();
+
                 return await query.GetQueryResultsAsync(request.Param);
             }
         }

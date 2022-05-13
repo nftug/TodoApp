@@ -11,6 +11,7 @@ namespace Application.TodoItems
         public class Command : IRequest<TodoItemDTO>
         {
             public TodoItemDTO TodoItemDTO { get; set; }
+            public string UserId { get; set; }
         }
 
         public class Handler : IRequestHandler<Command, TodoItemDTO>
@@ -26,6 +27,8 @@ namespace Application.TodoItems
             {
                 var item = request.TodoItemDTO.ToRawModel();
                 item.CreatedAt = DateTime.Now;
+                item.CreatedById = request.UserId;
+
                 _context.TodoItems.Add(item);
                 await _context.SaveChangesAsync();
 

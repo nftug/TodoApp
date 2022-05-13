@@ -10,6 +10,8 @@ namespace Domain
         public bool? IsComplete { get; set; } = false;
         public ICollection<Comment> Comments { get; set; } = new List<Comment>();
         public DateTime? CreatedAt { get; set; }
+        public ApplicationUser? CreatedBy { get; set; }
+        public string? CreatedById { get; set; }
 
         // Secret Fields
         public string? Secret { get; set; } = string.Empty;
@@ -22,7 +24,8 @@ namespace Domain
                 DueDateTime = DueDateTime,
                 IsComplete = IsComplete,
                 Comments = Comments.Select(x => x.ToDTO()).ToList(),
-                CreatedAt = CreatedAt
+                CreatedAt = CreatedAt,
+                CreatedById = CreatedById
             };
     }
 
@@ -34,6 +37,7 @@ namespace Domain
         public bool? IsComplete { get; set; } = false;
         public ICollection<CommentDTO> Comments { get; set; } = new List<CommentDTO>();
         public DateTime? CreatedAt { get; set; }
+        public string? CreatedById { get; set; }
 
         public TodoItem ToRawModel()
             => new TodoItem
@@ -42,7 +46,8 @@ namespace Domain
                 Name = Name,
                 DueDateTime = DueDateTime,
                 IsComplete = IsComplete,
-                CreatedAt = CreatedAt
+                CreatedAt = CreatedAt,
+                CreatedById = CreatedById
             };
     }
 }

@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Domain
 {
-    public class User : IdentityUser
+    public class ApplicationUser : IdentityUser
     {
     }
 
@@ -11,6 +11,7 @@ namespace Domain
     {
         public string? Token { get; set; }
         public string? Username { get; set; }
+        public string? Id { get; set; }
     }
 
     public class LoginModel

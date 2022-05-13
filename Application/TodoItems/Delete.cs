@@ -1,6 +1,7 @@
 using MediatR;
 using Application.Core.Exceptions;
 using Persistence;
+using Microsoft.EntityFrameworkCore;
 
 namespace Application.TodoItems
 {
@@ -9,6 +10,7 @@ namespace Application.TodoItems
         public class Command : IRequest
         {
             public Guid Id { get; set; }
+            public string? UserId { get; set; }
         }
 
         public class Handler : IRequestHandler<Command>
@@ -22,7 +24,12 @@ namespace Application.TodoItems
 
             public async Task<Unit> Handle(Command request, CancellationToken cancellationToken)
             {
-                var todoItem = await _context.TodoItems.FindAsync(request.Id);
+                var todoItem = await _context.TodoItems
+                                             .FirstOrDefaultAsync(
+                                                 x => x.Id == request.Id &&
+                                                 x.CreatedById == request.UserId
+                                             );
+
                 if (todoItem == null)
                     throw new NotFoundException();
 

@@ -11,6 +11,7 @@ namespace Application.TodoItems
         public class Query : IRequest<TodoItemDTO>
         {
             public Guid Id { get; set; }
+            public string? UserId { get; set; }
         }
 
         public class Handler : IRequestHandler<Query, TodoItemDTO>

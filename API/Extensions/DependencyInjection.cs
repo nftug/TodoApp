@@ -40,7 +40,7 @@ namespace API.Extensions
                 settings.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
             });
 
-            services.AddDefaultIdentity<User>(opt =>
+            services.AddDefaultIdentity<ApplicationUser>(opt =>
                 opt.SignIn.RequireConfirmedAccount = false
             ).AddEntityFrameworkStores<DataContext>();
 

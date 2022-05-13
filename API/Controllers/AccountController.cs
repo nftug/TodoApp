@@ -1,12 +1,9 @@
-using System.Security.Claims;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Domain;
 using API.Extensions;
-using API.Models;
 
 namespace API.Controllers
 {
@@ -15,13 +12,13 @@ namespace API.Controllers
     [Route("api/auth")]
     public class AccountController : ApiControllerBase
     {
-        private readonly UserManager<User> _userManager;
-        private readonly SignInManager<User> _signInManager;
+        private readonly UserManager<ApplicationUser> _userManager;
+        private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly TokenService _tokenService;
 
         public AccountController(
-            UserManager<User> userManager,
-            SignInManager<User> signInManager,
+            UserManager<ApplicationUser> userManager,
+            SignInManager<ApplicationUser> signInManager,
             TokenService tokenService
         )
         {
@@ -57,7 +54,7 @@ namespace API.Controllers
                 return ValidationProblem();
             }
 
-            var user = new User
+            var user = new ApplicationUser
             {
                 Email = registerModel.Email,
                 UserName = registerModel.Username
@@ -70,13 +67,12 @@ namespace API.Controllers
                 return BadRequest("Error while registering user");
         }
 
-        private UserModel CreateUserObject(User user)
+        private UserModel CreateUserObject(ApplicationUser user)
             => new UserModel
             {
                 Token = _tokenService.CreateToken(user),
-                Username = user.UserName
+                Username = user.UserName,
+                Id = user.Id
             };
-
-
     }
 }

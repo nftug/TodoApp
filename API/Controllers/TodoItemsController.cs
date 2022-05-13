@@ -17,6 +17,7 @@ namespace API.Controllers
     public class TodoItemsController : ApiControllerBase
     {
         private readonly DataContext _context;
+        private string _userId => User.FindFirstValue(ClaimTypes.NameIdentifier) ?? string.Empty;
 
         public TodoItemsController(DataContext context)
         {
@@ -28,10 +29,7 @@ namespace API.Controllers
         public async Task<ActionResult<Pagination<TodoItemDTO>>>
             GetTodoItems([FromQuery] QueryParameter param)
         {
-            // NOTE: ユーザーIDを表示 (テスト用)
-            Console.WriteLine("ID: " + User.FindFirstValue(ClaimTypes.NameIdentifier));
-
-            return await Mediator.Send(new List.Query(param));
+            return await Mediator.Send(new List.Query(param, _userId));
         }
 
         // GET: api/TodoItems/5
@@ -40,7 +38,7 @@ namespace API.Controllers
         {
             try
             {
-                return await Mediator.Send(new Details.Query { Id = id });
+                return await Mediator.Send(new Details.Query { Id = id, UserId = _userId });
             }
             catch (NotFoundException)
             {
@@ -55,7 +53,9 @@ namespace API.Controllers
         {
             try
             {
-                var result = await Mediator.Send(new Edit.Command { Id = id, TodoItemDTO = todoItemDTO });
+                var result = await Mediator.Send(
+                    new Edit.Command { Id = id, TodoItemDTO = todoItemDTO, UserId = _userId }
+                );
                 return AcceptedAtAction(nameof(GetTodoItem), new { id = id }, result);
             }
             catch (BadRequestException)
@@ -73,7 +73,9 @@ namespace API.Controllers
         [HttpPost]
         public async Task<ActionResult<TodoItemDTO>> PostTodoItem(TodoItemDTO todoItemDTO)
         {
-            var result = await Mediator.Send(new Create.Command { TodoItemDTO = todoItemDTO });
+            var result = await Mediator.Send(
+                new Create.Command { TodoItemDTO = todoItemDTO, UserId = _userId }
+            );
             return CreatedAtAction(nameof(GetTodoItem), new { id = todoItemDTO.Id }, result);
         }
 
@@ -83,7 +85,7 @@ namespace API.Controllers
         {
             try
             {
-                await Mediator.Send(new Delete.Command { Id = id });
+                await Mediator.Send(new Delete.Command { Id = id, UserId = _userId });
             }
             catch (NotFoundException)
             {

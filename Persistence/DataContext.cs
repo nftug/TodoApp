@@ -4,7 +4,7 @@ using Domain;
 
 namespace Persistence
 {
-    public class DataContext : IdentityDbContext<User>
+    public class DataContext : IdentityDbContext<ApplicationUser>
     {
         public DataContext(DbContextOptions<DataContext> options)
             : base(options)
@@ -17,6 +17,12 @@ namespace Persistence
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
+
+            modelBuilder.Entity<TodoItem>()
+                        .HasOne(todoItem => todoItem.CreatedBy)
+                        .WithMany()
+                        .HasForeignKey(todoItem => todoItem.CreatedById)
+                        .OnDelete(DeleteBehavior.SetNull);
 
             modelBuilder.Entity<Comment>()
                         .HasOne(comment => comment.TodoItem)
