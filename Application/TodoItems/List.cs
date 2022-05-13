@@ -22,9 +22,9 @@ namespace Application.TodoItems
 
         public class Handler : IRequestHandler<Query, Pagination<TodoItemDTO>>
         {
-            private readonly TodoContext _context;
+            private readonly DataContext _context;
 
-            public Handler(TodoContext context)
+            public Handler(DataContext context)
             {
                 _context = context;
             }

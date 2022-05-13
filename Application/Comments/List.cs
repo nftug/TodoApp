@@ -23,9 +23,9 @@ namespace Application.Comments
 
         public class Handler : IRequestHandler<Query, Pagination<CommentDTO>>
         {
-            private readonly TodoContext _context;
+            private readonly DataContext _context;
 
-            public Handler(TodoContext context)
+            public Handler(DataContext context)
             {
                 _context = context;
             }

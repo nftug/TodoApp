@@ -14,7 +14,7 @@ using (var services = builder.Services.BuildServiceProvider())
 {
     try
     {
-        var context = services.GetRequiredService<TodoContext>();
+        var context = services.GetRequiredService<DataContext>();
         await context.Database.MigrateAsync();
         // await Seed.SeedData(context);
     }
@@ -39,6 +39,8 @@ if (app.Environment.IsDevelopment())
 }
 
 // app.UseHttpsRedirection();
+
+app.UseAuthentication();
 
 app.UseAuthorization();
 

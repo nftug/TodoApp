@@ -13,9 +13,9 @@ namespace Application.TodoItems
 
         public class Handler : IRequestHandler<Command>
         {
-            private readonly TodoContext _context;
+            private readonly DataContext _context;
 
-            public Handler(TodoContext context)
+            public Handler(DataContext context)
             {
                 _context = context;
             }

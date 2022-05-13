@@ -1,11 +1,12 @@
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Domain;
 
 namespace Persistence
 {
-    public class TodoContext : DbContext
+    public class DataContext : IdentityDbContext<User>
     {
-        public TodoContext(DbContextOptions<TodoContext> options)
+        public DataContext(DbContextOptions<DataContext> options)
             : base(options)
         {
         }
@@ -15,6 +16,8 @@ namespace Persistence
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            base.OnModelCreating(modelBuilder);
+
             modelBuilder.Entity<Comment>()
                         .HasOne(comment => comment.TodoItem)
                         .WithMany(todoItem => todoItem.Comments)

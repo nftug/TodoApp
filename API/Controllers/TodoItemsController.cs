@@ -5,16 +5,19 @@ using Persistence;
 using Domain;
 using Application.TodoItems.Query;
 using Pagination.EntityFrameworkCore.Extensions;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 
 namespace API.Controllers
 {
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     [Route("api/[controller]")]
     [ApiController]
     public class TodoItemsController : ApiControllerBase
     {
-        private readonly TodoContext _context;
+        private readonly DataContext _context;
 
-        public TodoItemsController(TodoContext context)
+        public TodoItemsController(DataContext context)
         {
             _context = context;
         }
