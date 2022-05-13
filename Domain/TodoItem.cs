@@ -14,19 +14,19 @@ namespace Domain
         // Secret Fields
         public string? Secret { get; set; } = string.Empty;
 
-        public TodoItemDTO ItemToDTO()
+        public TodoItemDTO ToDTO()
             => new TodoItemDTO
             {
                 Id = Id,
                 Name = Name,
                 DueDateTime = DueDateTime,
                 IsComplete = IsComplete,
-                Comments = Comments.Select(x => x.ItemToDTO()).ToList(),
+                Comments = Comments.Select(x => x.ToDTO()).ToList(),
                 CreatedAt = CreatedAt
             };
     }
 
-    public class TodoItemDTO
+    public class TodoItemDTO : IDTOModel<TodoItem>
     {
         public Guid Id { get; set; }
         public string Name { get; set; } = string.Empty;
@@ -34,5 +34,15 @@ namespace Domain
         public bool? IsComplete { get; set; } = false;
         public ICollection<CommentDTO> Comments { get; set; } = new List<CommentDTO>();
         public DateTime? CreatedAt { get; set; }
+
+        public TodoItem ToRawModel()
+            => new TodoItem
+            {
+                Id = Id,
+                Name = Name,
+                DueDateTime = DueDateTime,
+                IsComplete = IsComplete,
+                CreatedAt = CreatedAt
+            };
     }
 }

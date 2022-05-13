@@ -2,6 +2,11 @@ namespace Domain.Interfaces
 {
     public interface IModel<DTO>
     {
-        public DTO ItemToDTO();
+        public DTO ToDTO();
+    }
+
+    public interface IDTOModel<Model>
+    {
+        public Model ToRawModel();
     }
 }

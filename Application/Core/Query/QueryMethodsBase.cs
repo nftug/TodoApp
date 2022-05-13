@@ -14,7 +14,7 @@ namespace Application.Core.Query
         {
             var page = param.Page ?? 1;
             var limit = param.Limit ?? 10;
-            var results = await query.Select(x => x.ItemToDTO())
+            var results = await query.Select(x => x.ToDTO())
                                      .Skip((page - 1) * limit).Take(limit)
                                      .ToListAsync();
             var count = await query.CountAsync();

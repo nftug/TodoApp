@@ -44,12 +44,12 @@ namespace API.Controllers
         // PUT: api/TodoItems/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutTodoItem(Guid id, TodoItem todoItem)
+        public async Task<IActionResult> PutTodoItem(Guid id, TodoItemDTO todoItemDTO)
         {
             try
             {
-                var result = await Mediator.Send(new Edit.Command { Id = id, TodoItem = todoItem });
-                return AcceptedAtAction(nameof(GetTodoItem), new { id = todoItem.Id }, result);
+                var result = await Mediator.Send(new Edit.Command { Id = id, TodoItemDTO = todoItemDTO });
+                return AcceptedAtAction(nameof(GetTodoItem), new { id = id }, result);
             }
             catch (BadRequestException)
             {
@@ -64,10 +64,10 @@ namespace API.Controllers
         // POST: api/TodoItems
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<TodoItem>> PostTodoItem(TodoItem todoItem)
+        public async Task<ActionResult<TodoItemDTO>> PostTodoItem(TodoItemDTO todoItemDTO)
         {
-            await Mediator.Send(new Create.Command { TodoItem = todoItem });
-            return CreatedAtAction(nameof(GetTodoItem), new { id = todoItem.Id }, todoItem.ItemToDTO());
+            var result = await Mediator.Send(new Create.Command { TodoItemDTO = todoItemDTO });
+            return CreatedAtAction(nameof(GetTodoItem), new { id = todoItemDTO.Id }, result);
         }
 
         // DELETE: api/TodoItems/5

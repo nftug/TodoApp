@@ -1,5 +1,6 @@
 #nullable disable
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 using Domain;
 using Persistence;
 
@@ -7,12 +8,12 @@ namespace Application.Comments
 {
     public class Create
     {
-        public class Command : IRequest
+        public class Command : IRequest<CommentDTO>
         {
-            public Comment Comment { get; set; }
+            public CommentDTO CommentDTO { get; set; }
         }
 
-        public class Handler : IRequestHandler<Command>
+        public class Handler : IRequestHandler<Command, CommentDTO>
         {
             private readonly TodoContext _context;
 
@@ -21,13 +22,16 @@ namespace Application.Comments
                 _context = context;
             }
 
-            public async Task<Unit> Handle(Command request, CancellationToken cancellationToken)
+            public async Task<CommentDTO> Handle(Command request, CancellationToken cancellationToken)
             {
-                request.Comment.CreatedAt = DateTime.Now;
-                _context.Comments.Add(request.Comment);
+                var item = request.CommentDTO.ToRawModel();
+                item.CreatedAt = DateTime.Now;
+                _context.Comments.Add(item);
                 await _context.SaveChangesAsync();
 
-                return Unit.Value;
+                item = await _context.Comments.FirstOrDefaultAsync(x => x.Id == item.Id);
+
+                return item.ToDTO();
             }
         }
     }

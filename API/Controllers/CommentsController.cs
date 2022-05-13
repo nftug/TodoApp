@@ -44,12 +44,12 @@ namespace API.Controllers
         // PUT: api/Comments/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutComment(Guid id, Comment todoItem)
+        public async Task<IActionResult> PutComment(Guid id, CommentDTO commentDTO)
         {
             try
             {
-                var result = await Mediator.Send(new Edit.Command { Id = id, Comment = todoItem });
-                return AcceptedAtAction(nameof(GetComment), new { id = todoItem.Id }, result);
+                var result = await Mediator.Send(new Edit.Command { Id = id, CommentDTO = commentDTO });
+                return AcceptedAtAction(nameof(GetComment), new { id = id }, result);
             }
             catch (BadRequestException)
             {
@@ -64,10 +64,10 @@ namespace API.Controllers
         // POST: api/Comments
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<Comment>> PostComment(Comment todoItem)
+        public async Task<ActionResult<CommentDTO>> PostComment(CommentDTO commentDTO)
         {
-            await Mediator.Send(new Create.Command { Comment = todoItem });
-            return CreatedAtAction(nameof(GetComment), new { id = todoItem.Id }, todoItem.ItemToDTO());
+            var result = await Mediator.Send(new Create.Command { CommentDTO = commentDTO });
+            return CreatedAtAction(nameof(GetComment), new { id = commentDTO.Id }, result);
         }
 
         // DELETE: api/Comments/5

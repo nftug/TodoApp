@@ -1,5 +1,6 @@
 #nullable disable
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 using Domain;
 using Persistence;
 
@@ -7,12 +8,12 @@ namespace Application.TodoItems
 {
     public class Create
     {
-        public class Command : IRequest
+        public class Command : IRequest<TodoItemDTO>
         {
-            public TodoItem TodoItem { get; set; }
+            public TodoItemDTO TodoItemDTO { get; set; }
         }
 
-        public class Handler : IRequestHandler<Command>
+        public class Handler : IRequestHandler<Command, TodoItemDTO>
         {
             private readonly TodoContext _context;
 
@@ -21,13 +22,18 @@ namespace Application.TodoItems
                 _context = context;
             }
 
-            public async Task<Unit> Handle(Command request, CancellationToken cancellationToken)
+            public async Task<TodoItemDTO> Handle(Command request, CancellationToken cancellationToken)
             {
-                request.TodoItem.CreatedAt = DateTime.Now;
-                _context.TodoItems.Add(request.TodoItem);
+                var item = request.TodoItemDTO.ToRawModel();
+                item.CreatedAt = DateTime.Now;
+                _context.TodoItems.Add(item);
                 await _context.SaveChangesAsync();
 
-                return Unit.Value;
+                item = await _context.TodoItems
+                                     .Include(x => x.Comments)
+                                     .FirstOrDefaultAsync(x => x.Id == item.Id);
+
+                return item.ToDTO();
             }
         }
     }

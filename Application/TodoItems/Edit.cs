@@ -11,7 +11,7 @@ namespace Application.TodoItems
     {
         public class Command : IRequest<TodoItemDTO>
         {
-            public TodoItem TodoItem { get; set; }
+            public TodoItemDTO TodoItemDTO { get; set; }
             public Guid Id { get; set; }
         }
 
@@ -26,10 +26,12 @@ namespace Application.TodoItems
 
             public async Task<TodoItemDTO> Handle(Command request, CancellationToken cancellationToken)
             {
-                if (request.Id != request.TodoItem.Id)
+                var inputItem = request.TodoItemDTO.ToRawModel();
+
+                if (request.Id != inputItem.Id)
                     throw new BadRequestException();
 
-                _context.Entry(request.TodoItem).State = EntityState.Modified;
+                _context.Entry(inputItem).State = EntityState.Modified;
 
                 var item = await _context.TodoItems
                                          .Include(x => x.Comments)
@@ -37,11 +39,11 @@ namespace Application.TodoItems
                 if (item == null)
                     throw new NotFoundException();
 
-                request.TodoItem.CreatedAt = item.CreatedAt;
+                inputItem.CreatedAt = item.CreatedAt;
 
                 await _context.SaveChangesAsync();
 
-                return item.ItemToDTO();
+                return item.ToDTO();
             }
         }
     }

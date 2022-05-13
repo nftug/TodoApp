@@ -28,7 +28,7 @@ namespace Application.Comments
                 if (todoItem == null)
                     throw new NotFoundException();
 
-                return todoItem.ItemToDTO();
+                return todoItem.ToDTO();
             }
         }
     }

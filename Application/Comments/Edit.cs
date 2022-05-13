@@ -11,7 +11,7 @@ namespace Application.Comments
     {
         public class Command : IRequest<CommentDTO>
         {
-            public Comment Comment { get; set; }
+            public CommentDTO CommentDTO { get; set; }
             public Guid Id { get; set; }
         }
 
@@ -26,20 +26,22 @@ namespace Application.Comments
 
             public async Task<CommentDTO> Handle(Command request, CancellationToken cancellationToken)
             {
-                if (request.Id != request.Comment.Id)
+                var inputItem = request.CommentDTO.ToRawModel();
+
+                if (request.Id != inputItem.Id)
                     throw new BadRequestException();
 
-                _context.Entry(request.Comment).State = EntityState.Modified;
+                _context.Entry(inputItem).State = EntityState.Modified;
 
                 var item = await _context.Comments.FindAsync(request.Id);
                 if (item == null)
                     throw new NotFoundException();
 
-                request.Comment.CreatedAt = item.CreatedAt;
+                inputItem.CreatedAt = item.CreatedAt;
 
                 await _context.SaveChangesAsync();
 
-                return item.ItemToDTO();
+                return item.ToDTO();
             }
         }
     }
