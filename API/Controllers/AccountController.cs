@@ -50,7 +50,7 @@ namespace API.Controllers
             }
             if (await _userManager.Users.AnyAsync(x => x.UserName == registerModel.Username))
             {
-                ModelState.AddModelError("email", "Username taken");
+                ModelState.AddModelError("username", "Username taken");
                 return ValidationProblem();
             }
 
@@ -62,9 +62,16 @@ namespace API.Controllers
 
             var result = await _userManager.CreateAsync(user, registerModel.Password);
             if (result.Succeeded)
+            {
                 return CreateUserObject(user);
+            }
             else
-                return BadRequest("Error while registering user");
+            {
+                foreach (var error in result.Errors)
+                    ModelState.AddModelError(error.Code, error.Description);
+
+                return ValidationProblem();
+            }
         }
 
         private UserModel CreateUserObject(ApplicationUser user)
