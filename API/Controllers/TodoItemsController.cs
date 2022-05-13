@@ -7,6 +7,7 @@ using Application.TodoItems.Query;
 using Pagination.EntityFrameworkCore.Extensions;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using System.Security.Claims;
 
 namespace API.Controllers
 {
@@ -27,6 +28,9 @@ namespace API.Controllers
         public async Task<ActionResult<Pagination<TodoItemDTO>>>
             GetTodoItems([FromQuery] QueryParameter param)
         {
+            // NOTE: ユーザーIDを表示 (テスト用)
+            Console.WriteLine("ID: " + User.FindFirstValue(ClaimTypes.NameIdentifier));
+
             return await Mediator.Send(new List.Query(param));
         }
 
