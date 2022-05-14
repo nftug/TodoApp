@@ -6,7 +6,7 @@ namespace Application.Comments.Query
 {
     public static class QueryMethods
     {
-        private static IQueryable<Comment> GetFilteredQuery
+        public static IQueryable<Comment> GetFilteredQuery
             (this IQueryable<Comment> query, QueryParameter param)
         {
             // qの絞り込み
@@ -28,16 +28,6 @@ namespace Application.Comments.Query
             }
 
             return query;
-        }
-
-        /// <summary>
-        /// クエリパラメータで処理したページネーション処理済みデータを返す
-        /// </summary>
-        public async static Task<Pagination<CommentDTO>> GetQueryResultsAsync
-            (this IQueryable<Comment> query, QueryParameter param)
-        {
-            query = query.GetFilteredQuery(param);
-            return await query.GetPaginatedResultsAsync(param);
         }
     }
 }

@@ -1,7 +1,8 @@
 using MediatR;
 using Application.Core.Exceptions;
 using Persistence;
-using Domain;
+using AutoMapper;
+using Microsoft.EntityFrameworkCore;
 
 namespace Application.Comments
 {
@@ -15,20 +16,23 @@ namespace Application.Comments
         public class Handler : IRequestHandler<Query, CommentDTO>
         {
             private readonly DataContext _context;
+            private readonly IMapper _mapper;
 
-            public Handler(DataContext context)
+            public Handler(DataContext context, IMapper mapper)
             {
                 _context = context;
+                _mapper = mapper;
             }
 
             public async Task<CommentDTO> Handle(Query request, CancellationToken cancellationToken)
             {
-                var todoItem = await _context.Comments.FindAsync(request.Id);
+                var result = await _mapper.ProjectTo<CommentDTO>(_context.Comments)
+                                          .FirstOrDefaultAsync(x => x.Id == request.Id);
 
-                if (todoItem == null)
+                if (result == null)
                     throw new NotFoundException();
 
-                return todoItem.ToDTO();
+                return result;
             }
         }
     }

@@ -1,9 +1,8 @@
 #nullable disable
 using MediatR;
-using Microsoft.EntityFrameworkCore;
 using Application.Core.Exceptions;
 using Persistence;
-using Domain;
+using AutoMapper;
 
 namespace Application.Comments
 {
@@ -18,30 +17,30 @@ namespace Application.Comments
         public class Handler : IRequestHandler<Command, CommentDTO>
         {
             private readonly DataContext _context;
+            private readonly IMapper _mapper;
 
-            public Handler(DataContext context)
+            public Handler(DataContext context, IMapper mapper)
             {
                 _context = context;
+                _mapper = mapper;
             }
 
             public async Task<CommentDTO> Handle(Command request, CancellationToken cancellationToken)
             {
-                var inputItem = request.CommentDTO.ToRawModel();
+                var inputItem = request.CommentDTO;
 
                 if (request.Id != inputItem.Id)
                     throw new BadRequestException();
-
-                _context.Entry(inputItem).State = EntityState.Modified;
 
                 var item = await _context.Comments.FindAsync(request.Id);
                 if (item == null)
                     throw new NotFoundException();
 
-                inputItem.CreatedAt = item.CreatedAt;
+                _mapper.Map(inputItem, item);
 
                 await _context.SaveChangesAsync();
 
-                return item.ToDTO();
+                return _mapper.Map<CommentDTO>(item);
             }
         }
     }

@@ -2,7 +2,6 @@ using Microsoft.AspNetCore.Mvc;
 using Application.TodoItems;
 using Application.Core.Exceptions;
 using Persistence;
-using Domain;
 using Application.TodoItems.Query;
 using Pagination.EntityFrameworkCore.Extensions;
 using Microsoft.AspNetCore.Authorization;
@@ -73,10 +72,15 @@ namespace API.Controllers
         [HttpPost]
         public async Task<ActionResult<TodoItemDTO>> PostTodoItem(TodoItemDTO todoItemDTO)
         {
-            var result = await Mediator.Send(
-                new Create.Command { TodoItemDTO = todoItemDTO, UserId = _userId }
-            );
-            return CreatedAtAction(nameof(GetTodoItem), new { id = todoItemDTO.Id }, result);
+            try
+            {
+                var result = await Mediator.Send(new Create.Command { TodoItemDTO = todoItemDTO });
+                return CreatedAtAction(nameof(GetTodoItem), new { id = todoItemDTO.Id }, result);
+            }
+            catch (BadRequestException)
+            {
+                return BadRequest();
+            }
         }
 
         // DELETE: api/TodoItems/5

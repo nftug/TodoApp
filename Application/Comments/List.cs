@@ -1,9 +1,9 @@
 using MediatR;
-using Domain;
 using Persistence;
 using Pagination.EntityFrameworkCore.Extensions;
-using Microsoft.EntityFrameworkCore;
 using Application.Comments.Query;
+using Application.Core.Query;
+using AutoMapper;
 
 namespace Application.Comments
 {
@@ -24,17 +24,21 @@ namespace Application.Comments
         public class Handler : IRequestHandler<Query, Pagination<CommentDTO>>
         {
             private readonly DataContext _context;
+            private readonly IMapper _mapper;
 
-            public Handler(DataContext context)
+            public Handler(DataContext context, IMapper mapper)
             {
                 _context = context;
+                _mapper = mapper;
             }
 
             public async Task<Pagination<CommentDTO>> Handle
                 (Query request, CancellationToken cancellationToken)
             {
-                var query = _context.Comments.AsQueryable();
-                return await query.GetQueryResultsAsync(request.Param);
+                var query = _context.Comments.GetFilteredQuery(request.Param);
+                var results = _mapper.ProjectTo<CommentDTO>(query);
+
+                return await results.GetPaginatedResultsAsync(request.Param);
             }
         }
     }

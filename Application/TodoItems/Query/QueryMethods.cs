@@ -7,10 +7,10 @@ namespace Application.TodoItems.Query
 {
     public static class QueryMethods
     {
-        private static IQueryable<TodoItem> GetFilteredQuery
+        public static IQueryable<TodoItem> GetFilteredQuery
             (this IQueryable<TodoItem> query, QueryParameter param)
         {
-            query = query.Include(x => x.Comments);
+            // query = query.Include(x => x.Comments);
 
             // qの絞り込み
             if (!string.IsNullOrEmpty(param.q))
@@ -47,16 +47,6 @@ namespace Application.TodoItems.Query
             }
 
             return query;
-        }
-
-        /// <summary>
-        /// クエリパラメータで処理したページネーション処理済みデータを返す
-        /// </summary>
-        public async static Task<Pagination<TodoItemDTO>> GetQueryResultsAsync
-            (this IQueryable<TodoItem> query, QueryParameter param)
-        {
-            query = query.GetFilteredQuery(param);
-            return await query.GetPaginatedResultsAsync(param);
         }
     }
 }

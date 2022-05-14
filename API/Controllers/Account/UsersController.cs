@@ -37,13 +37,13 @@ namespace API.Controllers.Account
 
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         [HttpGet("me")]
-        public async Task<ActionResult<UserModel.Private>> GetMyUserInfo()
+        public async Task<ActionResult<UserModel.Me>> GetMyUserInfo()
         {
             var user = await _userManager.GetUserAsync(HttpContext.User);
 
             if (user == null) return NotFound();
 
-            return new UserModel.Private
+            return new UserModel.Me
             {
                 Id = user.Id,
                 Username = user.UserName,

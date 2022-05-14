@@ -3,6 +3,7 @@ using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Domain;
 using Persistence;
+using AutoMapper;
 
 namespace Application.TodoItems
 {
@@ -17,26 +18,25 @@ namespace Application.TodoItems
         public class Handler : IRequestHandler<Command, TodoItemDTO>
         {
             private readonly DataContext _context;
+            private readonly IMapper _mapper;
 
-            public Handler(DataContext context)
+            public Handler(DataContext context, IMapper mapper)
             {
                 _context = context;
+                _mapper = mapper;
             }
 
             public async Task<TodoItemDTO> Handle(Command request, CancellationToken cancellationToken)
             {
-                var item = request.TodoItemDTO.ToRawModel();
+                var item = _mapper.Map<TodoItem>(request.TodoItemDTO);
                 item.CreatedAt = DateTime.Now;
                 item.CreatedById = request.UserId;
 
                 _context.TodoItems.Add(item);
                 await _context.SaveChangesAsync();
 
-                item = await _context.TodoItems
-                                     .Include(x => x.Comments)
-                                     .FirstOrDefaultAsync(x => x.Id == item.Id);
-
-                return item.ToDTO();
+                return await _mapper.ProjectTo<TodoItemDTO>(_context.TodoItems)
+                                    .FirstOrDefaultAsync(x => x.Id == item.Id);
             }
         }
     }

@@ -2,7 +2,6 @@ using Microsoft.AspNetCore.Mvc;
 using Application.Comments;
 using Application.Core.Exceptions;
 using Persistence;
-using Domain;
 using Application.Comments.Query;
 using Pagination.EntityFrameworkCore.Extensions;
 
@@ -66,8 +65,15 @@ namespace API.Controllers
         [HttpPost]
         public async Task<ActionResult<CommentDTO>> PostComment(CommentDTO commentDTO)
         {
-            var result = await Mediator.Send(new Create.Command { CommentDTO = commentDTO });
-            return CreatedAtAction(nameof(GetComment), new { id = commentDTO.Id }, result);
+            try
+            {
+                var result = await Mediator.Send(new Create.Command { CommentDTO = commentDTO });
+                return CreatedAtAction(nameof(GetComment), new { id = commentDTO.Id }, result);
+            }
+            catch (BadRequestException)
+            {
+                return BadRequest();
+            }
         }
 
         // DELETE: api/Comments/5

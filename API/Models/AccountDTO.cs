@@ -27,7 +27,7 @@ namespace API.Models
 
     public class UserModel
     {
-        public class Private
+        public class Me
         {
             public string? Id { get; set; }
             public string? Username { get; set; }

@@ -9,6 +9,7 @@ using Microsoft.Extensions.Options;
 using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
+using Application.Core;
 
 namespace API.Extensions
 {
@@ -45,6 +46,8 @@ namespace API.Extensions
             ).AddEntityFrameworkStores<DataContext>();
 
             services.AddMediatR(typeof(List.Handler).Assembly);
+            services.AddAutoMapper(typeof(MappingProfiles).Assembly);
+
             services.AddJwtService(config);
             services.AddScoped<TokenService>();
 
