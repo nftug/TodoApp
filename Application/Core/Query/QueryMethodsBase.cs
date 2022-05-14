@@ -1,5 +1,4 @@
 using Pagination.EntityFrameworkCore.Extensions;
-using Domain.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
 namespace Application.Core.Query

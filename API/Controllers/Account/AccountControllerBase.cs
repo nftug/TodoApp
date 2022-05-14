@@ -6,7 +6,7 @@ using API.Extensions;
 
 namespace API.Controllers.Account
 {
-    public class AccountControllerBase : ControllerBase
+    public abstract class AccountControllerBase : ControllerBase
     {
         protected readonly UserManager<ApplicationUser> _userManager;
         protected readonly SignInManager<ApplicationUser> _signInManager;
