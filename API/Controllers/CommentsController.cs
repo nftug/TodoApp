@@ -43,7 +43,7 @@ namespace API.Controllers
         // PUT: api/Comments/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutComment(Guid id, CommentDTO commentDTO)
+        public async Task<ActionResult<CommentDTO>> PutComment(Guid id, CommentDTO commentDTO)
         {
             try
             {

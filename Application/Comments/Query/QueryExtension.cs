@@ -1,10 +1,8 @@
 using Domain;
-using Pagination.EntityFrameworkCore.Extensions;
-using Application.Core.Query;
 
 namespace Application.Comments.Query
 {
-    public static class QueryMethods
+    public static class QueryExtension
     {
         public static IQueryable<Comment> GetFilteredQuery
             (this IQueryable<Comment> query, QueryParameter param)

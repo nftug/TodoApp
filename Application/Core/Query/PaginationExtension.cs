@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Application.Core.Query
 {
-    public static class QueryMethodsBase
+    public static class PaginationExtension
     {
         // <summary>
         // クエリからページネーション処理を行った結果を返す

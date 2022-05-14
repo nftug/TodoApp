@@ -4,6 +4,7 @@ using Application.Users;
 using Application.Core.Exceptions;
 using Persistence;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Pagination.EntityFrameworkCore.Extensions;
 
 namespace API.Controllers.Account
 {
@@ -58,6 +59,15 @@ namespace API.Controllers.Account
             {
                 return BadRequest();
             }
+        }
+
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+        [HttpGet("me/todoItems")]
+        public async Task<ActionResult<Pagination<Application.TodoItems.TodoItemDTO>>>
+            GetMyTodoItems([FromQuery] Application.TodoItems.Query.QueryParameter param)
+        {
+            param.User = _userId;
+            return await Mediator.Send(new Application.TodoItems.List.Query(param, _userId));
         }
     }
 }

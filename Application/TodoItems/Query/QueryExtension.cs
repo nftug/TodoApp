@@ -1,24 +1,20 @@
 using Domain;
-using Pagination.EntityFrameworkCore.Extensions;
-using Microsoft.EntityFrameworkCore;
-using Application.Core.Query;
 
 namespace Application.TodoItems.Query
 {
-    public static class QueryMethods
+    public static class QueryExtension
     {
         public static IQueryable<TodoItem> GetFilteredQuery
             (this IQueryable<TodoItem> query, QueryParameter param)
         {
-            // query = query.Include(x => x.Comments);
-
             // qの絞り込み
             if (!string.IsNullOrEmpty(param.q))
             {
                 var paramLower = param.q.ToLower();
                 query = query.Where(x =>
                     x.Name.ToLower().Contains(paramLower) ||
-                    x.Comments.Any(x => x.Content.ToLower().Contains(paramLower))
+                    x.Comments.Any(x => x.Content.ToLower().Contains(paramLower)) ||
+                    x.CreatedBy!.UserName.ToLower().Contains(paramLower)
                 );
             }
 
@@ -38,6 +34,21 @@ namespace Application.TodoItems.Query
                 query = query.Where(x =>
                     x.Comments.Any(x => x.Content.ToLower().Contains(paramLower))
                 );
+            }
+
+            // ユーザー名での絞り込み
+            if (!string.IsNullOrEmpty(param.UserName))
+            {
+                var paramLower = param.UserName.ToLower();
+                query = query.Where(x =>
+                    x.CreatedBy!.UserName.ToLower().Contains(paramLower)
+                );
+            }
+
+            // ユーザーIDでの絞り込み
+            if (!string.IsNullOrEmpty(param.User))
+            {
+                query = query.Where(x => x.CreatedBy!.Id == param.User);
             }
 
             // 状態での絞り込み

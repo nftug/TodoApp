@@ -46,7 +46,7 @@ namespace API.Controllers
         // PUT: api/TodoItems/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutTodoItem(Guid id, TodoItemDTO todoItemDTO)
+        public async Task<ActionResult<TodoItemDTO>> PutTodoItem(Guid id, TodoItemDTO todoItemDTO)
         {
             try
             {
