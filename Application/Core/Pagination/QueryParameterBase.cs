@@ -1,4 +1,4 @@
-namespace Application.Core.Query
+namespace Application.Core.Pagination
 {
     public abstract class QueryParameterBase
     {

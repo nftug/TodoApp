@@ -2,7 +2,7 @@ using MediatR;
 using Persistence;
 using Pagination.EntityFrameworkCore.Extensions;
 using Application.TodoItems.Query;
-using Application.Core.Query;
+using Application.Core.Pagination;
 using AutoMapper;
 
 namespace Application.TodoItems

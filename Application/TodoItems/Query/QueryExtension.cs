@@ -1,4 +1,5 @@
 using Domain;
+using Application.Core.Query;
 
 namespace Application.TodoItems.Query
 {
@@ -8,54 +9,46 @@ namespace Application.TodoItems.Query
             (this IQueryable<TodoItem> query, QueryParameter param)
         {
             // qの絞り込み
-            if (!string.IsNullOrEmpty(param.q))
+            QueryMethods.ForEachKeyword(param.q, q =>
             {
-                var paramLower = param.q.ToLower();
                 query = query.Where(x =>
-                    x.Name.ToLower().Contains(paramLower) ||
-                    x.Comments.Any(x => x.Content.ToLower().Contains(paramLower)) ||
-                    x.CreatedBy!.UserName.ToLower().Contains(paramLower)
+                    x.Name.ToLower().Contains(q) |
+                    x.Comments.Any(x => x.Content.ToLower().Contains(q)) |
+                    x.CreatedBy!.UserName.ToLower().Contains(q)
                 );
-            }
+            });
 
             // Nameの絞り込み
-            if (!string.IsNullOrEmpty(param.Name))
+            QueryMethods.ForEachKeyword(param.Name, name =>
             {
-                var paramLower = param.Name.ToLower();
                 query = query.Where(x =>
-                    x.Name.ToLower().Contains(paramLower)
+                    x.Name.ToLower().Contains(name)
                 );
-            }
+            });
 
             // コメントでの絞り込み
-            if (!string.IsNullOrEmpty(param.Comment))
+            QueryMethods.ForEachKeyword(param.Comment, comment =>
             {
-                var paramLower = param.Comment.ToLower();
                 query = query.Where(x =>
-                    x.Comments.Any(x => x.Content.ToLower().Contains(paramLower))
+                    x.Comments.Any(x => x.Content.ToLower().Contains(comment))
                 );
-            }
+            });
 
             // ユーザー名での絞り込み
-            if (!string.IsNullOrEmpty(param.UserName))
+            QueryMethods.ForEachKeyword(param.UserName, username =>
             {
-                var paramLower = param.UserName.ToLower();
                 query = query.Where(x =>
-                    x.CreatedBy!.UserName.ToLower().Contains(paramLower)
+                    x.CreatedBy!.UserName.ToLower().Contains(username)
                 );
-            }
+            });
 
             // ユーザーIDでの絞り込み
             if (!string.IsNullOrEmpty(param.User))
-            {
                 query = query.Where(x => x.CreatedBy!.Id == param.User);
-            }
 
             // 状態での絞り込み
             if (param.IsComplete != null)
-            {
                 query = query.Where(x => x.IsComplete == param.IsComplete);
-            }
 
             return query;
         }

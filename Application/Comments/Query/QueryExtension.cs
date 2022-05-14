@@ -1,4 +1,5 @@
 using Domain;
+using Application.Core.Query;
 
 namespace Application.Comments.Query
 {
@@ -8,22 +9,20 @@ namespace Application.Comments.Query
             (this IQueryable<Comment> query, QueryParameter param)
         {
             // qの絞り込み
-            if (!string.IsNullOrEmpty(param.q))
+            QueryMethods.ForEachKeyword(param.q, q =>
             {
-                var paramLower = param.q.ToLower();
                 query = query.Where(x =>
-                    x.Content.ToLower().Contains(paramLower)
+                    x.Content.ToLower().Contains(q)
                 );
-            }
+            });
 
             // Contentの絞り込み
-            if (!string.IsNullOrEmpty(param.Content))
+            QueryMethods.ForEachKeyword(param.Content, content =>
             {
-                var paramLower = param.Content.ToLower();
                 query = query.Where(x =>
-                    x.Content.ToLower().Contains(paramLower)
+                    x.Content.ToLower().Contains(content)
                 );
-            }
+            });
 
             return query;
         }

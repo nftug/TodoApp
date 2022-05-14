@@ -1,4 +1,4 @@
-using Application.Core.Query;
+using Application.Core.Pagination;
 
 namespace Application.TodoItems.Query
 {

@@ -1,7 +1,7 @@
 using Pagination.EntityFrameworkCore.Extensions;
 using Microsoft.EntityFrameworkCore;
 
-namespace Application.Core.Query
+namespace Application.Core.Pagination
 {
     public static class PaginationExtension
     {
@@ -11,11 +11,11 @@ namespace Application.Core.Query
         public async static Task<Pagination<T>> GetPaginatedResultsAsync<T>
             (this IQueryable<T> query, QueryParameterBase param)
         {
-            var page = param.Page ?? 1;
-            var limit = param.Limit ?? 10;
+            int page = param.Page ?? 1;
+            int limit = param.Limit ?? 10;
             var results = await query.Skip((page - 1) * limit).Take(limit)
                                      .ToListAsync();
-            var count = await query.CountAsync();
+            int count = await query.CountAsync();
 
             return new Pagination<T>(results, count, page, limit);
         }
