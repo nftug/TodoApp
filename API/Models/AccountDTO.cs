@@ -24,19 +24,4 @@ namespace API.Models
         [Required]
         public string? Username { get; set; }
     }
-
-    public class UserModel
-    {
-        public class Me
-        {
-            public string? Id { get; set; }
-            public string? Username { get; set; }
-            public string? Email { get; set; }
-        }
-        public class Public
-        {
-            public string? Id { get; set; }
-            public string? Username { get; set; }
-        }
-    }
 }

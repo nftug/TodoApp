@@ -1,5 +1,6 @@
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 
 namespace API.Controllers
 {
@@ -7,5 +8,7 @@ namespace API.Controllers
     {
         private ISender? _mediator;
         protected ISender Mediator => _mediator ??= HttpContext.RequestServices.GetService<ISender>()!;
+
+        protected string _userId => User.FindFirstValue(ClaimTypes.NameIdentifier) ?? string.Empty;
     }
 }

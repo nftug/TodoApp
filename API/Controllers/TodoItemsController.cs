@@ -6,7 +6,6 @@ using Application.TodoItems.Query;
 using Pagination.EntityFrameworkCore.Extensions;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using System.Security.Claims;
 
 namespace API.Controllers
 {
@@ -16,7 +15,6 @@ namespace API.Controllers
     public class TodoItemsController : ApiControllerBase
     {
         private readonly DataContext _context;
-        private string _userId => User.FindFirstValue(ClaimTypes.NameIdentifier) ?? string.Empty;
 
         public TodoItemsController(DataContext context)
         {
