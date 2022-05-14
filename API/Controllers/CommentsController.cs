@@ -8,7 +8,7 @@ using Pagination.EntityFrameworkCore.Extensions;
 
 namespace API.Controllers
 {
-    [Route("api/comments")]
+    [Route("api/[controller]")]
     [ApiController]
     public class CommentsController : ApiControllerBase
     {

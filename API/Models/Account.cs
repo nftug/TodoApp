@@ -1,17 +1,10 @@
-using Microsoft.AspNetCore.Identity;
 using System.ComponentModel.DataAnnotations;
 
-namespace Domain
+namespace API.Models
 {
-    public class ApplicationUser : IdentityUser
-    {
-    }
-
-    public class UserModel
+    public class TokenModel
     {
         public string? Token { get; set; }
-        public string? Username { get; set; }
-        public string? Id { get; set; }
     }
 
     public class LoginModel
@@ -30,5 +23,20 @@ namespace Domain
         public string? Password { get; set; }
         [Required]
         public string? Username { get; set; }
+    }
+
+    public class UserModel
+    {
+        public class Private
+        {
+            public string? Id { get; set; }
+            public string? Username { get; set; }
+            public string? Email { get; set; }
+        }
+        public class Public
+        {
+            public string? Id { get; set; }
+            public string? Username { get; set; }
+        }
     }
 }
