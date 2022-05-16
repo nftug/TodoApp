@@ -46,7 +46,7 @@ public class Create
             await _context.SaveChangesAsync();
 
             var result = await _mapper.ProjectTo<CommentDTO>(_context.Comments)
-                                .FirstOrDefaultAsync(x => x.Id == item.Id);
+                                      .FirstOrDefaultAsync(x => x.Id == item.Id);
 
             return Result<CommentDTO?>.Success(result);
         }

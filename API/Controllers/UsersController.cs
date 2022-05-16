@@ -1,7 +1,6 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Application.Users;
-using Persistence;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 
 namespace API.Controllers.Account;
@@ -10,13 +9,6 @@ namespace API.Controllers.Account;
 [Route("api/[controller]")]
 public class UsersController : ApiControllerBase
 {
-    private readonly DataContext _context;
-
-    public UsersController(DataContext context)
-    {
-        _context = context;
-    }
-
     [AllowAnonymous]
     [HttpGet("{id}")]
     public async Task<IActionResult> GetUserInfo(string id)

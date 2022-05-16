@@ -3,9 +3,9 @@ using Application.Core.Query;
 
 namespace Application.TodoItems.Query;
 
-public static class QueryExtension
+internal static class QueryExtension
 {
-    public static IQueryable<TodoItem> GetFilteredQuery
+    internal static IQueryable<TodoItem> GetFilteredQuery
         (this IQueryable<TodoItem> query, QueryParameter param)
     {
         // qの絞り込み

@@ -3,9 +3,9 @@ using Application.Core.Query;
 
 namespace Application.Comments.Query;
 
-public static class QueryExtension
+internal static class QueryExtension
 {
-    public static IQueryable<Comment> GetFilteredQuery
+    internal static IQueryable<Comment> GetFilteredQuery
         (this IQueryable<Comment> query, QueryParameter param)
     {
         // qの絞り込み

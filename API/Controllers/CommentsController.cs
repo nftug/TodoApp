@@ -1,6 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
 using Application.Comments;
-using Persistence;
 using Application.Comments.Query;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -12,13 +11,6 @@ namespace API.Controllers;
 [ApiController]
 public class CommentsController : ApiControllerBase
 {
-    private readonly DataContext _context;
-
-    public CommentsController(DataContext context)
-    {
-        _context = context;
-    }
-
     // GET: api/Comments
     [HttpGet]
     public async Task<IActionResult> GetComments([FromQuery] QueryParameter param)

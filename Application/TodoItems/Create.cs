@@ -42,7 +42,7 @@ public class Create
             await _context.SaveChangesAsync();
 
             var result = await _mapper.ProjectTo<TodoItemDTO>(_context.TodoItems)
-                                .FirstOrDefaultAsync(x => x.Id == item.Id);
+                                      .FirstOrDefaultAsync(x => x.Id == item.Id);
 
             return Result<TodoItemDTO?>.Success(result);
         }

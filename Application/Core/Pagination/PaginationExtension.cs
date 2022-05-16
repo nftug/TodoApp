@@ -3,12 +3,12 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Application.Core.Pagination;
 
-public static class PaginationExtension
+internal static class PaginationExtension
 {
     // <summary>
     // クエリからページネーション処理を行った結果を返す
     // </summary>
-    public async static Task<Pagination<T>> GetPaginatedResultsAsync<T>
+    internal async static Task<Pagination<T>> GetPaginatedResultsAsync<T>
         (this IQueryable<T> query, QueryParameterBase param)
     {
         int page = param.Page ?? 1;

@@ -5,7 +5,6 @@ using Persistence;
 using Application.TodoItems;
 using Domain;
 using API.Models;
-using Microsoft.Extensions.Options;
 using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
@@ -13,9 +12,9 @@ using Application.Core;
 
 namespace API.Extensions;
 
-public static class DependencyInjection
+internal static class DependencyInjection
 {
-    public static IServiceCollection AddApplications(this IServiceCollection services, IConfiguration config)
+    internal static IServiceCollection AddApplications(this IServiceCollection services, IConfiguration config)
     {
         services.AddSwaggerGen(c =>
         {
@@ -24,7 +23,7 @@ public static class DependencyInjection
 
         services.AddDbContext<DataContext>(opt =>
         {
-                // opt.UseInMemoryDatabase("TodoList");
+            // opt.UseInMemoryDatabase("TodoList");
             opt.UseSqlite(config.GetConnectionString("DefaultConnection"));
         });
 
@@ -45,7 +44,7 @@ public static class DependencyInjection
             opt.SignIn.RequireConfirmedAccount = false
         ).AddEntityFrameworkStores<DataContext>();
 
-        services.AddMediatR(typeof(List.Handler).Assembly);
+        services.AddMediatR(typeof(List.Query).Assembly);
         services.AddAutoMapper(typeof(MappingProfiles).Assembly);
 
         services.AddJwtService(config);

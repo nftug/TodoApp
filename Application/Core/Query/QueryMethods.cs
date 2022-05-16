@@ -1,8 +1,8 @@
 namespace Application.Core.Query;
 
-public class QueryMethods
+internal class QueryMethods
 {
-    public static void ForEachKeyword(string? param, Action<string> func)
+    internal static void ForEachKeyword(string? param, Action<string> func)
     {
         if (string.IsNullOrEmpty(param)) return;
 

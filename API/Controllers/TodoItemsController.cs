@@ -1,6 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
 using Application.TodoItems;
-using Persistence;
 using Application.TodoItems.Query;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -12,13 +11,6 @@ namespace API.Controllers;
 [ApiController]
 public class TodoItemsController : ApiControllerBase
 {
-    private readonly DataContext _context;
-
-    public TodoItemsController(DataContext context)
-    {
-        _context = context;
-    }
-
     // GET: api/TodoItems
     [HttpGet]
     public async Task<IActionResult> GetTodoItems([FromQuery] QueryParameter param)
