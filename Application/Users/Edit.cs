@@ -8,7 +8,7 @@ namespace Application.Users;
 
 public class Edit
 {
-    public class Command : IRequest<Result<UserDTO.Me?>?>
+    public class Command : IRequest<Result<UserDTO.Me>>
     {
         public UserDTO.Me User { get; set; }
         public string UserId { get; set; }
@@ -20,7 +20,7 @@ public class Edit
         }
     }
 
-    public class Handler : IRequestHandler<Command, Result<UserDTO.Me?>?>
+    public class Handler : IRequestHandler<Command, Result<UserDTO.Me>>
     {
         private readonly DataContext _context;
         private readonly IMapper _mapper;
@@ -31,17 +31,17 @@ public class Edit
             _mapper = mapper;
         }
 
-        public async Task<Result<UserDTO.Me?>?> Handle(Command request, CancellationToken cancellationToken)
+        public async Task<Result<UserDTO.Me>> Handle(Command request, CancellationToken cancellationToken)
         {
             var inputItem = request.User;
 
             if (request.UserId != inputItem.Id)
-                return Result<UserDTO.Me?>.Failure("id", "Incorrect id");
+                return Result<UserDTO.Me>.Failure("id", "Incorrect id");
 
             var user = await _context.Users.FirstOrDefaultAsync(x => x.Id == request.UserId);
 
             if (user == null)
-                return null;
+                return Result<UserDTO.Me>.NotFound();
 
             user.UserName = inputItem.Username ?? user.UserName;
             user.Email = inputItem.Email ?? user.Email;
@@ -50,7 +50,7 @@ public class Edit
 
             await _context.SaveChangesAsync();
 
-            return Result<UserDTO.Me?>.Success(
+            return Result<UserDTO.Me>.Success(
                 new UserDTO.Me { Id = user.Id, Username = user.UserName, Email = user.Email }
             );
         }

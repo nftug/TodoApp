@@ -8,7 +8,7 @@ namespace Application.Comments;
 
 public class Edit
 {
-    public class Command : IRequest<Result<CommentDTO?>?>
+    public class Command : IRequest<Result<CommentDTO>>
     {
         public CommentDTO CommentDTO { get; set; }
         public Guid Id { get; set; }
@@ -22,7 +22,7 @@ public class Edit
         }
     }
 
-    public class Handler : IRequestHandler<Command, Result<CommentDTO?>?>
+    public class Handler : IRequestHandler<Command, Result<CommentDTO>>
     {
         private readonly DataContext _context;
         private readonly IMapper _mapper;
@@ -33,23 +33,23 @@ public class Edit
             _mapper = mapper;
         }
 
-        public async Task<Result<CommentDTO?>?> Handle(Command request, CancellationToken cancellationToken)
+        public async Task<Result<CommentDTO>> Handle(Command request, CancellationToken cancellationToken)
         {
             var inputItem = request.CommentDTO;
 
             if (request.Id != inputItem?.Id)
-                return Result<CommentDTO?>.Failure("id", "Incorrect id");
+                return Result<CommentDTO>.Failure("id", "Incorrect id");
 
             var item = await _context.Comments.FirstOrDefaultAsync(x => x.Id == request.Id);
             if (item == null)
-                return null;
+                return Result<CommentDTO>.NotFound();
 
             _mapper.Map(inputItem, item);
 
             await _context.SaveChangesAsync();
 
             var result = _mapper.Map<CommentDTO>(item);
-            return Result<CommentDTO?>.Success(result);
+            return Result<CommentDTO>.Success(result);
         }
     }
 }

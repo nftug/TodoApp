@@ -8,7 +8,7 @@ namespace Application.TodoItems;
 
 public class Edit
 {
-    public class Command : IRequest<Result<TodoItemDTO?>?>
+    public class Command : IRequest<Result<TodoItemDTO>>
     {
         public TodoItemDTO TodoItemDTO { get; set; }
         public Guid Id { get; set; }
@@ -22,7 +22,7 @@ public class Edit
         }
     }
 
-    public class Handler : IRequestHandler<Command, Result<TodoItemDTO?>?>
+    public class Handler : IRequestHandler<Command, Result<TodoItemDTO>>
     {
         private readonly DataContext _context;
         private readonly IMapper _mapper;
@@ -33,12 +33,12 @@ public class Edit
             _mapper = mapper;
         }
 
-        public async Task<Result<TodoItemDTO?>?> Handle(Command request, CancellationToken cancellationToken)
+        public async Task<Result<TodoItemDTO>> Handle(Command request, CancellationToken cancellationToken)
         {
             var inputItem = request.TodoItemDTO;
 
             if (request.Id != inputItem?.Id)
-                return Result<TodoItemDTO?>.Failure("id", "Incorrect id");
+                return Result<TodoItemDTO>.Failure("id", "Incorrect id");
 
             var item = await _context.TodoItems
                                      .Include(x => x.Comments)
@@ -47,14 +47,14 @@ public class Edit
                                         x.CreatedById == request.UserId
                                      );
             if (item == null)
-                return null;
+                return Result<TodoItemDTO>.NotFound();
 
             _mapper.Map(inputItem, item);
 
             await _context.SaveChangesAsync();
 
             var result = _mapper.Map<TodoItemDTO>(item);
-            return Result<TodoItemDTO?>.Success(result);
+            return Result<TodoItemDTO>.Success(result);
         }
     }
 }

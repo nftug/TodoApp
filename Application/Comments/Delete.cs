@@ -7,7 +7,7 @@ namespace Application.Comments;
 
 public class Delete
 {
-    public class Command : IRequest<Result<Unit>?>
+    public class Command : IRequest<Result<Unit>>
     {
         public Guid Id { get; set; }
         public string UserId { get; set; }
@@ -19,7 +19,7 @@ public class Delete
         }
     }
 
-    public class Handler : IRequestHandler<Command, Result<Unit>?>
+    public class Handler : IRequestHandler<Command, Result<Unit>>
     {
         private readonly DataContext _context;
 
@@ -28,12 +28,12 @@ public class Delete
             _context = context;
         }
 
-        public async Task<Result<Unit>?> Handle(Command request, CancellationToken cancellationToken)
+        public async Task<Result<Unit>> Handle(Command request, CancellationToken cancellationToken)
         {
             var Comment = await _context.Comments.FirstOrDefaultAsync(x => x.Id == request.Id);
 
             if (Comment == null)
-                return null;
+                return Result<Unit>.NotFound();
 
             _context.Comments.Remove(Comment);
             await _context.SaveChangesAsync();

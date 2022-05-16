@@ -12,9 +12,9 @@ public abstract class ApiControllerBase : ControllerBase
 
     protected string _userId => User.FindFirstValue(ClaimTypes.NameIdentifier);
 
-    protected ActionResult HandleResult<T>(Result<T>? result)
+    protected ActionResult HandleResult<T>(Result<T> result)
     {
-        if (result == null) return NotFound();
+        if (result.IsNotFound) return NotFound();
         if (result.IsSuccess && result.Value == null)
             return NotFound();
         if (result.IsSuccess && result.Value is Unit)

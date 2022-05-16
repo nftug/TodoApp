@@ -7,7 +7,7 @@ namespace Application.TodoItems;
 
 public class Delete
 {
-    public class Command : IRequest<Result<Unit>?>
+    public class Command : IRequest<Result<Unit>>
     {
         public Guid Id { get; set; }
         public string UserId { get; set; }
@@ -19,7 +19,7 @@ public class Delete
         }
     }
 
-    public class Handler : IRequestHandler<Command, Result<Unit>?>
+    public class Handler : IRequestHandler<Command, Result<Unit>>
     {
         private readonly DataContext _context;
 
@@ -28,7 +28,7 @@ public class Delete
             _context = context;
         }
 
-        public async Task<Result<Unit>?> Handle(Command request, CancellationToken cancellationToken)
+        public async Task<Result<Unit>> Handle(Command request, CancellationToken cancellationToken)
         {
             var todoItem = await _context.TodoItems
                                          .FirstOrDefaultAsync(
@@ -37,7 +37,7 @@ public class Delete
                                          );
 
             if (todoItem == null)
-                return null;
+                return Result<Unit>.NotFound();
 
             _context.TodoItems.Remove(todoItem);
             await _context.SaveChangesAsync();
