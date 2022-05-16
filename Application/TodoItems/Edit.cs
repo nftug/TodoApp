@@ -10,7 +10,7 @@ public class Edit
 {
     public class Command : IRequest<Result<TodoItemDTO?>?>
     {
-        public TodoItemDTO? TodoItemDTO { get; set; }
+        public TodoItemDTO TodoItemDTO { get; set; }
         public Guid Id { get; set; }
         public string UserId { get; set; }
 
@@ -38,7 +38,7 @@ public class Edit
             var inputItem = request.TodoItemDTO;
 
             if (request.Id != inputItem?.Id)
-                return Result<TodoItemDTO?>.Failure("Incorrect id");
+                return Result<TodoItemDTO?>.Failure("id", "Incorrect id");
 
             var item = await _context.TodoItems
                                      .Include(x => x.Comments)

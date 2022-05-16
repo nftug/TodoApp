@@ -11,7 +11,7 @@ public class Create
 {
     public class Command : IRequest<Result<CommentDTO?>>
     {
-        public CommentDTO? CommentDTO { get; set; }
+        public CommentDTO CommentDTO { get; set; }
         public string UserId { get; set; }
 
         public Command(CommentDTO commentDTO, string usedId)
@@ -38,7 +38,7 @@ public class Create
 
             // 外部キーの存在判定
             if (await _context.TodoItems.FindAsync(item.TodoItemId) == null)
-                return Result<CommentDTO?>.Failure("Incorrect todoItemId");
+                return Result<CommentDTO?>.Failure("todoItemId", "Incorrect todoItemId");
 
             item.CreatedAt = DateTime.Now;
 

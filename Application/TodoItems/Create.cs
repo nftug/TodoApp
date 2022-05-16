@@ -11,7 +11,7 @@ public class Create
 {
     public class Command : IRequest<Result<TodoItemDTO?>>
     {
-        public TodoItemDTO? TodoItemDTO { get; set; }
+        public TodoItemDTO TodoItemDTO { get; set; }
         public string UserId { get; set; }
 
         public Command(TodoItemDTO todoItemDTO, string usedId)

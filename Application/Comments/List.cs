@@ -12,7 +12,7 @@ public class List
 {
     public class Query : IRequest<Result<Pagination<CommentDTO>>>
     {
-        public QueryParameter Param { get; set; } = new QueryParameter();
+        public QueryParameter Param { get; set; }
         public string? UserId { get; set; }
 
         public Query(QueryParameter param, string? userId)

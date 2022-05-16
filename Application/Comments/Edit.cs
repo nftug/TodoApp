@@ -10,7 +10,7 @@ public class Edit
 {
     public class Command : IRequest<Result<CommentDTO?>?>
     {
-        public CommentDTO? CommentDTO { get; set; }
+        public CommentDTO CommentDTO { get; set; }
         public Guid Id { get; set; }
         public string UserId { get; set; }
 
@@ -38,7 +38,7 @@ public class Edit
             var inputItem = request.CommentDTO;
 
             if (request.Id != inputItem?.Id)
-                return Result<CommentDTO?>.Failure("Incorrect id");
+                return Result<CommentDTO?>.Failure("id", "Incorrect id");
 
             var item = await _context.Comments.FirstOrDefaultAsync(x => x.Id == request.Id);
             if (item == null)

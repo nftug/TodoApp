@@ -36,7 +36,7 @@ public class Edit
             var inputItem = request.User;
 
             if (request.UserId != inputItem.Id)
-                return Result<UserDTO.Me?>.Failure("failed");
+                return Result<UserDTO.Me?>.Failure("id", "Incorrect id");
 
             var user = await _context.Users.FirstOrDefaultAsync(x => x.Id == request.UserId);
 

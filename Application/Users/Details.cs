@@ -12,7 +12,7 @@ public class Details
     {
         public class Query : IRequest<Result<UserDTO.Public>?>
         {
-            public string? Id { get; set; }
+            public string Id { get; set; }
             public string? UserId { get; set; }
 
             public Query(string id, string? userId)
