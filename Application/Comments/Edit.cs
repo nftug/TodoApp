@@ -1,6 +1,6 @@
-#nullable disable
 using MediatR;
-using Application.Core.Exceptions;
+using Microsoft.EntityFrameworkCore;
+using Application.Core;
 using Persistence;
 using AutoMapper;
 
@@ -8,13 +8,21 @@ namespace Application.Comments;
 
 public class Edit
 {
-    public class Command : IRequest<CommentDTO>
+    public class Command : IRequest<Result<CommentDTO?>?>
     {
-        public CommentDTO CommentDTO { get; set; }
+        public CommentDTO? CommentDTO { get; set; }
         public Guid Id { get; set; }
+        public string UserId { get; set; }
+
+        public Command(Guid id, CommentDTO commentDTO, string userId)
+        {
+            CommentDTO = commentDTO;
+            Id = id;
+            UserId = userId;
+        }
     }
 
-    public class Handler : IRequestHandler<Command, CommentDTO>
+    public class Handler : IRequestHandler<Command, Result<CommentDTO?>?>
     {
         private readonly DataContext _context;
         private readonly IMapper _mapper;
@@ -25,22 +33,23 @@ public class Edit
             _mapper = mapper;
         }
 
-        public async Task<CommentDTO> Handle(Command request, CancellationToken cancellationToken)
+        public async Task<Result<CommentDTO?>?> Handle(Command request, CancellationToken cancellationToken)
         {
             var inputItem = request.CommentDTO;
 
-            if (request.Id != inputItem.Id)
-                throw new BadRequestException();
+            if (request.Id != inputItem?.Id)
+                return Result<CommentDTO?>.Failure("Incorrect id");
 
-            var item = await _context.Comments.FindAsync(request.Id);
+            var item = await _context.Comments.FirstOrDefaultAsync(x => x.Id == request.Id);
             if (item == null)
-                throw new NotFoundException();
+                return null;
 
             _mapper.Map(inputItem, item);
 
             await _context.SaveChangesAsync();
 
-            return _mapper.Map<CommentDTO>(item);
+            var result = _mapper.Map<CommentDTO>(item);
+            return Result<CommentDTO?>.Success(result);
         }
     }
 }

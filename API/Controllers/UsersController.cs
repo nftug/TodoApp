@@ -1,10 +1,8 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Application.Users;
-using Application.Core.Exceptions;
 using Persistence;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Pagination.EntityFrameworkCore.Extensions;
 
 namespace API.Controllers.Account;
 
@@ -21,52 +19,33 @@ public class UsersController : ApiControllerBase
 
     [AllowAnonymous]
     [HttpGet("{id}")]
-    public async Task<ActionResult<UserDTO.Public>> GetUserInfo(string id)
+    public async Task<IActionResult> GetUserInfo(string id)
     {
-        try
-        {
-            return await Mediator.Send(new Details.Public.Query { Id = id, UserId = _userId });
-        }
-        catch (NotFoundException)
-        {
-            return NotFound();
-        }
+        return HandleResult(await Mediator.Send(new Details.Public.Query(id, _userId)));
     }
 
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     [HttpGet("me")]
-    public async Task<ActionResult<UserDTO.Me>> GetMyUserInfo()
+    public async Task<IActionResult> GetMyUserInfo()
     {
-        try
-        {
-            return await Mediator.Send(new Details.Me.Query { UserId = _userId });
-        }
-        catch (NotFoundException)
-        {
-            return NotFound();
-        }
+        return HandleResult(await Mediator.Send(new Details.Me.Query(_userId)));
     }
 
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     [HttpPut("me")]
-    public async Task<ActionResult<UserDTO.Me>> EditMyUserInfo(UserDTO.Me user)
+    public async Task<IActionResult> EditMyUserInfo(UserDTO.Me user)
     {
-        try
-        {
-            return await Mediator.Send(new Edit.Command { User = user, UserId = _userId });
-        }
-        catch (BadRequestException)
-        {
-            return BadRequest();
-        }
+        return HandleResult(await Mediator.Send(new Edit.Command(user, _userId)));
     }
 
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     [HttpGet("me/todoItems")]
-    public async Task<ActionResult<Pagination<Application.TodoItems.TodoItemDTO>>>
+    public async Task<IActionResult>
         GetMyTodoItems([FromQuery] Application.TodoItems.Query.QueryParameter param)
     {
         param.User = _userId;
-        return await Mediator.Send(new Application.TodoItems.List.Query(param, _userId));
+        return HandleResult(
+            await Mediator.Send(new Application.TodoItems.List.Query(param, _userId))
+        );
     }
 }

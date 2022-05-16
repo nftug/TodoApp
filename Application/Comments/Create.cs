@@ -1,21 +1,27 @@
-#nullable disable
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Domain;
 using Persistence;
 using AutoMapper;
-using Application.Core.Exceptions;
+using Application.Core;
 
 namespace Application.Comments;
 
 public class Create
 {
-    public class Command : IRequest<CommentDTO>
+    public class Command : IRequest<Result<CommentDTO?>>
     {
-        public CommentDTO CommentDTO { get; set; }
+        public CommentDTO? CommentDTO { get; set; }
+        public string UserId { get; set; }
+
+        public Command(CommentDTO commentDTO, string usedId)
+        {
+            CommentDTO = commentDTO;
+            UserId = usedId;
+        }
     }
 
-    public class Handler : IRequestHandler<Command, CommentDTO>
+    public class Handler : IRequestHandler<Command, Result<CommentDTO?>>
     {
         private readonly DataContext _context;
         private readonly IMapper _mapper;
@@ -26,20 +32,23 @@ public class Create
             _mapper = mapper;
         }
 
-        public async Task<CommentDTO> Handle(Command request, CancellationToken cancellationToken)
+        public async Task<Result<CommentDTO?>> Handle(Command request, CancellationToken cancellationToken)
         {
             var item = _mapper.Map<Comment>(request.CommentDTO);
 
             // 外部キーの存在判定
             if (await _context.TodoItems.FindAsync(item.TodoItemId) == null)
-                throw new BadRequestException();
+                return Result<CommentDTO?>.Failure("Incorrect todoItemId");
 
             item.CreatedAt = DateTime.Now;
+
             _context.Comments.Add(item);
             await _context.SaveChangesAsync();
 
-            return await _mapper.ProjectTo<CommentDTO>(_context.Comments)
+            var result = await _mapper.ProjectTo<CommentDTO>(_context.Comments)
                                 .FirstOrDefaultAsync(x => x.Id == item.Id);
+
+            return Result<CommentDTO?>.Success(result);
         }
     }
 }

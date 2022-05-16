@@ -1,17 +1,25 @@
 using MediatR;
-using Application.Core.Exceptions;
 using Persistence;
+using Microsoft.EntityFrameworkCore;
+using Application.Core;
 
 namespace Application.Comments;
 
 public class Delete
 {
-    public class Command : IRequest
+    public class Command : IRequest<Result<Unit>?>
     {
         public Guid Id { get; set; }
+        public string UserId { get; set; }
+
+        public Command(Guid id, string userId)
+        {
+            Id = id;
+            UserId = userId;
+        }
     }
 
-    public class Handler : IRequestHandler<Command>
+    public class Handler : IRequestHandler<Command, Result<Unit>?>
     {
         private readonly DataContext _context;
 
@@ -20,16 +28,17 @@ public class Delete
             _context = context;
         }
 
-        public async Task<Unit> Handle(Command request, CancellationToken cancellationToken)
+        public async Task<Result<Unit>?> Handle(Command request, CancellationToken cancellationToken)
         {
-            var todoItem = await _context.Comments.FindAsync(request.Id);
-            if (todoItem == null)
-                throw new NotFoundException();
+            var Comment = await _context.Comments.FirstOrDefaultAsync(x => x.Id == request.Id);
 
-            _context.Comments.Remove(todoItem);
+            if (Comment == null)
+                return null;
+
+            _context.Comments.Remove(Comment);
             await _context.SaveChangesAsync();
 
-            return Unit.Value;
+            return Result<Unit>.Success(Unit.Value);
         }
     }
 }

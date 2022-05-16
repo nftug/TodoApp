@@ -1,19 +1,26 @@
 using MediatR;
-using Application.Core.Exceptions;
 using Persistence;
-using AutoMapper;
 using Microsoft.EntityFrameworkCore;
+using AutoMapper;
+using Application.Core;
 
 namespace Application.Comments;
 
 public class Details
 {
-    public class Query : IRequest<CommentDTO>
+    public class Query : IRequest<Result<CommentDTO?>>
     {
         public Guid Id { get; set; }
+        public string? UserId { get; set; }
+
+        public Query(Guid id, string? userId)
+        {
+            Id = id;
+            UserId = userId;
+        }
     }
 
-    public class Handler : IRequestHandler<Query, CommentDTO>
+    public class Handler : IRequestHandler<Query, Result<CommentDTO?>>
     {
         private readonly DataContext _context;
         private readonly IMapper _mapper;
@@ -24,15 +31,12 @@ public class Details
             _mapper = mapper;
         }
 
-        public async Task<CommentDTO> Handle(Query request, CancellationToken cancellationToken)
+        public async Task<Result<CommentDTO?>> Handle(Query request, CancellationToken cancellationToken)
         {
             var result = await _mapper.ProjectTo<CommentDTO>(_context.Comments)
                                       .FirstOrDefaultAsync(x => x.Id == request.Id);
 
-            if (result == null)
-                throw new NotFoundException();
-
-            return result;
+            return Result<CommentDTO?>.Success(result);
         }
     }
 }

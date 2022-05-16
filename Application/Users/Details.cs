@@ -1,5 +1,5 @@
 using MediatR;
-using Application.Core.Exceptions;
+using Application.Core;
 using Persistence;
 using Microsoft.EntityFrameworkCore;
 using AutoMapper;
@@ -10,13 +10,19 @@ public class Details
 {
     public class Public
     {
-        public class Query : IRequest<UserDTO.Public>
+        public class Query : IRequest<Result<UserDTO.Public>?>
         {
-            public string Id { get; set; } = string.Empty;
+            public string? Id { get; set; }
             public string? UserId { get; set; }
+
+            public Query(string id, string? userId)
+            {
+                Id = id;
+                UserId = userId;
+            }
         }
 
-        public class Handler : IRequestHandler<Query, UserDTO.Public>
+        public class Handler : IRequestHandler<Query, Result<UserDTO.Public>?>
         {
             private readonly DataContext _context;
             private readonly IMapper _mapper;
@@ -27,30 +33,33 @@ public class Details
                 _mapper = mapper;
             }
 
-            public async Task<UserDTO.Public> Handle(Query request, CancellationToken cancellationToken)
+            public async Task<Result<UserDTO.Public>?> Handle(Query request, CancellationToken cancellationToken)
             {
-                var result = await _context.Users.FirstOrDefaultAsync(x => x.Id == request.Id);
+                var user = await _context.Users.FirstOrDefaultAsync(x => x.Id == request.Id);
 
-                if (result == null)
-                    throw new NotFoundException();
+                if (user == null)
+                    return null;
 
-                return new UserDTO.Public
-                {
-                    Id = result.Id,
-                    Username = result.UserName
-                };
+                return Result<UserDTO.Public>.Success(
+                    new UserDTO.Public { Id = user.Id, Username = user.UserName }
+                );
             }
         }
     }
 
     public class Me
     {
-        public class Query : IRequest<UserDTO.Me>
+        public class Query : IRequest<Result<UserDTO.Me>?>
         {
-            public string? UserId { get; set; }
+            public string UserId { get; set; }
+
+            public Query(string userId)
+            {
+                UserId = userId;
+            }
         }
 
-        public class Handler : IRequestHandler<Query, UserDTO.Me>
+        public class Handler : IRequestHandler<Query, Result<UserDTO.Me>?>
         {
             private readonly DataContext _context;
             private readonly IMapper _mapper;
@@ -61,19 +70,16 @@ public class Details
                 _mapper = mapper;
             }
 
-            public async Task<UserDTO.Me> Handle(Query request, CancellationToken cancellationToken)
+            public async Task<Result<UserDTO.Me>?> Handle(Query request, CancellationToken cancellationToken)
             {
-                var result = await _context.Users.FirstOrDefaultAsync(x => x.Id == request.UserId);
+                var user = await _context.Users.FirstOrDefaultAsync(x => x.Id == request.UserId);
 
-                if (result == null)
-                    throw new NotFoundException();
+                if (user == null)
+                    return null;
 
-                return new UserDTO.Me
-                {
-                    Id = result.Id,
-                    Username = result.UserName,
-                    Email = result.Email
-                };
+                return Result<UserDTO.Me>.Success(
+                    new UserDTO.Me { Id = user.Id, Username = user.UserName, Email = user.Email }
+                );
             }
         }
     }

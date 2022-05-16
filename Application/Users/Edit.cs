@@ -1,7 +1,6 @@
-#nullable disable
 using MediatR;
 using Microsoft.EntityFrameworkCore;
-using Application.Core.Exceptions;
+using Application.Core;
 using Persistence;
 using AutoMapper;
 
@@ -9,13 +8,19 @@ namespace Application.Users;
 
 public class Edit
 {
-    public class Command : IRequest<UserDTO.Me>
+    public class Command : IRequest<Result<UserDTO.Me?>?>
     {
         public UserDTO.Me User { get; set; }
         public string UserId { get; set; }
+
+        public Command(UserDTO.Me user, string userId)
+        {
+            User = user;
+            UserId = userId;
+        }
     }
 
-    public class Handler : IRequestHandler<Command, UserDTO.Me>
+    public class Handler : IRequestHandler<Command, Result<UserDTO.Me?>?>
     {
         private readonly DataContext _context;
         private readonly IMapper _mapper;
@@ -26,17 +31,17 @@ public class Edit
             _mapper = mapper;
         }
 
-        public async Task<UserDTO.Me> Handle(Command request, CancellationToken cancellationToken)
+        public async Task<Result<UserDTO.Me?>?> Handle(Command request, CancellationToken cancellationToken)
         {
             var inputItem = request.User;
 
             if (request.UserId != inputItem.Id)
-                throw new BadRequestException();
+                return Result<UserDTO.Me?>.Failure("failed");
 
             var user = await _context.Users.FirstOrDefaultAsync(x => x.Id == request.UserId);
 
             if (user == null)
-                throw new BadRequestException();
+                return null;
 
             user.UserName = inputItem.Username ?? user.UserName;
             user.Email = inputItem.Email ?? user.Email;
@@ -45,7 +50,9 @@ public class Edit
 
             await _context.SaveChangesAsync();
 
-            return request.User;
+            return Result<UserDTO.Me?>.Success(
+                new UserDTO.Me { Id = user.Id, Username = user.UserName, Email = user.Email }
+            );
         }
     }
 }

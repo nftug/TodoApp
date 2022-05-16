@@ -1,7 +1,6 @@
-#nullable disable
 using MediatR;
 using Microsoft.EntityFrameworkCore;
-using Application.Core.Exceptions;
+using Application.Core;
 using Persistence;
 using AutoMapper;
 
@@ -9,14 +8,21 @@ namespace Application.TodoItems;
 
 public class Edit
 {
-    public class Command : IRequest<TodoItemDTO>
+    public class Command : IRequest<Result<TodoItemDTO?>?>
     {
-        public TodoItemDTO TodoItemDTO { get; set; }
+        public TodoItemDTO? TodoItemDTO { get; set; }
         public Guid Id { get; set; }
         public string UserId { get; set; }
+
+        public Command(Guid id, TodoItemDTO todoItemDTO, string userId)
+        {
+            TodoItemDTO = todoItemDTO;
+            Id = id;
+            UserId = userId;
+        }
     }
 
-    public class Handler : IRequestHandler<Command, TodoItemDTO>
+    public class Handler : IRequestHandler<Command, Result<TodoItemDTO?>?>
     {
         private readonly DataContext _context;
         private readonly IMapper _mapper;
@@ -27,12 +33,12 @@ public class Edit
             _mapper = mapper;
         }
 
-        public async Task<TodoItemDTO> Handle(Command request, CancellationToken cancellationToken)
+        public async Task<Result<TodoItemDTO?>?> Handle(Command request, CancellationToken cancellationToken)
         {
             var inputItem = request.TodoItemDTO;
 
-            if (request.Id != inputItem.Id)
-                throw new BadRequestException();
+            if (request.Id != inputItem?.Id)
+                return Result<TodoItemDTO?>.Failure("Incorrect id");
 
             var item = await _context.TodoItems
                                      .Include(x => x.Comments)
@@ -41,13 +47,14 @@ public class Edit
                                         x.CreatedById == request.UserId
                                      );
             if (item == null)
-                throw new NotFoundException();
+                return null;
 
             _mapper.Map(inputItem, item);
 
             await _context.SaveChangesAsync();
 
-            return _mapper.Map<TodoItemDTO>(item);
+            var result = _mapper.Map<TodoItemDTO>(item);
+            return Result<TodoItemDTO?>.Success(result);
         }
     }
 }

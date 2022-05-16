@@ -1,20 +1,26 @@
 using MediatR;
-using Application.Core.Exceptions;
 using Persistence;
 using Microsoft.EntityFrameworkCore;
 using AutoMapper;
+using Application.Core;
 
 namespace Application.TodoItems;
 
 public class Details
 {
-    public class Query : IRequest<TodoItemDTO>
+    public class Query : IRequest<Result<TodoItemDTO?>>
     {
         public Guid Id { get; set; }
         public string? UserId { get; set; }
+
+        public Query(Guid id, string? userId)
+        {
+            Id = id;
+            UserId = userId;
+        }
     }
 
-    public class Handler : IRequestHandler<Query, TodoItemDTO>
+    public class Handler : IRequestHandler<Query, Result<TodoItemDTO?>>
     {
         private readonly DataContext _context;
         private readonly IMapper _mapper;
@@ -25,15 +31,12 @@ public class Details
             _mapper = mapper;
         }
 
-        public async Task<TodoItemDTO> Handle(Query request, CancellationToken cancellationToken)
+        public async Task<Result<TodoItemDTO?>> Handle(Query request, CancellationToken cancellationToken)
         {
             var result = await _mapper.ProjectTo<TodoItemDTO>(_context.TodoItems)
                                       .FirstOrDefaultAsync(x => x.Id == request.Id);
 
-            if (result == null)
-                throw new NotFoundException();
-
-            return result;
+            return Result<TodoItemDTO?>.Success(result);
         }
     }
 }
