@@ -1,6 +1,5 @@
-namespace Application.Core.Exceptions
+namespace Application.Core.Exceptions;
+
+public class NotFoundException : Exception
 {
-    public class NotFoundException : Exception
-    {
-    }
 }

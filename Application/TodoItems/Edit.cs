@@ -5,50 +5,49 @@ using Application.Core.Exceptions;
 using Persistence;
 using AutoMapper;
 
-namespace Application.TodoItems
+namespace Application.TodoItems;
+
+public class Edit
 {
-    public class Edit
+    public class Command : IRequest<TodoItemDTO>
     {
-        public class Command : IRequest<TodoItemDTO>
+        public TodoItemDTO TodoItemDTO { get; set; }
+        public Guid Id { get; set; }
+        public string UserId { get; set; }
+    }
+
+    public class Handler : IRequestHandler<Command, TodoItemDTO>
+    {
+        private readonly DataContext _context;
+        private readonly IMapper _mapper;
+
+        public Handler(DataContext context, IMapper mapper)
         {
-            public TodoItemDTO TodoItemDTO { get; set; }
-            public Guid Id { get; set; }
-            public string UserId { get; set; }
+            _context = context;
+            _mapper = mapper;
         }
 
-        public class Handler : IRequestHandler<Command, TodoItemDTO>
+        public async Task<TodoItemDTO> Handle(Command request, CancellationToken cancellationToken)
         {
-            private readonly DataContext _context;
-            private readonly IMapper _mapper;
+            var inputItem = request.TodoItemDTO;
 
-            public Handler(DataContext context, IMapper mapper)
-            {
-                _context = context;
-                _mapper = mapper;
-            }
+            if (request.Id != inputItem.Id)
+                throw new BadRequestException();
 
-            public async Task<TodoItemDTO> Handle(Command request, CancellationToken cancellationToken)
-            {
-                var inputItem = request.TodoItemDTO;
+            var item = await _context.TodoItems
+                                     .Include(x => x.Comments)
+                                     .FirstOrDefaultAsync(
+                                        x => x.Id == request.Id &&
+                                        x.CreatedById == request.UserId
+                                     );
+            if (item == null)
+                throw new NotFoundException();
 
-                if (request.Id != inputItem.Id)
-                    throw new BadRequestException();
+            _mapper.Map(inputItem, item);
 
-                var item = await _context.TodoItems
-                                         .Include(x => x.Comments)
-                                         .FirstOrDefaultAsync(
-                                            x => x.Id == request.Id &&
-                                            x.CreatedById == request.UserId
-                                         );
-                if (item == null)
-                    throw new NotFoundException();
+            await _context.SaveChangesAsync();
 
-                _mapper.Map(inputItem, item);
-
-                await _context.SaveChangesAsync();
-
-                return _mapper.Map<TodoItemDTO>(item);
-            }
+            return _mapper.Map<TodoItemDTO>(item);
         }
     }
 }

@@ -5,48 +5,47 @@ using Application.Core.Exceptions;
 using Persistence;
 using AutoMapper;
 
-namespace Application.Users
+namespace Application.Users;
+
+public class Edit
 {
-    public class Edit
+    public class Command : IRequest<UserDTO.Me>
     {
-        public class Command : IRequest<UserDTO.Me>
+        public UserDTO.Me User { get; set; }
+        public string UserId { get; set; }
+    }
+
+    public class Handler : IRequestHandler<Command, UserDTO.Me>
+    {
+        private readonly DataContext _context;
+        private readonly IMapper _mapper;
+
+        public Handler(DataContext context, IMapper mapper)
         {
-            public UserDTO.Me User { get; set; }
-            public string UserId { get; set; }
+            _context = context;
+            _mapper = mapper;
         }
 
-        public class Handler : IRequestHandler<Command, UserDTO.Me>
+        public async Task<UserDTO.Me> Handle(Command request, CancellationToken cancellationToken)
         {
-            private readonly DataContext _context;
-            private readonly IMapper _mapper;
+            var inputItem = request.User;
 
-            public Handler(DataContext context, IMapper mapper)
-            {
-                _context = context;
-                _mapper = mapper;
-            }
+            if (request.UserId != inputItem.Id)
+                throw new BadRequestException();
 
-            public async Task<UserDTO.Me> Handle(Command request, CancellationToken cancellationToken)
-            {
-                var inputItem = request.User;
+            var user = await _context.Users.FirstOrDefaultAsync(x => x.Id == request.UserId);
 
-                if (request.UserId != inputItem.Id)
-                    throw new BadRequestException();
+            if (user == null)
+                throw new BadRequestException();
 
-                var user = await _context.Users.FirstOrDefaultAsync(x => x.Id == request.UserId);
+            user.UserName = inputItem.Username ?? user.UserName;
+            user.Email = inputItem.Email ?? user.Email;
 
-                if (user == null)
-                    throw new BadRequestException();
+            _context.Entry(user).State = EntityState.Modified;
 
-                user.UserName = inputItem.Username ?? user.UserName;
-                user.Email = inputItem.Email ?? user.Email;
+            await _context.SaveChangesAsync();
 
-                _context.Entry(user).State = EntityState.Modified;
-
-                await _context.SaveChangesAsync();
-
-                return request.User;
-            }
+            return request.User;
         }
     }
 }

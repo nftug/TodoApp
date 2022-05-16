@@ -4,37 +4,36 @@ using Persistence;
 using Microsoft.EntityFrameworkCore;
 using AutoMapper;
 
-namespace Application.TodoItems
+namespace Application.TodoItems;
+
+public class Details
 {
-    public class Details
+    public class Query : IRequest<TodoItemDTO>
     {
-        public class Query : IRequest<TodoItemDTO>
+        public Guid Id { get; set; }
+        public string? UserId { get; set; }
+    }
+
+    public class Handler : IRequestHandler<Query, TodoItemDTO>
+    {
+        private readonly DataContext _context;
+        private readonly IMapper _mapper;
+
+        public Handler(DataContext context, IMapper mapper)
         {
-            public Guid Id { get; set; }
-            public string? UserId { get; set; }
+            _context = context;
+            _mapper = mapper;
         }
 
-        public class Handler : IRequestHandler<Query, TodoItemDTO>
+        public async Task<TodoItemDTO> Handle(Query request, CancellationToken cancellationToken)
         {
-            private readonly DataContext _context;
-            private readonly IMapper _mapper;
+            var result = await _mapper.ProjectTo<TodoItemDTO>(_context.TodoItems)
+                                      .FirstOrDefaultAsync(x => x.Id == request.Id);
 
-            public Handler(DataContext context, IMapper mapper)
-            {
-                _context = context;
-                _mapper = mapper;
-            }
+            if (result == null)
+                throw new NotFoundException();
 
-            public async Task<TodoItemDTO> Handle(Query request, CancellationToken cancellationToken)
-            {
-                var result = await _mapper.ProjectTo<TodoItemDTO>(_context.TodoItems)
-                                          .FirstOrDefaultAsync(x => x.Id == request.Id);
-
-                if (result == null)
-                    throw new NotFoundException();
-
-                return result;
-            }
+            return result;
         }
     }
 }

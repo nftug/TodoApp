@@ -2,35 +2,34 @@ using MediatR;
 using Application.Core.Exceptions;
 using Persistence;
 
-namespace Application.Comments
+namespace Application.Comments;
+
+public class Delete
 {
-    public class Delete
+    public class Command : IRequest
     {
-        public class Command : IRequest
+        public Guid Id { get; set; }
+    }
+
+    public class Handler : IRequestHandler<Command>
+    {
+        private readonly DataContext _context;
+
+        public Handler(DataContext context)
         {
-            public Guid Id { get; set; }
+            _context = context;
         }
 
-        public class Handler : IRequestHandler<Command>
+        public async Task<Unit> Handle(Command request, CancellationToken cancellationToken)
         {
-            private readonly DataContext _context;
+            var todoItem = await _context.Comments.FindAsync(request.Id);
+            if (todoItem == null)
+                throw new NotFoundException();
 
-            public Handler(DataContext context)
-            {
-                _context = context;
-            }
+            _context.Comments.Remove(todoItem);
+            await _context.SaveChangesAsync();
 
-            public async Task<Unit> Handle(Command request, CancellationToken cancellationToken)
-            {
-                var todoItem = await _context.Comments.FindAsync(request.Id);
-                if (todoItem == null)
-                    throw new NotFoundException();
-
-                _context.Comments.Remove(todoItem);
-                await _context.SaveChangesAsync();
-
-                return Unit.Value;
-            }
+            return Unit.Value;
         }
     }
 }

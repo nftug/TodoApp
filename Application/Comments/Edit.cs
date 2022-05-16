@@ -4,44 +4,43 @@ using Application.Core.Exceptions;
 using Persistence;
 using AutoMapper;
 
-namespace Application.Comments
+namespace Application.Comments;
+
+public class Edit
 {
-    public class Edit
+    public class Command : IRequest<CommentDTO>
     {
-        public class Command : IRequest<CommentDTO>
+        public CommentDTO CommentDTO { get; set; }
+        public Guid Id { get; set; }
+    }
+
+    public class Handler : IRequestHandler<Command, CommentDTO>
+    {
+        private readonly DataContext _context;
+        private readonly IMapper _mapper;
+
+        public Handler(DataContext context, IMapper mapper)
         {
-            public CommentDTO CommentDTO { get; set; }
-            public Guid Id { get; set; }
+            _context = context;
+            _mapper = mapper;
         }
 
-        public class Handler : IRequestHandler<Command, CommentDTO>
+        public async Task<CommentDTO> Handle(Command request, CancellationToken cancellationToken)
         {
-            private readonly DataContext _context;
-            private readonly IMapper _mapper;
+            var inputItem = request.CommentDTO;
 
-            public Handler(DataContext context, IMapper mapper)
-            {
-                _context = context;
-                _mapper = mapper;
-            }
+            if (request.Id != inputItem.Id)
+                throw new BadRequestException();
 
-            public async Task<CommentDTO> Handle(Command request, CancellationToken cancellationToken)
-            {
-                var inputItem = request.CommentDTO;
+            var item = await _context.Comments.FindAsync(request.Id);
+            if (item == null)
+                throw new NotFoundException();
 
-                if (request.Id != inputItem.Id)
-                    throw new BadRequestException();
+            _mapper.Map(inputItem, item);
 
-                var item = await _context.Comments.FindAsync(request.Id);
-                if (item == null)
-                    throw new NotFoundException();
+            await _context.SaveChangesAsync();
 
-                _mapper.Map(inputItem, item);
-
-                await _context.SaveChangesAsync();
-
-                return _mapper.Map<CommentDTO>(item);
-            }
+            return _mapper.Map<CommentDTO>(item);
         }
     }
 }

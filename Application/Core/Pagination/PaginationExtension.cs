@@ -1,23 +1,22 @@
 using Pagination.EntityFrameworkCore.Extensions;
 using Microsoft.EntityFrameworkCore;
 
-namespace Application.Core.Pagination
-{
-    public static class PaginationExtension
-    {
-        // <summary>
-        // クエリからページネーション処理を行った結果を返す
-        // </summary>
-        public async static Task<Pagination<T>> GetPaginatedResultsAsync<T>
-            (this IQueryable<T> query, QueryParameterBase param)
-        {
-            int page = param.Page ?? 1;
-            int limit = param.Limit ?? 10;
-            var results = await query.Skip((page - 1) * limit).Take(limit)
-                                     .ToListAsync();
-            int count = await query.CountAsync();
+namespace Application.Core.Pagination;
 
-            return new Pagination<T>(results, count, page, limit);
-        }
+public static class PaginationExtension
+{
+    // <summary>
+    // クエリからページネーション処理を行った結果を返す
+    // </summary>
+    public async static Task<Pagination<T>> GetPaginatedResultsAsync<T>
+        (this IQueryable<T> query, QueryParameterBase param)
+    {
+        int page = param.Page ?? 1;
+        int limit = param.Limit ?? 10;
+        var results = await query.Skip((page - 1) * limit).Take(limit)
+                                 .ToListAsync();
+        int count = await query.CountAsync();
+
+        return new Pagination<T>(results, count, page, limit);
     }
 }

@@ -1,30 +1,29 @@
 using Domain;
 using Application.Core.Query;
 
-namespace Application.Comments.Query
+namespace Application.Comments.Query;
+
+public static class QueryExtension
 {
-    public static class QueryExtension
+    public static IQueryable<Comment> GetFilteredQuery
+        (this IQueryable<Comment> query, QueryParameter param)
     {
-        public static IQueryable<Comment> GetFilteredQuery
-            (this IQueryable<Comment> query, QueryParameter param)
+        // qの絞り込み
+        QueryMethods.ForEachKeyword(param.q, q =>
         {
-            // qの絞り込み
-            QueryMethods.ForEachKeyword(param.q, q =>
-            {
-                query = query.Where(x =>
-                    x.Content.ToLower().Contains(q)
-                );
-            });
+            query = query.Where(x =>
+                x.Content.ToLower().Contains(q)
+            );
+        });
 
-            // Contentの絞り込み
-            QueryMethods.ForEachKeyword(param.Content, content =>
-            {
-                query = query.Where(x =>
-                    x.Content.ToLower().Contains(content)
-                );
-            });
+        // Contentの絞り込み
+        QueryMethods.ForEachKeyword(param.Content, content =>
+        {
+            query = query.Where(x =>
+                x.Content.ToLower().Contains(content)
+            );
+        });
 
-            return query;
-        }
+        return query;
     }
 }

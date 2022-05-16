@@ -4,36 +4,35 @@ using Persistence;
 using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 
-namespace Application.Comments
+namespace Application.Comments;
+
+public class Details
 {
-    public class Details
+    public class Query : IRequest<CommentDTO>
     {
-        public class Query : IRequest<CommentDTO>
+        public Guid Id { get; set; }
+    }
+
+    public class Handler : IRequestHandler<Query, CommentDTO>
+    {
+        private readonly DataContext _context;
+        private readonly IMapper _mapper;
+
+        public Handler(DataContext context, IMapper mapper)
         {
-            public Guid Id { get; set; }
+            _context = context;
+            _mapper = mapper;
         }
 
-        public class Handler : IRequestHandler<Query, CommentDTO>
+        public async Task<CommentDTO> Handle(Query request, CancellationToken cancellationToken)
         {
-            private readonly DataContext _context;
-            private readonly IMapper _mapper;
+            var result = await _mapper.ProjectTo<CommentDTO>(_context.Comments)
+                                      .FirstOrDefaultAsync(x => x.Id == request.Id);
 
-            public Handler(DataContext context, IMapper mapper)
-            {
-                _context = context;
-                _mapper = mapper;
-            }
+            if (result == null)
+                throw new NotFoundException();
 
-            public async Task<CommentDTO> Handle(Query request, CancellationToken cancellationToken)
-            {
-                var result = await _mapper.ProjectTo<CommentDTO>(_context.Comments)
-                                          .FirstOrDefaultAsync(x => x.Id == request.Id);
-
-                if (result == null)
-                    throw new NotFoundException();
-
-                return result;
-            }
+            return result;
         }
     }
 }
