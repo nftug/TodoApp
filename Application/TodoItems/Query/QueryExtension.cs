@@ -12,8 +12,8 @@ internal static class QueryExtension
         QueryMethods.ForEachKeyword(param.q, q =>
         {
             query = query.Where(x =>
-                x.Name.ToLower().Contains(q) |
-                x.Comments.Any(x => x.Content.ToLower().Contains(q)) |
+                x.Name.ToLower().Contains(q) ||
+                x.Comments.Any(x => x.Content.ToLower().Contains(q)) ||
                 x.CreatedBy!.UserName.ToLower().Contains(q)
             );
         });
