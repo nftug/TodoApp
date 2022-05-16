@@ -9,32 +9,28 @@ namespace API.Extensions;
 
 public class TokenService
 {
-    private readonly IConfiguration _config;
+    private readonly JwtSettings _settings;
 
-    public TokenService(IConfiguration config)
+    public TokenService(JwtSettings settings)
     {
-        _config = config;
+        _settings = settings;
     }
 
     public string CreateToken(ApplicationUser user)
     {
-        var settings = new JwtSettings();
-        var section = _config.GetSection(nameof(JwtSettings));
-        section.Bind(settings);
-
         var claims = new List<Claim> {
                 new Claim(ClaimTypes.Name, user.UserName),
                 new Claim(ClaimTypes.NameIdentifier, user.Id),
                 new Claim(ClaimTypes.Email, user.Email)
             };
 
-        var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(settings.Secret));
+        var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_settings.Secret));
         var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha512Signature);
 
         var tokenDescriptor = new SecurityTokenDescriptor
         {
             Subject = new ClaimsIdentity(claims),
-            Expires = DateTime.Now.AddDays(int.Parse(settings.JwtExpireDay)),
+            Expires = DateTime.Now.AddDays(int.Parse(_settings.JwtExpireDay)),
             SigningCredentials = creds
         };
 

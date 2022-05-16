@@ -9,6 +9,7 @@ using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using Application.Core;
+using Microsoft.Extensions.Options;
 
 namespace API.Extensions;
 
@@ -48,7 +49,6 @@ internal static class DependencyInjection
         services.AddAutoMapper(typeof(MappingProfiles).Assembly);
 
         services.AddJwtService(config);
-        services.AddScoped<TokenService>();
 
         return services;
     }
@@ -61,8 +61,11 @@ internal static class DependencyInjection
     {
         var jwtSettings = new JwtSettings();
         var section = config.GetSection(nameof(JwtSettings));
-
         section.Bind(jwtSettings);
+        services.Configure<JwtSettings>(section);
+        services.AddSingleton<JwtSettings>(opt =>
+            opt.GetRequiredService<IOptions<JwtSettings>>().Value
+        );
 
         var key = Encoding.ASCII.GetBytes(jwtSettings.Secret);
 
@@ -80,6 +83,8 @@ internal static class DependencyInjection
                         ValidateAudience = false,
                     };
                 });
+
+        services.AddScoped<TokenService>();
 
         return services;
     }
