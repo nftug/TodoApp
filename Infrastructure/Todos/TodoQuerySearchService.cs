@@ -1,11 +1,8 @@
 using Microsoft.EntityFrameworkCore;
-using Persistence.DataModels;
-using Persistence.Shared;
-using Pagination.EntityFrameworkCore.Extensions;
-using Domain.Todos;
-using Domain.Comments;
+using Infrastructure.DataModels;
+using Infrastructure.Shared;
 
-namespace Persistence.Todos;
+namespace Infrastructure.Todos;
 
 public class TodoQuerySearchService
 {

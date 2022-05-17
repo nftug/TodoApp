@@ -1,6 +1,6 @@
 using Domain;
 
-namespace Persistence.DataModels;
+namespace Infrastructure.DataModels;
 
 public class TodoDataModel
 {

@@ -1,4 +1,4 @@
-namespace Persistence.Shared;
+namespace Infrastructure.Shared;
 
 public abstract class PaginationQueryParameterBase
 {

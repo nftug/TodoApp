@@ -1,7 +1,7 @@
 using Pagination.EntityFrameworkCore.Extensions;
 using Microsoft.EntityFrameworkCore;
 
-namespace Persistence.Shared;
+namespace Infrastructure.Shared;
 
 internal static class QuerySearchManager
 {

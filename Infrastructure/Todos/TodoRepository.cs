@@ -2,9 +2,9 @@ using Domain.Todos;
 using Domain.Comments;
 using Domain.Shared;
 using Microsoft.EntityFrameworkCore;
-using Persistence.DataModels;
+using Infrastructure.DataModels;
 
-namespace Persistence.Todos;
+namespace Infrastructure.Todos;
 
 public class TodoRepository : ITodoRepository
 {
@@ -51,8 +51,6 @@ public class TodoRepository : ITodoRepository
             BeginDateTime = todo.BeginDateTime,
             DueDateTime = todo.DueDateTime,
             State = todo.State.Value,
-            // Comments = todo.Comments,
-            // TODO: Commentドメインを実装次第下の行を入れ替えること
             Comments = new List<CommentDataModel>(),
             CreatedDateTime = todo.CreatedDateTime,
             UpdatedDateTime = todo.UpdatedDateTime,
@@ -86,6 +84,16 @@ public class TodoRepository : ITodoRepository
 
     private Todo ToModel(TodoDataModel todoDataModel)
     {
+        var comments = todoDataModel.Comments.Select(x =>
+            Comment.CreateFromRepository(
+                x.Id,
+                new CommentContent(x.Content),
+                x.TodoId,
+                x.CreatedDateTime,
+                x.UpdatedDateTime,
+                x.OwnerUserId
+            )).ToList();
+
         return Todo.CreateFromRepository(
             id: todoDataModel.Id,
             title: new TodoTitle(todoDataModel.Title),
@@ -94,9 +102,7 @@ public class TodoRepository : ITodoRepository
             beginDateTime: todoDataModel.BeginDateTime,
             dueDateTime: todoDataModel.DueDateTime,
             state: new TodoState(todoDataModel.State),
-            // comments: todoDataModel.Comments,
-            // TODO: Commentドメインを実装次第下の行を入れ替えること
-            comments: new List<Comment>(),
+            comments: comments,
             createdDateTime: todoDataModel.CreatedDateTime,
             updatedDateTime: todoDataModel.UpdatedDateTime,
             ownerUserId: todoDataModel?.OwnerUserId

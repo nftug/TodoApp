@@ -1,14 +1,12 @@
 using MediatR;
-using Persistence;
-using Microsoft.EntityFrameworkCore;
-using AutoMapper;
-using Application.Core;
+using Domain.Comments;
+using Domain.Shared;
 
 namespace Application.Comments;
 
 public class Details
 {
-    public class Query : IRequest<Result<CommentDTO?>>
+    public class Query : IRequest<CommentResultDTO>
     {
         public Guid Id { get; set; }
         public string? UserId { get; set; }
@@ -20,23 +18,23 @@ public class Details
         }
     }
 
-    public class Handler : IRequestHandler<Query, Result<CommentDTO?>>
+    public class Handler : IRequestHandler<Query, CommentResultDTO>
     {
-        private readonly DataContext _context;
-        private readonly IMapper _mapper;
+        private readonly ICommentRepository _commentRepository;
 
-        public Handler(DataContext context, IMapper mapper)
+        public Handler(ICommentRepository commentRepository)
         {
-            _context = context;
-            _mapper = mapper;
+            _commentRepository = commentRepository;
         }
 
-        public async Task<Result<CommentDTO?>> Handle(Query request, CancellationToken cancellationToken)
+        public async Task<CommentResultDTO> Handle(Query request, CancellationToken cancellationToken)
         {
-            var result = await _mapper.ProjectTo<CommentDTO>(_context.Comments)
-                                      .FirstOrDefaultAsync(x => x.Id == request.Id);
+            var result = await _commentRepository.FindAsync(request.Id);
 
-            return Result<CommentDTO?>.Success(result);
+            if (result == null)
+                throw new NotFoundException();
+
+            return CommentResultDTO.CreateResultDTO(result);
         }
     }
 }

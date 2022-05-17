@@ -1,16 +1,17 @@
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
-using Persistence;
+using Infrastructure;
 using Application.Todos;
 using Domain.Todos;
-using Persistence.Todos;
+using Domain.Comments;
+using Infrastructure.Todos;
+using Infrastructure.Comments;
 using Domain;
 using API.Models;
 using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
-using Application.Core;
 using Microsoft.Extensions.Options;
 
 namespace API.Extensions;
@@ -48,15 +49,16 @@ internal static class DependencyInjection
         ).AddEntityFrameworkStores<DataContext>();
 
         services.AddMediatR(typeof(List.Query).Assembly);
-        services.AddAutoMapper(typeof(MappingProfiles).Assembly);
 
         services.AddJwtService(config);
 
         // repositories
         services.AddTransient<ITodoRepository, TodoRepository>();
+        services.AddTransient<ICommentRepository, CommentRepository>();
 
         // query services
         services.AddTransient<TodoQuerySearchService>();
+        services.AddTransient<CommentQuerySearchService>();
 
         return services;
     }

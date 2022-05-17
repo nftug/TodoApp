@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using Application.Todos;
-using Persistence.Todos;
+using Infrastructure.Todos;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 

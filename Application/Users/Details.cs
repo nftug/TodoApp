@@ -1,8 +1,7 @@
 using MediatR;
 using Application.Core;
-using Persistence;
+using Infrastructure;
 using Microsoft.EntityFrameworkCore;
-using AutoMapper;
 
 namespace Application.Users;
 
@@ -25,12 +24,10 @@ public class Details
         public class Handler : IRequestHandler<Query, Result<UserDTO.Public>>
         {
             private readonly DataContext _context;
-            private readonly IMapper _mapper;
 
-            public Handler(DataContext context, IMapper mapper)
+            public Handler(DataContext context)
             {
                 _context = context;
-                _mapper = mapper;
             }
 
             public async Task<Result<UserDTO.Public>> Handle(Query request, CancellationToken cancellationToken)
@@ -62,12 +59,10 @@ public class Details
         public class Handler : IRequestHandler<Query, Result<UserDTO.Me>>
         {
             private readonly DataContext _context;
-            private readonly IMapper _mapper;
 
-            public Handler(DataContext context, IMapper mapper)
+            public Handler(DataContext context)
             {
                 _context = context;
-                _mapper = mapper;
             }
 
             public async Task<Result<UserDTO.Me>> Handle(Query request, CancellationToken cancellationToken)

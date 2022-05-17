@@ -1,9 +1,5 @@
 using MediatR;
-using Microsoft.EntityFrameworkCore;
 using Domain.Todos;
-using Persistence;
-using AutoMapper;
-using Application.Core;
 
 namespace Application.Todos;
 

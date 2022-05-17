@@ -1,13 +1,12 @@
 using MediatR;
-using Persistence;
-using Microsoft.EntityFrameworkCore;
-using Application.Core;
+using Domain.Comments;
+using Domain.Shared;
 
 namespace Application.Comments;
 
 public class Delete
 {
-    public class Command : IRequest<Result<Unit>>
+    public class Command : IRequest<Unit>
     {
         public Guid Id { get; set; }
         public string UserId { get; set; }
@@ -19,26 +18,27 @@ public class Delete
         }
     }
 
-    public class Handler : IRequestHandler<Command, Result<Unit>>
+    public class Handler : IRequestHandler<Command, Unit>
     {
-        private readonly DataContext _context;
+        private readonly ICommentRepository _commentRepository;
 
-        public Handler(DataContext context)
+        public Handler(ICommentRepository commentRepository)
         {
-            _context = context;
+            _commentRepository = commentRepository;
         }
 
-        public async Task<Result<Unit>> Handle(Command request, CancellationToken cancellationToken)
+        public async Task<Unit> Handle(Command request, CancellationToken cancellationToken)
         {
-            var Comment = await _context.Comments.FirstOrDefaultAsync(x => x.Id == request.Id);
+            var CommentItem = await _commentRepository.FindAsync(request.Id);
 
-            if (Comment == null)
-                return Result<Unit>.NotFound();
+            if (CommentItem == null)
+                throw new NotFoundException();
+            if (CommentItem.OwnerUserId != request.UserId)
+                throw new BadRequestException();
 
-            _context.Comments.Remove(Comment);
-            await _context.SaveChangesAsync();
+            await _commentRepository.RemoveAsync(request.Id);
 
-            return Result<Unit>.Success(Unit.Value);
+            return Unit.Value;
         }
     }
 }

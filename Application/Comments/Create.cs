@@ -1,56 +1,51 @@
 using MediatR;
-using Microsoft.EntityFrameworkCore;
-using Domain;
-using Persistence;
-using AutoMapper;
-using Application.Core;
-using Persistence.Todos;
-using Persistence.DataModels;
+using Domain.Comments;
+using Domain.Todos;
+using Domain.Shared;
 
 namespace Application.Comments;
 
 public class Create
 {
-    public class Command : IRequest<Result<CommentDTO?>>
+    public class Command : IRequest<CommentResultDTO>
     {
-        public CommentDTO CommentDTO { get; set; }
+        public CommentCommandDTO CommentCommandDTO { get; set; }
         public string UserId { get; set; }
 
-        public Command(CommentDTO commentDTO, string usedId)
+        public Command(CommentCommandDTO CommentItemDTO, string usedId)
         {
-            CommentDTO = commentDTO;
+            CommentCommandDTO = CommentItemDTO;
             UserId = usedId;
         }
     }
 
-    public class Handler : IRequestHandler<Command, Result<CommentDTO?>>
+    public class Handler : IRequestHandler<Command, CommentResultDTO>
     {
-        private readonly DataContext _context;
-        private readonly IMapper _mapper;
+        private readonly ICommentRepository _commentRepository;
+        private readonly ITodoRepository _todoRepository;
 
-        public Handler(DataContext context, IMapper mapper)
+        public Handler
+            (ICommentRepository commentRepository, ITodoRepository todoRepository)
         {
-            _context = context;
-            _mapper = mapper;
+            _commentRepository = commentRepository;
+            _todoRepository = todoRepository;
         }
 
-        public async Task<Result<CommentDTO?>> Handle(Command request, CancellationToken cancellationToken)
+        public async Task<CommentResultDTO> Handle(Command request, CancellationToken cancellationToken)
         {
-            var item = _mapper.Map<CommentDataModel>(request.CommentDTO);
+            // 外部キーの存在チェック
+            var todoDataModel = await _todoRepository.FindAsync(request.CommentCommandDTO.TodoId);
+            if (todoDataModel == null)
+                throw new DomainException("todoId", "Todoアイテムが存在しません");
 
-            // 外部キーの存在判定
-            if (await _context.Todos.FindAsync(item.TodoId) == null)
-                return Result<CommentDTO?>.Failure("todoId", "Incorrect todoItemId");
+            var comment = Comment.CreateNew(
+                content: new CommentContent(request.CommentCommandDTO.Content),
+                todoId: request.CommentCommandDTO.TodoId,
+                ownerUserId: request.UserId
+            );
 
-            item.CreatedAt = DateTime.Now;
-
-            _context.Comments.Add(item);
-            await _context.SaveChangesAsync();
-
-            var result = await _mapper.ProjectTo<CommentDTO>(_context.Comments)
-                                      .FirstOrDefaultAsync(x => x.Id == item.Id);
-
-            return Result<CommentDTO?>.Success(result);
+            var result = await _commentRepository.CreateAsync(comment);
+            return CommentResultDTO.CreateResultDTO(result);
         }
     }
 }

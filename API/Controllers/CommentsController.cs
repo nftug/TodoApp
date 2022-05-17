@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using Application.Comments;
-using Application.Comments.Query;
+using Infrastructure.Comments;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 
@@ -11,40 +11,40 @@ namespace API.Controllers;
 [ApiController]
 public class CommentsController : ApiControllerBase
 {
-    // GET: api/Comments
+    // GET: api/commentItems
     [HttpGet]
-    public async Task<IActionResult> GetComments([FromQuery] QueryParameter param)
+    public async Task<IActionResult> GetcommentItems([FromQuery] CommentQueryParameter param)
     {
-        return HandleResult(await Mediator.Send(new List.Query(param, _userId)));
+        return await HandleResult(() => Mediator.Send(new List.Query(param, _userId)));
     }
 
-    // GET: api/Comments/5
+    // GET: api/commentItems/5
     [HttpGet("{id}")]
-    public async Task<IActionResult> GetComment(Guid id)
+    public async Task<IActionResult> GetcommentItem(Guid id)
     {
-        return HandleResult(await Mediator.Send(new Details.Query(id, _userId)));
+        return await HandleResult(() => Mediator.Send(new Details.Query(id, _userId)));
     }
 
-    // PUT: api/Comments/5
+    // PUT: api/commentItems/5
     // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
     [HttpPut("{id}")]
-    public async Task<IActionResult> PutComment(Guid id, CommentDTO CommentDTO)
+    public async Task<IActionResult> PutcommentItem(Guid id, CommentCommandDTO commentCommandDTO)
     {
-        return HandleResult(await Mediator.Send(new Edit.Command(id, CommentDTO, _userId)));
+        return await HandleResult(() => Mediator.Send(new Edit.Command(id, commentCommandDTO, _userId)));
     }
 
-    // POST: api/Comments
+    // POST: api/commentItems
     // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
     [HttpPost]
-    public async Task<IActionResult> PostComment(CommentDTO CommentDTO)
+    public async Task<IActionResult> PostcommentItem(CommentCommandDTO commentCommandDTO)
     {
-        return HandleResult(await Mediator.Send(new Create.Command(CommentDTO, _userId)));
+        return await HandleResult(() => Mediator.Send(new Create.Command(commentCommandDTO, _userId)));
     }
 
-    // DELETE: api/Comments/5
+    // DELETE: api/commentItems/5
     [HttpDelete("{id}")]
-    public async Task<IActionResult> DeleteComment(Guid id)
+    public async Task<IActionResult> DeletecommentItem(Guid id)
     {
-        return HandleResult(await Mediator.Send(new Delete.Command(id, _userId)));
+        return await HandleResult(() => Mediator.Send(new Delete.Command(id, _userId)));
     }
 }

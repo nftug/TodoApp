@@ -1,8 +1,4 @@
 using MediatR;
-using Microsoft.EntityFrameworkCore;
-using Application.Core;
-using Persistence;
-using AutoMapper;
 using Domain.Todos;
 using Domain.Shared;
 

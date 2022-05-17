@@ -1,6 +1,6 @@
-using Persistence.Shared;
+using Infrastructure.Shared;
 
-namespace Persistence.Todos;
+namespace Infrastructure.Todos;
 
 public class TodoQueryParameter : PaginationQueryParameterBase
 {

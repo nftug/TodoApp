@@ -1,55 +1,52 @@
 using MediatR;
-using Microsoft.EntityFrameworkCore;
-using Application.Core;
-using Persistence;
-using AutoMapper;
+using Domain.Comments;
+using Domain.Shared;
 
 namespace Application.Comments;
 
 public class Edit
 {
-    public class Command : IRequest<Result<CommentDTO>>
+    public class Command : IRequest<CommentResultDTO>
     {
-        public CommentDTO CommentDTO { get; set; }
+        public CommentCommandDTO CommentCommandDTO { get; set; }
         public Guid Id { get; set; }
         public string UserId { get; set; }
 
-        public Command(Guid id, CommentDTO commentDTO, string userId)
+        public Command(Guid id, CommentCommandDTO CommentItemDTO, string userId)
         {
-            CommentDTO = commentDTO;
+            CommentCommandDTO = CommentItemDTO;
             Id = id;
             UserId = userId;
         }
     }
 
-    public class Handler : IRequestHandler<Command, Result<CommentDTO>>
+    public class Handler : IRequestHandler<Command, CommentResultDTO>
     {
-        private readonly DataContext _context;
-        private readonly IMapper _mapper;
+        private readonly ICommentRepository _commentRepository;
 
-        public Handler(DataContext context, IMapper mapper)
+        public Handler(ICommentRepository commentRepository)
         {
-            _context = context;
-            _mapper = mapper;
+            _commentRepository = commentRepository;
         }
 
-        public async Task<Result<CommentDTO>> Handle(Command request, CancellationToken cancellationToken)
+        public async Task<CommentResultDTO> Handle(Command request, CancellationToken cancellationToken)
         {
-            var inputItem = request.CommentDTO;
+            if (request.Id != request.CommentCommandDTO.Id)
+                throw new DomainException("id", "IDが正しくありません");
 
-            if (request.Id != inputItem?.Id)
-                return Result<CommentDTO>.Failure("id", "Incorrect id");
+            var Comment = await _commentRepository.FindAsync(request.Id);
+            if (Comment == null)
+                throw new NotFoundException();
+            if (Comment.OwnerUserId != request.UserId)
+                throw new BadRequestException();
 
-            var item = await _context.Comments.FirstOrDefaultAsync(x => x.Id == request.Id);
-            if (item == null)
-                return Result<CommentDTO>.NotFound();
+            Comment.Edit(
+                content: new CommentContent(request.CommentCommandDTO.Content)
+            );
 
-            _mapper.Map(inputItem, item);
+            var result = await _commentRepository.UpdateAsync(Comment);
 
-            await _context.SaveChangesAsync();
-
-            var result = _mapper.Map<CommentDTO>(item);
-            return Result<CommentDTO>.Success(result);
+            return CommentResultDTO.CreateResultDTO(result);
         }
     }
 }

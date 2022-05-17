@@ -1,6 +1,5 @@
-using Domain.Comments;
 using Domain.Todos;
-using Domain.Shared;
+using Application.Comments;
 
 namespace Application.Todos;
 
@@ -12,7 +11,7 @@ public class TodoResultDTO
     public DateTime? BeginDateTime { get; set; }
     public DateTime? DueDateTime { get; set; }
     public string State { get; set; }
-    public ICollection<Comment> Comments { get; set; } = null!;
+    public ICollection<CommentResultDTO> Comments { get; set; } = null!;
     public DateTime CreatedDateTime { get; set; }
     public DateTime UpdatedDateTime { get; set; }
     public string? OwnerUserId { get; set; }
@@ -24,7 +23,7 @@ public class TodoResultDTO
         DateTime? beginDateTime,
         DateTime? dueDateTime,
         string state,
-        ICollection<Comment> comments,
+        ICollection<CommentResultDTO> comments,
         DateTime createdDateTime,
         DateTime updatedDateTime,
         string? ownerUserId
@@ -44,6 +43,10 @@ public class TodoResultDTO
 
     public static TodoResultDTO CreateResultDTO(Todo todo)
     {
+        var comments = todo.Comments.Select(x =>
+            CommentResultDTO.CreateResultDTO(x)
+        ).ToList();
+
         return new TodoResultDTO(
             id: todo.Id,
             title: todo.Title.Value,
@@ -51,7 +54,7 @@ public class TodoResultDTO
             beginDateTime: todo.BeginDateTime,
             dueDateTime: todo.DueDateTime,
             state: todo.State.DisplayValue,
-            comments: todo.Comments,
+            comments: comments,
             createdDateTime: todo.CreatedDateTime,
             updatedDateTime: todo.UpdatedDateTime,
             ownerUserId: todo.OwnerUserId

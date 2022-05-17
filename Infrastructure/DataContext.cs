@@ -1,9 +1,9 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Domain;
-using Persistence.DataModels;
+using Infrastructure.DataModels;
 
-namespace Persistence;
+namespace Infrastructure;
 
 public class DataContext : IdentityDbContext<ApplicationUser>
 {
@@ -26,9 +26,9 @@ public class DataContext : IdentityDbContext<ApplicationUser>
                     .OnDelete(DeleteBehavior.SetNull);
 
         modelBuilder.Entity<CommentDataModel>()
-                    .HasOne(comment => comment.Todo)
-                    .WithMany(todo => todo.Comments)
-                    .HasForeignKey(comment => comment.TodoId)
+                    .HasOne(commentDataModel => commentDataModel.Todo)
+                    .WithMany(todoDataModel => todoDataModel.Comments)
+                    .HasForeignKey(commentDataModel => commentDataModel.TodoId)
                     .OnDelete(DeleteBehavior.Cascade);
     }
 }

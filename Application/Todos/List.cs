@@ -1,10 +1,7 @@
 using MediatR;
-using Persistence;
 using Pagination.EntityFrameworkCore.Extensions;
-using Application.Core;
-using AutoMapper;
 using Domain.Todos;
-using Persistence.Todos;
+using Infrastructure.Todos;
 using Domain.Comments;
 using Microsoft.EntityFrameworkCore;
 
@@ -53,9 +50,15 @@ public class List
                         x.BeginDateTime,
                         x.DueDateTime,
                         new TodoState(x.State),
-                        // x.Comments,
-                        // TODO: Commentドメインを実装次第下の行を入れ替えること
-                        new List<Comment>(),
+                        x.Comments.Select(x =>
+                            Comment.CreateFromRepository(
+                                x.Id,
+                                new CommentContent(x.Content),
+                                x.TodoId,
+                                x.CreatedDateTime,
+                                x.UpdatedDateTime,
+                                x.OwnerUserId
+                            )).ToList(),
                         x.CreatedDateTime,
                         x.UpdatedDateTime,
                         x.OwnerUserId

@@ -15,8 +15,7 @@ public abstract class ApiControllerBase : ControllerBase
 
     protected ActionResult HandleResult<T>(Result<T> result)
     {
-        // NOTE: 例外を補足するために、引数をコールバック関数でとること
-
+        // TODO: あとで消去
         if (result.IsNotFound) return NotFound();
         if (result.IsSuccess && result.Value == null)
             return NotFound();
@@ -35,8 +34,6 @@ public abstract class ApiControllerBase : ControllerBase
 
     protected async Task<IActionResult> HandleResult<T>(Func<Task<T>> cb)
     {
-        // NOTE: 例外を補足するために、引数をコールバック関数でとること
-
         try
         {
             var result = await cb();
@@ -57,9 +54,9 @@ public abstract class ApiControllerBase : ControllerBase
             ModelState.AddModelError(exc.Field, exc.Message);
             return ValidationProblem();
         }
-        catch
+        catch (Exception exc)
         {
-            return BadRequest();
+            return BadRequest(exc.Message);
         }
     }
 }

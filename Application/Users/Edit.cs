@@ -1,8 +1,7 @@
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Application.Core;
-using Persistence;
-using AutoMapper;
+using Infrastructure;
 
 namespace Application.Users;
 
@@ -23,12 +22,10 @@ public class Edit
     public class Handler : IRequestHandler<Command, Result<UserDTO.Me>>
     {
         private readonly DataContext _context;
-        private readonly IMapper _mapper;
 
-        public Handler(DataContext context, IMapper mapper)
+        public Handler(DataContext context)
         {
             _context = context;
-            _mapper = mapper;
         }
 
         public async Task<Result<UserDTO.Me>> Handle(Command request, CancellationToken cancellationToken)

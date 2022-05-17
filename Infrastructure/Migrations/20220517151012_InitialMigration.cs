@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
-namespace Persistence.Migrations
+namespace Infrastructure.Migrations
 {
     public partial class InitialMigration : Migration
     {
@@ -185,12 +185,19 @@ namespace Persistence.Migrations
                 {
                     Id = table.Column<Guid>(type: "TEXT", nullable: false),
                     Content = table.Column<string>(type: "TEXT", nullable: false),
-                    CreatedAt = table.Column<DateTime>(type: "TEXT", nullable: true),
-                    TodoId = table.Column<Guid>(type: "TEXT", nullable: false)
+                    TodoId = table.Column<Guid>(type: "TEXT", nullable: false),
+                    CreatedDateTime = table.Column<DateTime>(type: "TEXT", nullable: false),
+                    UpdatedDateTime = table.Column<DateTime>(type: "TEXT", nullable: false),
+                    OwnerUserId = table.Column<string>(type: "TEXT", nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Comments", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Comments_AspNetUsers_OwnerUserId",
+                        column: x => x.OwnerUserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id");
                     table.ForeignKey(
                         name: "FK_Comments_Todos_TodoId",
                         column: x => x.TodoId,
@@ -235,6 +242,11 @@ namespace Persistence.Migrations
                 table: "AspNetUsers",
                 column: "NormalizedUserName",
                 unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Comments_OwnerUserId",
+                table: "Comments",
+                column: "OwnerUserId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Comments_TodoId",
