@@ -29,11 +29,11 @@ public class Delete
 
         public async Task<Unit> Handle(Command request, CancellationToken cancellationToken)
         {
-            var CommentItem = await _commentRepository.FindAsync(request.Id);
+            var comment = await _commentRepository.FindAsync(request.Id);
 
-            if (CommentItem == null)
+            if (comment == null)
                 throw new NotFoundException();
-            if (CommentItem.OwnerUserId != request.UserId)
+            if (comment.OwnerUserId != request.UserId)
                 throw new BadRequestException();
 
             await _commentRepository.RemoveAsync(request.Id);

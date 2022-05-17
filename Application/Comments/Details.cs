@@ -29,12 +29,12 @@ public class Details
 
         public async Task<CommentResultDTO> Handle(Query request, CancellationToken cancellationToken)
         {
-            var result = await _commentRepository.FindAsync(request.Id);
+            var comment = await _commentRepository.FindAsync(request.Id);
 
-            if (result == null)
+            if (comment == null)
                 throw new NotFoundException();
 
-            return CommentResultDTO.CreateResultDTO(result);
+            return CommentResultDTO.CreateResultDTO(comment);
         }
     }
 }

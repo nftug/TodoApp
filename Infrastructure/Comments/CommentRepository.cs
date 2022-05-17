@@ -14,84 +14,84 @@ public class CommentRepository : ICommentRepository
         _context = context;
     }
 
-    public async Task<Comment> CreateAsync(Comment Comment)
+    public async Task<Comment> CreateAsync(Comment comment)
     {
-        var CommentDataModel = ToDataModel(Comment);
-        await _context.Comments.AddAsync(CommentDataModel);
+        var commentDataModel = ToDataModel(comment);
+        await _context.Comments.AddAsync(commentDataModel);
         await _context.SaveChangesAsync();
 
-        return ToModel(CommentDataModel);
+        return ToModel(commentDataModel);
     }
 
-    public async Task<Comment> UpdateAsync(Comment Comment)
+    public async Task<Comment> UpdateAsync(Comment comment)
     {
         var foundCommentDataModel = await _context.Comments
                                                .FirstOrDefaultAsync(
-                                                   x => x.Id == Comment.Id
+                                                   x => x.Id == comment.Id
                                                );
         if (foundCommentDataModel == null)
             throw new NotFoundException();
 
-        var CommentDataModel = Transfer(Comment, foundCommentDataModel);
+        var commentDataModel = Transfer(comment, foundCommentDataModel);
 
-        _context.Comments.Update(CommentDataModel);
+        _context.Comments.Update(commentDataModel);
         await _context.SaveChangesAsync();
 
-        return ToModel(CommentDataModel);
+        return ToModel(commentDataModel);
     }
 
-    private CommentDataModel ToDataModel(Comment Comment)
+    private CommentDataModel ToDataModel(Comment comment)
     {
         return new CommentDataModel
         {
-            Content = Comment.Content.Value,
-            TodoId = Comment.TodoId,
-            CreatedDateTime = Comment.CreatedDateTime,
-            UpdatedDateTime = Comment.UpdatedDateTime,
-            OwnerUserId = Comment.OwnerUserId
+            Content = comment.Content.Value,
+            TodoId = comment.TodoId,
+            CreatedDateTime = comment.CreatedDateTime,
+            UpdatedDateTime = comment.UpdatedDateTime,
+            OwnerUserId = comment.OwnerUserId
         };
     }
 
-    private CommentDataModel Transfer(Comment Comment, CommentDataModel CommentDataModel)
+    private CommentDataModel Transfer(Comment comment, CommentDataModel CommentDataModel)
     {
-        CommentDataModel.Content = Comment.Content.Value;
-        CommentDataModel.TodoId = Comment.TodoId;
-        CommentDataModel.CreatedDateTime = Comment.CreatedDateTime;
-        CommentDataModel.UpdatedDateTime = Comment.UpdatedDateTime;
-        CommentDataModel.OwnerUserId = Comment.OwnerUserId;
+        CommentDataModel.Content = comment.Content.Value;
+        CommentDataModel.TodoId = comment.TodoId;
+        CommentDataModel.CreatedDateTime = comment.CreatedDateTime;
+        CommentDataModel.UpdatedDateTime = comment.UpdatedDateTime;
+        CommentDataModel.OwnerUserId = comment.OwnerUserId;
 
         return CommentDataModel;
     }
 
     public async Task<Comment?> FindAsync(Guid id)
     {
-        var CommentDataModel = await _context.Comments
+        var commentDataModel = await _context.Comments
                                           .FirstOrDefaultAsync(
                                               x => x.Id == id
                                           );
-        return CommentDataModel != null ? ToModel(CommentDataModel) : null;
+        return commentDataModel != null ? ToModel(commentDataModel) : null;
     }
 
-    private Comment ToModel(CommentDataModel CommentDataModel)
+    private Comment ToModel(CommentDataModel commentDataModel)
     {
         return Comment.CreateFromRepository(
-            id: CommentDataModel.Id,
-            content: new CommentContent(CommentDataModel.Content),
-            todoId: CommentDataModel.TodoId,
-            createdDateTime: CommentDataModel.CreatedDateTime,
-            updatedDateTime: CommentDataModel.UpdatedDateTime,
-            ownerUserId: CommentDataModel?.OwnerUserId
+            id: commentDataModel.Id,
+            content: new CommentContent(commentDataModel.Content),
+            todoId: commentDataModel.TodoId,
+            createdDateTime: commentDataModel.CreatedDateTime,
+            updatedDateTime: commentDataModel.UpdatedDateTime,
+            ownerUserId: commentDataModel?.OwnerUserId
         );
     }
 
     public async Task RemoveAsync(Guid id)
     {
-        var CommentDataModel = await _context.Comments.FindAsync(id);
+        var commentDataModel = await _context.Comments.FindAsync(id);
 
-        if (CommentDataModel == null)
+        if (commentDataModel == null)
             throw new NotFoundException();
 
-        _context.Comments.Remove(CommentDataModel);
+        _context.Comments.Remove(commentDataModel);
         await _context.SaveChangesAsync();
     }
 }

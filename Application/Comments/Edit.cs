@@ -34,17 +34,17 @@ public class Edit
             if (request.Id != request.CommentCommandDTO.Id)
                 throw new DomainException("id", "IDが正しくありません");
 
-            var Comment = await _commentRepository.FindAsync(request.Id);
-            if (Comment == null)
+            var comment = await _commentRepository.FindAsync(request.Id);
+            if (comment == null)
                 throw new NotFoundException();
-            if (Comment.OwnerUserId != request.UserId)
+            if (comment.OwnerUserId != request.UserId)
                 throw new BadRequestException();
 
-            Comment.Edit(
+            comment.Edit(
                 content: new CommentContent(request.CommentCommandDTO.Content)
             );
 
-            var result = await _commentRepository.UpdateAsync(Comment);
+            var result = await _commentRepository.UpdateAsync(comment);
 
             return CommentResultDTO.CreateResultDTO(result);
         }

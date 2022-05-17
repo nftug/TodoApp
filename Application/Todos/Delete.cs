@@ -29,11 +29,11 @@ public class Delete
 
         public async Task<Unit> Handle(Command request, CancellationToken cancellationToken)
         {
-            var todoItem = await _todoRepository.FindAsync(request.Id);
+            var todo = await _todoRepository.FindAsync(request.Id);
 
-            if (todoItem == null)
+            if (todo == null)
                 throw new NotFoundException();
-            if (todoItem.OwnerUserId != request.UserId)
+            if (todo.OwnerUserId != request.UserId)
                 throw new BadRequestException();
 
             await _todoRepository.RemoveAsync(request.Id);

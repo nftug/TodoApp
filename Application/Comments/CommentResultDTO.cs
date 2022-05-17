@@ -28,15 +28,15 @@ public class CommentResultDTO
         OwnerUserId = ownerUserId;
     }
 
-    public static CommentResultDTO CreateResultDTO(Comment Comment)
+    public static CommentResultDTO CreateResultDTO(Comment comment)
     {
         return new CommentResultDTO(
-            id: Comment.Id,
-            content: Comment.Content.Value,
-            todoId: Comment.TodoId,
-            createdDateTime: Comment.CreatedDateTime,
-            updatedDateTime: Comment.UpdatedDateTime,
-            ownerUserId: Comment.OwnerUserId
+            id: comment.Id,
+            content: comment.Content.Value,
+            todoId: comment.TodoId,
+            createdDateTime: comment.CreatedDateTime,
+            updatedDateTime: comment.UpdatedDateTime,
+            ownerUserId: comment.OwnerUserId
         );
     }
 }

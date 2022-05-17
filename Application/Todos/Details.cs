@@ -29,12 +29,12 @@ public class Details
 
         public async Task<TodoResultDTO> Handle(Query request, CancellationToken cancellationToken)
         {
-            var result = await _todoRepository.FindAsync(request.Id);
+            var todo = await _todoRepository.FindAsync(request.Id);
 
-            if (result == null)
+            if (todo == null)
                 throw new NotFoundException();
 
-            return TodoResultDTO.CreateResultDTO(result);
+            return TodoResultDTO.CreateResultDTO(todo);
         }
     }
 }
