@@ -1,6 +1,5 @@
 using MediatR;
 using Pagination.EntityFrameworkCore.Extensions;
-using Domain.Comments;
 using Infrastructure.Comments;
 using Microsoft.EntityFrameworkCore;
 
@@ -41,15 +40,15 @@ public class List
             var paginatedQuery = filteredQuery.Skip((page - 1) * limit).Take(limit);
 
             var results = await paginatedQuery.Select(
-                x => CommentResultDTO.CreateResultDTO(Comment.CreateFromRepository(
-                        x.Id,
-                        new CommentContent(x.Content),
-                        x.TodoId,
-                        x.CreatedDateTime,
-                        x.UpdatedDateTime,
-                        x.OwnerUserId
-                    ))
-                ).ToListAsync();
+                x => new CommentResultDTO(
+                    x.Id,
+                    x.Content,
+                    x.TodoId,
+                    x.CreatedDateTime,
+                    x.UpdatedDateTime,
+                    x.OwnerUserId
+                )
+            ).ToListAsync();
 
             var count = await filteredQuery.CountAsync();
 

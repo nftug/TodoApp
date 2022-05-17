@@ -1,8 +1,7 @@
 using MediatR;
 using Pagination.EntityFrameworkCore.Extensions;
-using Domain.Todos;
 using Infrastructure.Todos;
-using Domain.Comments;
+using Application.Comments;
 using Microsoft.EntityFrameworkCore;
 
 namespace Application.Todos;
@@ -42,28 +41,28 @@ public class List
             var paginatedQuery = filteredQuery.Skip((page - 1) * limit).Take(limit);
 
             var results = await paginatedQuery.Select(
-                x => TodoResultDTO.CreateResultDTO(Todo.CreateFromRepository(
-                        x.Id,
-                        new TodoTitle(x.Title),
-                        !string.IsNullOrWhiteSpace(x.Description)
-                            ? new TodoDescription(x.Description) : null,
-                        x.BeginDateTime,
-                        x.DueDateTime,
-                        new TodoState(x.State),
-                        x.Comments.Select(x =>
-                            Comment.CreateFromRepository(
-                                x.Id,
-                                new CommentContent(x.Content),
-                                x.TodoId,
-                                x.CreatedDateTime,
-                                x.UpdatedDateTime,
-                                x.OwnerUserId
-                            )).ToList(),
-                        x.CreatedDateTime,
-                        x.UpdatedDateTime,
-                        x.OwnerUserId
-                    ))
-                ).ToListAsync();
+                x => new TodoResultDTO(
+                    x.Id,
+                    x.Title,
+                    x.Description,
+                    x.BeginDateTime,
+                    x.DueDateTime,
+                    x.State,
+                    x.Comments.Select(
+                        _ => new CommentResultDTO(
+                                _.Id,
+                                _.Content,
+                                _.TodoId,
+                                _.CreatedDateTime,
+                                _.UpdatedDateTime,
+                                _.OwnerUserId
+                            )
+                        ).ToList(),
+                    x.CreatedDateTime,
+                    x.UpdatedDateTime,
+                    x.OwnerUserId
+                )
+            ).ToListAsync();
 
             var count = await filteredQuery.CountAsync();
 

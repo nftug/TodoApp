@@ -10,7 +10,7 @@ public class TodoResultDTO
     public string? Description { get; set; }
     public DateTime? BeginDateTime { get; set; }
     public DateTime? DueDateTime { get; set; }
-    public string State { get; set; }
+    public int State { get; set; }
     public ICollection<CommentResultDTO> Comments { get; set; } = null!;
     public DateTime CreatedDateTime { get; set; }
     public DateTime UpdatedDateTime { get; set; }
@@ -22,7 +22,7 @@ public class TodoResultDTO
         string? description,
         DateTime? beginDateTime,
         DateTime? dueDateTime,
-        string state,
+        int state,
         ICollection<CommentResultDTO> comments,
         DateTime createdDateTime,
         DateTime updatedDateTime,
@@ -53,7 +53,7 @@ public class TodoResultDTO
             description: todo.Description?.Value,
             beginDateTime: todo.BeginDateTime,
             dueDateTime: todo.DueDateTime,
-            state: todo.State.DisplayValue,
+            state: todo.State.Value,
             comments: comments,
             createdDateTime: todo.CreatedDateTime,
             updatedDateTime: todo.UpdatedDateTime,
