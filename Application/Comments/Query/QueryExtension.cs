@@ -1,12 +1,13 @@
 using Domain;
 using Application.Core.Query;
+using Persistence.DataModels;
 
 namespace Application.Comments.Query;
 
 internal static class QueryExtension
 {
-    internal static IQueryable<Comment> GetFilteredQuery
-        (this IQueryable<Comment> query, QueryParameter param)
+    internal static IQueryable<CommentDataModel> GetFilteredQuery
+        (this IQueryable<CommentDataModel> query, QueryParameter param)
     {
         // qの絞り込み
         QueryMethods.ForEachKeyword(param.q, q =>

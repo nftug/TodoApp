@@ -2,7 +2,9 @@ using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 using Persistence;
-using Application.TodoItems;
+using Application.Todos;
+using Domain.Todos;
+using Persistence.Todos;
 using Domain;
 using API.Models;
 using System.Text;
@@ -49,6 +51,12 @@ internal static class DependencyInjection
         services.AddAutoMapper(typeof(MappingProfiles).Assembly);
 
         services.AddJwtService(config);
+
+        // repositories
+        services.AddTransient<ITodoRepository, TodoRepository>();
+
+        // query services
+        services.AddTransient<TodoQuerySearchService>();
 
         return services;
     }

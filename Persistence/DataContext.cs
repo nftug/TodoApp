@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Domain;
+using Persistence.DataModels;
 
 namespace Persistence;
 
@@ -11,23 +12,23 @@ public class DataContext : IdentityDbContext<ApplicationUser>
     {
     }
 
-    public DbSet<TodoItem> TodoItems { get; set; } = null!;
-    public DbSet<Comment> Comments { get; set; } = null!;
+    public DbSet<TodoDataModel> Todos { get; set; } = null!;
+    public DbSet<CommentDataModel> Comments { get; set; } = null!;
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
 
-        modelBuilder.Entity<TodoItem>()
-                    .HasOne(todoItem => todoItem.CreatedBy)
+        modelBuilder.Entity<TodoDataModel>()
+                    .HasOne(todoDataModel => todoDataModel.OwnerUser)
                     .WithMany()
-                    .HasForeignKey(todoItem => todoItem.CreatedById)
+                    .HasForeignKey(todoDataModel => todoDataModel.OwnerUserId)
                     .OnDelete(DeleteBehavior.SetNull);
 
-        modelBuilder.Entity<Comment>()
-                    .HasOne(comment => comment.TodoItem)
-                    .WithMany(todoItem => todoItem.Comments)
-                    .HasForeignKey(comment => comment.TodoItemId)
+        modelBuilder.Entity<CommentDataModel>()
+                    .HasOne(comment => comment.Todo)
+                    .WithMany(todo => todo.Comments)
+                    .HasForeignKey(comment => comment.TodoId)
                     .OnDelete(DeleteBehavior.Cascade);
     }
 }

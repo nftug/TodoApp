@@ -3,6 +3,8 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Application.Core.Pagination;
 
+// TODO: あとで消去
+
 internal static class PaginationExtension
 {
     // <summary>

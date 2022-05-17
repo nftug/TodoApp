@@ -4,6 +4,8 @@ using Domain;
 using Persistence;
 using AutoMapper;
 using Application.Core;
+using Persistence.Todos;
+using Persistence.DataModels;
 
 namespace Application.Comments;
 
@@ -34,11 +36,11 @@ public class Create
 
         public async Task<Result<CommentDTO?>> Handle(Command request, CancellationToken cancellationToken)
         {
-            var item = _mapper.Map<Comment>(request.CommentDTO);
+            var item = _mapper.Map<CommentDataModel>(request.CommentDTO);
 
             // 外部キーの存在判定
-            if (await _context.TodoItems.FindAsync(item.TodoItemId) == null)
-                return Result<CommentDTO?>.Failure("todoItemId", "Incorrect todoItemId");
+            if (await _context.Todos.FindAsync(item.TodoId) == null)
+                return Result<CommentDTO?>.Failure("todoId", "Incorrect todoItemId");
 
             item.CreatedAt = DateTime.Now;
 

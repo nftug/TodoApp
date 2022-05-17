@@ -1,5 +1,7 @@
 namespace Application.Core.Query;
 
+// TODO: あとで消去
+
 internal class QueryMethods
 {
     internal static void ForEachKeyword(string? param, Action<string> func)

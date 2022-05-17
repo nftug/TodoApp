@@ -30,7 +30,7 @@ public class UsersController : ApiControllerBase
         return HandleResult(await Mediator.Send(new Edit.Command(user, _userId)));
     }
 
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+    /* [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     [HttpGet("me/todoItems")]
     public async Task<IActionResult>
         GetMyTodoItems([FromQuery] Application.TodoItems.Query.QueryParameter param)
@@ -39,5 +39,5 @@ public class UsersController : ApiControllerBase
         return HandleResult(
             await Mediator.Send(new Application.TodoItems.List.Query(param, _userId))
         );
-    }
+    } */
 }

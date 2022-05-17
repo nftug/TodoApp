@@ -1,5 +1,7 @@
 namespace Application.Core;
 
+// TODO: あとで消去
+
 public class Error
 {
     public string? Field { get; set; }
