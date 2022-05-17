@@ -56,7 +56,8 @@ public abstract class ApiControllerBase : ControllerBase
         }
         catch (Exception exc)
         {
-            return BadRequest(exc.Message);
+            ModelState.AddModelError("unknown", exc.Message);
+            return BadRequest(ModelState);
         }
     }
 }

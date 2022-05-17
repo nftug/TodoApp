@@ -2,6 +2,8 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Application.Users;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Infrastructure.Todos;
+using Infrastructure.Comments;
 
 namespace API.Controllers.Account;
 
@@ -30,14 +32,19 @@ public class UsersController : ApiControllerBase
         return HandleResult(await Mediator.Send(new Edit.Command(user, _userId)));
     }
 
-    /* [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-    [HttpGet("me/todoItems")]
-    public async Task<IActionResult>
-        GetMyTodoItems([FromQuery] Application.TodoItems.Query.QueryParameter param)
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+    [HttpGet("me/todos")]
+    public async Task<IActionResult> GetMyTodos([FromQuery] TodoQueryParameter param)
     {
-        param.User = _userId;
-        return HandleResult(
-            await Mediator.Send(new Application.TodoItems.List.Query(param, _userId))
-        );
-    } */
+        param.UserId = _userId;
+        return await HandleResult(() => Mediator.Send(new Application.Todos.List.Query(param, _userId)));
+    }
+
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+    [HttpGet("me/comments")]
+    public async Task<IActionResult> GetMyComments([FromQuery] CommentQueryParameter param)
+    {
+        param.UserId = _userId;
+        return await HandleResult(() => Mediator.Send(new Application.Comments.List.Query(param, _userId)));
+    }
 }

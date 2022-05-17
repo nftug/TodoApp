@@ -9,41 +9,41 @@ namespace API.Controllers;
 [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
 [Route("api/[controller]")]
 [ApiController]
-public class TodoItemsController : ApiControllerBase
+public class TodosController : ApiControllerBase
 {
-    // GET: api/TodoItems
+    // GET: api/Todos
     [HttpGet]
-    public async Task<IActionResult> GetTodoItems([FromQuery] TodoQueryParameter param)
+    public async Task<IActionResult> GetTodos([FromQuery] TodoQueryParameter param)
     {
         return await HandleResult(() => Mediator.Send(new List.Query(param, _userId)));
     }
 
-    // GET: api/TodoItems/5
+    // GET: api/Todos/5
     [HttpGet("{id}")]
-    public async Task<IActionResult> GetTodoItem(Guid id)
+    public async Task<IActionResult> GetTodo(Guid id)
     {
         return await HandleResult(() => Mediator.Send(new Details.Query(id, _userId)));
     }
 
-    // PUT: api/TodoItems/5
+    // PUT: api/Todos/5
     // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
     [HttpPut("{id}")]
-    public async Task<IActionResult> PutTodoItem(Guid id, TodoCommandDTO TodoCommandDTO)
+    public async Task<IActionResult> PutTodo(Guid id, TodoCommandDTO TodoCommandDTO)
     {
         return await HandleResult(() => Mediator.Send(new Edit.Command(id, TodoCommandDTO, _userId)));
     }
 
-    // POST: api/TodoItems
+    // POST: api/Todos
     // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
     [HttpPost]
-    public async Task<IActionResult> PostTodoItem(TodoCommandDTO TodoCommandDTO)
+    public async Task<IActionResult> PostTodo(TodoCommandDTO TodoCommandDTO)
     {
         return await HandleResult(() => Mediator.Send(new Create.Command(TodoCommandDTO, _userId)));
     }
 
-    // DELETE: api/TodoItems/5
+    // DELETE: api/Todos/5
     [HttpDelete("{id}")]
-    public async Task<IActionResult> DeleteTodoItem(Guid id)
+    public async Task<IActionResult> DeleteTodo(Guid id)
     {
         return await HandleResult(() => Mediator.Send(new Delete.Command(id, _userId)));
     }
