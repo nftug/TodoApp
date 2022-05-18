@@ -8,7 +8,7 @@ public class TodoTitle : ValueObject<TodoTitle>
 
     public const int MaxTitleLength = 50;
 
-    public TodoTitle(string value)
+    public TodoTitle(string? value)
     {
         if (string.IsNullOrWhiteSpace(value))
             throw CreateTitleException("タイトルを入力してください");

@@ -27,9 +27,16 @@ public class UsersController : ApiControllerBase
 
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     [HttpPut("me")]
-    public async Task<IActionResult> EditMyUserInfo(UserCommandDTO user)
+    public async Task<IActionResult> PutMyUserInfo(UserCommandDTO user)
     {
-        return await HandleResult(() => Mediator.Send(new Edit.Command(user, _userId)));
+        return await HandleResult(() => Mediator.Send(new Edit.Command(user, _userId, false)));
+    }
+
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+    [HttpPatch("me")]
+    public async Task<IActionResult> PatchMyUserInfo(UserCommandDTO user)
+    {
+        return await HandleResult(() => Mediator.Send(new Edit.Command(user, _userId, true)));
     }
 
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]

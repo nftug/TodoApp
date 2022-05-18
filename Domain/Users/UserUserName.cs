@@ -8,7 +8,7 @@ public class UserUserName : ValueObject<UserUserName>
 
     public const int MaxUserNameLength = 30;
 
-    public UserUserName(string value)
+    public UserUserName(string? value)
     {
         if (string.IsNullOrWhiteSpace(value))
             throw CreateUserNameException("ユーザー名を入力してください");

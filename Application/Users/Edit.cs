@@ -10,11 +10,13 @@ public class Edit
     {
         public UserCommandDTO User { get; set; }
         public string UserId { get; set; }
+        public bool IsPartial { get; set; }
 
-        public Command(UserCommandDTO user, string userId)
+        public Command(UserCommandDTO user, string userId, bool isPartial)
         {
             User = user;
             UserId = userId;
+            IsPartial = isPartial;
         }
     }
 
@@ -29,15 +31,22 @@ public class Edit
 
         public async Task<UserResultDTO.Me> Handle(Command request, CancellationToken cancellationToken)
         {
+            var inputItem = request.User;
             var user = await _userRepository.FindAsync(request.UserId);
 
             if (user == null)
                 throw new NotFoundException();
 
-            user.Edit(
-                new UserUserName(request.User.Username),
-                new UserEmail(request.User.Email)
-            );
+            if (request.IsPartial)
+                user.Edit(
+                    new UserUserName(inputItem.Username ?? user.UserName.Value),
+                    new UserEmail(inputItem.Email ?? user.Email.Value)
+                );
+            else
+                user.Edit(
+                    new UserUserName(inputItem.Username),
+                    new UserEmail(inputItem.Email)
+                );
 
             var result = await _userRepository.UpdateAsync(user);
 

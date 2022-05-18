@@ -7,8 +7,10 @@ public class UserEmail : ValueObject<UserEmail>
 {
     public string Value { get; }
 
-    public UserEmail(string value)
+    public UserEmail(string? value)
     {
+        if (string.IsNullOrWhiteSpace(value))
+            throw CreateEmailException("メールアドレスを入力してください");
         if (!new EmailAddressAttribute().IsValid(value))
             throw CreateEmailException("正しいメールアドレスを入力してください");
 

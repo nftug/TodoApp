@@ -26,15 +26,20 @@ public class CommentsController : ApiControllerBase
     }
 
     // PUT: api/Comments/5
-    // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
     [HttpPut("{id}")]
     public async Task<IActionResult> PutComment(Guid id, CommentCommandDTO commentCommandDTO)
     {
-        return await HandleResult(() => Mediator.Send(new Edit.Command(id, commentCommandDTO, _userId)));
+        return await HandleResult(() => Mediator.Send(new Edit.Command(id, commentCommandDTO, _userId, false)));
+    }
+
+    // PATCH: api/Comments/5
+    [HttpPut("{id}")]
+    public async Task<IActionResult> PatchComment(Guid id, CommentCommandDTO commentCommandDTO)
+    {
+        return await HandleResult(() => Mediator.Send(new Edit.Command(id, commentCommandDTO, _userId, true)));
     }
 
     // POST: api/Comments
-    // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
     [HttpPost]
     public async Task<IActionResult> PostComment(CommentCommandDTO commentCommandDTO)
     {

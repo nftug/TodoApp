@@ -11,12 +11,14 @@ public class Edit
         public CommentCommandDTO CommentCommandDTO { get; set; }
         public Guid Id { get; set; }
         public string UserId { get; set; }
+        public bool IsPartial { get; set; }
 
-        public Command(Guid id, CommentCommandDTO CommentItemDTO, string userId)
+        public Command(Guid id, CommentCommandDTO CommentItemDTO, string userId, bool isPartial)
         {
             CommentCommandDTO = CommentItemDTO;
             Id = id;
             UserId = userId;
+            IsPartial = isPartial;
         }
     }
 

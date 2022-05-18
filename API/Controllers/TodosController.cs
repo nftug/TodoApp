@@ -26,15 +26,20 @@ public class TodosController : ApiControllerBase
     }
 
     // PUT: api/Todos/5
-    // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
     [HttpPut("{id}")]
     public async Task<IActionResult> PutTodo(Guid id, TodoCommandDTO TodoCommandDTO)
     {
-        return await HandleResult(() => Mediator.Send(new Edit.Command(id, TodoCommandDTO, _userId)));
+        return await HandleResult(() => Mediator.Send(new Edit.Command(id, TodoCommandDTO, _userId, false)));
+    }
+
+    // PATCH: api/Todos/5
+    [HttpPatch("{id}")]
+    public async Task<IActionResult> PutPatch(Guid id, TodoCommandDTO TodoCommandDTO)
+    {
+        return await HandleResult(() => Mediator.Send(new Edit.Command(id, TodoCommandDTO, _userId, true)));
     }
 
     // POST: api/Todos
-    // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
     [HttpPost]
     public async Task<IActionResult> PostTodo(TodoCommandDTO TodoCommandDTO)
     {

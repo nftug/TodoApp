@@ -8,7 +8,7 @@ public class CommentContent : ValueObject<CommentContent>
 
     public const int MaxContentLength = 140;
 
-    public CommentContent(string value)
+    public CommentContent(string? value)
     {
         if (string.IsNullOrWhiteSpace(value))
             throw CreateTitleException("内容を入力してください");

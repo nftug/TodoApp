@@ -4,13 +4,13 @@ namespace Domain.Todos;
 
 public class TodoDescription : ValueObject<TodoDescription>
 {
-    public string Value { get; set; }
+    public string? Value { get; set; }
 
     public const int MaxDescriptionLength = 140;
 
-    public TodoDescription(string value)
+    public TodoDescription(string? value)
     {
-        if (value.Length > MaxDescriptionLength)
+        if (value?.Length > MaxDescriptionLength)
             throw CreateDescriptionException($"{MaxDescriptionLength}文字以内で入力してください");
 
         Value = value;
