@@ -9,9 +9,9 @@ public class UserUserName : ValueObject<UserUserName, string>
     public UserUserName(string value) : base(value)
     {
         if (string.IsNullOrWhiteSpace(value))
-            throw new DomainException("ユーザー名を入力してください");
+            throw CreateUserNameException("ユーザー名を入力してください");
         if (value.Length > MaxUserNameLength)
-            throw new DomainException($"{MaxUserNameLength}文字以内で入力してください");
+            throw CreateUserNameException($"{MaxUserNameLength}文字以内で入力してください");
     }
 
     protected override bool EqualsCore(UserUserName other) => Value == other.Value;
