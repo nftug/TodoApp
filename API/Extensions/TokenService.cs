@@ -2,7 +2,7 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 using Microsoft.IdentityModel.Tokens;
-using Domain;
+using Infrastructure.DataModels;
 using API.Models;
 
 namespace API.Extensions;
@@ -16,7 +16,7 @@ public class TokenService
         _settings = settings;
     }
 
-    public string CreateToken(ApplicationUser user)
+    public string CreateToken(UserDataModel user)
     {
         var claims = new List<Claim> {
                 new Claim(ClaimTypes.Name, user.UserName),

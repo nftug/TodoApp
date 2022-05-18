@@ -26,9 +26,9 @@ public class CommentRepository : ICommentRepository
     public async Task<Comment> UpdateAsync(Comment comment)
     {
         var foundCommentDataModel = await _context.Comments
-                                               .FirstOrDefaultAsync(
-                                                   x => x.Id == comment.Id
-                                               );
+                                                  .FirstOrDefaultAsync(
+                                                      x => x.Id == comment.Id
+                                                  );
         if (foundCommentDataModel == null)
             throw new NotFoundException();
 
@@ -66,9 +66,10 @@ public class CommentRepository : ICommentRepository
     public async Task<Comment?> FindAsync(Guid id)
     {
         var commentDataModel = await _context.Comments
-                                          .FirstOrDefaultAsync(
-                                              x => x.Id == id
-                                          );
+                                             .FirstOrDefaultAsync(
+                                                x => x.Id == id
+                                             );
+
         return commentDataModel != null ? ToModel(commentDataModel) : null;
     }
 

@@ -5,9 +5,11 @@ using Infrastructure;
 using Application.Todos;
 using Domain.Todos;
 using Domain.Comments;
+using Domain.Users;
+using Infrastructure.DataModels;
 using Infrastructure.Todos;
 using Infrastructure.Comments;
-using Domain;
+using Infrastructure.Users;
 using API.Models;
 using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -44,7 +46,7 @@ internal static class DependencyInjection
             settings.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
         });
 
-        services.AddDefaultIdentity<ApplicationUser>(opt =>
+        services.AddDefaultIdentity<UserDataModel>(opt =>
             opt.SignIn.RequireConfirmedAccount = false
         ).AddEntityFrameworkStores<DataContext>();
 
@@ -55,6 +57,7 @@ internal static class DependencyInjection
         // repositories
         services.AddTransient<ITodoRepository, TodoRepository>();
         services.AddTransient<ICommentRepository, CommentRepository>();
+        services.AddTransient<IUserRepository, UserRepository>();
 
         // query services
         services.AddTransient<TodoQuerySearchService>();

@@ -1,7 +1,6 @@
 using MediatR;
-using Application.Core;
-using Infrastructure;
-using Microsoft.EntityFrameworkCore;
+using Domain.Shared;
+using Domain.Users;
 
 namespace Application.Users;
 
@@ -9,7 +8,7 @@ public class Details
 {
     public class Public
     {
-        public class Query : IRequest<Result<UserDTO.Public>>
+        public class Query : IRequest<UserResultDTO.Public>
         {
             public string Id { get; set; }
             public string? UserId { get; set; }
@@ -21,32 +20,29 @@ public class Details
             }
         }
 
-        public class Handler : IRequestHandler<Query, Result<UserDTO.Public>>
+        public class Handler : IRequestHandler<Query, UserResultDTO.Public>
         {
-            private readonly DataContext _context;
+            private readonly IUserRepository _userRepository;
 
-            public Handler(DataContext context)
+            public Handler(IUserRepository userRepository)
             {
-                _context = context;
+                _userRepository = userRepository;
             }
 
-            public async Task<Result<UserDTO.Public>> Handle(Query request, CancellationToken cancellationToken)
+            public async Task<UserResultDTO.Public> Handle(Query request, CancellationToken cancellationToken)
             {
-                var user = await _context.Users.FirstOrDefaultAsync(x => x.Id == request.Id);
-
+                var user = await _userRepository.FindAsync(request.Id);
                 if (user == null)
-                    return Result<UserDTO.Public>.NotFound();
+                    throw new NotFoundException();
 
-                return Result<UserDTO.Public>.Success(
-                    new UserDTO.Public { Id = user.Id, Username = user.UserName }
-                );
+                return UserResultDTO.Public.CreateResultDTO(user);
             }
         }
     }
 
     public class Me
     {
-        public class Query : IRequest<Result<UserDTO.Me>>
+        public class Query : IRequest<UserResultDTO.Me>
         {
             public string UserId { get; set; }
 
@@ -56,25 +52,23 @@ public class Details
             }
         }
 
-        public class Handler : IRequestHandler<Query, Result<UserDTO.Me>>
+        public class Handler : IRequestHandler<Query, UserResultDTO.Me>
         {
-            private readonly DataContext _context;
+            private readonly IUserRepository _userRepository;
 
-            public Handler(DataContext context)
+            public Handler(IUserRepository userRepository)
             {
-                _context = context;
+                _userRepository = userRepository;
             }
 
-            public async Task<Result<UserDTO.Me>> Handle(Query request, CancellationToken cancellationToken)
+
+            public async Task<UserResultDTO.Me> Handle(Query request, CancellationToken cancellationToken)
             {
-                var user = await _context.Users.FirstOrDefaultAsync(x => x.Id == request.UserId);
-
+                var user = await _userRepository.FindAsync(request.UserId);
                 if (user == null)
-                    return Result<UserDTO.Me>.NotFound();
+                    throw new NotFoundException();
 
-                return Result<UserDTO.Me>.Success(
-                    new UserDTO.Me { Id = user.Id, Username = user.UserName, Email = user.Email }
-                );
+                return UserResultDTO.Me.CreateResultDTO(user);
             }
         }
     }

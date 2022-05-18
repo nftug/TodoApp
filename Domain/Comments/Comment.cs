@@ -54,7 +54,7 @@ public class Comment
     )
     {
         return new Comment(
-            id: id,  // Guidの生成はEF Coreに任せる
+            id: id,
             content: content,
             todoId: todoId,
             createdDateTime: createdDateTime,

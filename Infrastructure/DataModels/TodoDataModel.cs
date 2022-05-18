@@ -13,6 +13,6 @@ public class TodoDataModel
     public ICollection<CommentDataModel> Comments { get; set; } = null!;
     public DateTime CreatedDateTime { get; set; }
     public DateTime UpdatedDateTime { get; set; }
-    public ApplicationUser? OwnerUser { get; set; }
+    public UserDataModel? OwnerUser { get; set; }
     public string? OwnerUserId { get; set; }
 }

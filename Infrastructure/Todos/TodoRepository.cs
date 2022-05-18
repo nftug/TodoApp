@@ -79,6 +79,7 @@ public class TodoRepository : ITodoRepository
                                           .FirstOrDefaultAsync(
                                               x => x.Id == id
                                           );
+
         return todoDataModel != null ? ToModel(todoDataModel) : null;
     }
 

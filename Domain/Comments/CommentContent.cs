@@ -4,15 +4,15 @@ namespace Domain.Comments;
 
 public class CommentContent : ValueObject<CommentContent, string>
 {
-    public const int MaxTodoTitleLength = 140;
+    public const int MaxContentLength = 140;
 
     public CommentContent(string value) : base(value)
     {
         if (string.IsNullOrWhiteSpace(value))
             throw CreateTitleException("内容を入力してください");
 
-        if (value.Length > MaxTodoTitleLength)
-            throw CreateTitleException($"{MaxTodoTitleLength}文字以内で入力してください");
+        if (value.Length > MaxContentLength)
+            throw CreateTitleException($"{MaxContentLength}文字以内で入力してください");
     }
 
     protected override bool EqualsCore(CommentContent other) => Value == other.Value;

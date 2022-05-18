@@ -15,21 +15,21 @@ public class UsersController : ApiControllerBase
     [HttpGet("{id}")]
     public async Task<IActionResult> GetUserInfo(string id)
     {
-        return HandleResult(await Mediator.Send(new Details.Public.Query(id, _userId)));
+        return await HandleResult(() => Mediator.Send(new Details.Public.Query(id, _userId)));
     }
 
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     [HttpGet("me")]
     public async Task<IActionResult> GetMyUserInfo()
     {
-        return HandleResult(await Mediator.Send(new Details.Me.Query(_userId)));
+        return await HandleResult(() => Mediator.Send(new Details.Me.Query(_userId)));
     }
 
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     [HttpPut("me")]
-    public async Task<IActionResult> EditMyUserInfo(UserDTO.Me user)
+    public async Task<IActionResult> EditMyUserInfo(UserCommandDTO user)
     {
-        return HandleResult(await Mediator.Send(new Edit.Command(user, _userId)));
+        return await HandleResult(() => Mediator.Send(new Edit.Command(user, _userId)));
     }
 
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]

@@ -55,7 +55,7 @@ public class Todo
         ValidateBeginDueDateTime(beginDateTime, dueDateTime);
 
         return new Todo(
-            id: new Guid(),  // Guidの生成はEF Coreに任せる
+            id: new Guid(),
             title: title,
             description: description,
             beginDateTime: beginDateTime,

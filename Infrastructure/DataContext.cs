@@ -5,7 +5,7 @@ using Infrastructure.DataModels;
 
 namespace Infrastructure;
 
-public class DataContext : IdentityDbContext<ApplicationUser>
+public class DataContext : IdentityDbContext<UserDataModel>
 {
     public DataContext(DbContextOptions<DataContext> options)
         : base(options)

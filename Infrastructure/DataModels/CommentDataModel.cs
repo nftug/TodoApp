@@ -10,6 +10,6 @@ public class CommentDataModel
     public Guid TodoId { get; set; }
     public DateTime CreatedDateTime { get; set; }
     public DateTime UpdatedDateTime { get; set; }
-    public ApplicationUser? OwnerUser { get; set; }
+    public UserDataModel? OwnerUser { get; set; }
     public string? OwnerUserId { get; set; }
 }

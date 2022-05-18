@@ -2,7 +2,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Domain;
+using Infrastructure.DataModels;
 using API.Models;
 using API.Extensions;
 
@@ -12,13 +12,13 @@ namespace API.Controllers;
 [Route("api/[controller]")]
 public class AuthController : ControllerBase
 {
-    private readonly UserManager<ApplicationUser> _userManager;
-    private readonly SignInManager<ApplicationUser> _signInManager;
+    private readonly UserManager<UserDataModel> _userManager;
+    private readonly SignInManager<UserDataModel> _signInManager;
     private readonly TokenService _tokenService;
 
     public AuthController(
-        UserManager<ApplicationUser> userManager,
-        SignInManager<ApplicationUser> signInManager,
+        UserManager<UserDataModel> userManager,
+        SignInManager<UserDataModel> signInManager,
         TokenService tokenService
     )
     {
@@ -47,11 +47,11 @@ public class AuthController : ControllerBase
     {
         if (await _userManager.Users.AnyAsync(x => x.Email == registerModel.Email))
         {
-            ModelState.AddModelError("email", "Email already taken");
+            ModelState.AddModelError("email", "このメールアドレスは既に使用済みです");
             return ValidationProblem();
         }
 
-        var user = new ApplicationUser
+        var user = new UserDataModel
         {
             Email = registerModel.Email,
             UserName = registerModel.Username
@@ -69,7 +69,7 @@ public class AuthController : ControllerBase
         return CreateUserObject(user);
     }
 
-    private TokenModel CreateUserObject(ApplicationUser user)
+    private TokenModel CreateUserObject(UserDataModel user)
         => new TokenModel
         {
             Token = _tokenService.CreateToken(user)
