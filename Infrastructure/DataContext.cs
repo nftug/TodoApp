@@ -20,15 +20,21 @@ public class DataContext : IdentityDbContext<UserDataModel>
         base.OnModelCreating(modelBuilder);
 
         modelBuilder.Entity<TodoDataModel>()
-                    .HasOne(todoDataModel => todoDataModel.OwnerUser)
+                    .HasOne(todo => todo.OwnerUser)
                     .WithMany()
-                    .HasForeignKey(todoDataModel => todoDataModel.OwnerUserId)
+                    .HasForeignKey(todo => todo.OwnerUserId)
                     .OnDelete(DeleteBehavior.SetNull);
 
         modelBuilder.Entity<CommentDataModel>()
-                    .HasOne(commentDataModel => commentDataModel.Todo)
-                    .WithMany(todoDataModel => todoDataModel.Comments)
-                    .HasForeignKey(commentDataModel => commentDataModel.TodoId)
+                    .HasOne(comment => comment.Todo)
+                    .WithMany(todo => todo.Comments)
+                    .HasForeignKey(comment => comment.TodoId)
                     .OnDelete(DeleteBehavior.Cascade);
+
+        modelBuilder.Entity<CommentDataModel>()
+                    .HasOne(comment => comment.OwnerUser)
+                    .WithMany()
+                    .HasForeignKey(comment => comment.OwnerUserId)
+                    .OnDelete(DeleteBehavior.SetNull);
     }
 }

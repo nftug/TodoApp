@@ -11,8 +11,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Infrastructure.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20220518031915_AddedUserModel")]
-    partial class AddedUserModel
+    [Migration("20220518040402_AddedRelation")]
+    partial class AddedRelation
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -288,7 +288,8 @@ namespace Infrastructure.Migrations
                 {
                     b.HasOne("Infrastructure.DataModels.UserDataModel", "OwnerUser")
                         .WithMany()
-                        .HasForeignKey("OwnerUserId");
+                        .HasForeignKey("OwnerUserId")
+                        .OnDelete(DeleteBehavior.SetNull);
 
                     b.HasOne("Infrastructure.DataModels.TodoDataModel", "Todo")
                         .WithMany("Comments")

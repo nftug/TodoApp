@@ -286,7 +286,8 @@ namespace Infrastructure.Migrations
                 {
                     b.HasOne("Infrastructure.DataModels.UserDataModel", "OwnerUser")
                         .WithMany()
-                        .HasForeignKey("OwnerUserId");
+                        .HasForeignKey("OwnerUserId")
+                        .OnDelete(DeleteBehavior.SetNull);
 
                     b.HasOne("Infrastructure.DataModels.TodoDataModel", "Todo")
                         .WithMany("Comments")
