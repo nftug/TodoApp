@@ -45,7 +45,7 @@ public class UserRepository : IUserRepository
 
     private User ToModel(UserDataModel userDataModel)
     {
-        return User.CreateFromRepository(
+        return new User(
             id: userDataModel.Id,
             userName: new UserUserName(userDataModel.UserName),
             email: new UserEmail(userDataModel.Email)

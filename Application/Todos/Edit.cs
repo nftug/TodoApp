@@ -31,7 +31,9 @@ public class Edit
 
         public async Task<TodoResultDTO> Handle(Command request, CancellationToken cancellationToken)
         {
-            if (request.Id != request.TodoCommandDTO.Id)
+            var inputItem = request.TodoCommandDTO;
+
+            if (request.Id != inputItem.Id)
                 throw new DomainException("id", "IDが正しくありません");
 
             var todo = await _todoRepository.FindAsync(request.Id);
@@ -41,13 +43,12 @@ public class Edit
                 throw new BadRequestException();
 
             todo.Edit(
-                title: new TodoTitle(request.TodoCommandDTO.Title),
-                description: request.TodoCommandDTO.Description != null ?
-                    new TodoDescription(request.TodoCommandDTO.Description) : null,
-                beginDateTime: request.TodoCommandDTO.BeginDateTime,
-                dueDateTime: request.TodoCommandDTO.DueDateTime,
-                state: request.TodoCommandDTO.State != null ?
-                    new TodoState((int)request.TodoCommandDTO.State) : TodoState.Todo
+                title: new TodoTitle(inputItem.Title),
+                description: !string.IsNullOrEmpty(inputItem.Description) ?
+                    new TodoDescription(inputItem.Description) : null,
+                period: new TodoPeriod(inputItem.BeginDateTime, inputItem.DueDateTime),
+                state: inputItem.State != null ?
+                    new TodoState((int)inputItem.State) : TodoState.Todo
             );
 
             var result = await _todoRepository.UpdateAsync(todo);

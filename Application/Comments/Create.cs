@@ -33,14 +33,16 @@ public class Create
 
         public async Task<CommentResultDTO> Handle(Command request, CancellationToken cancellationToken)
         {
+            var inputItem = request.CommentCommandDTO;
+
             // 外部キーの存在チェック
-            var todoDataModel = await _todoRepository.FindAsync(request.CommentCommandDTO.TodoId);
+            var todoDataModel = await _todoRepository.FindAsync(inputItem.TodoId);
             if (todoDataModel == null)
                 throw new DomainException("todoId", "Todoアイテムが存在しません");
 
             var comment = Comment.CreateNew(
-                content: new CommentContent(request.CommentCommandDTO.Content),
-                todoId: request.CommentCommandDTO.TodoId,
+                content: new CommentContent(inputItem.Content),
+                todoId: inputItem.TodoId,
                 ownerUserId: request.UserId
             );
 

@@ -31,7 +31,9 @@ public class Edit
 
         public async Task<CommentResultDTO> Handle(Command request, CancellationToken cancellationToken)
         {
-            if (request.Id != request.CommentCommandDTO.Id)
+            var inputItem = request.CommentCommandDTO;
+
+            if (request.Id != inputItem.Id)
                 throw new DomainException("id", "IDが正しくありません");
 
             var comment = await _commentRepository.FindAsync(request.Id);
@@ -41,7 +43,7 @@ public class Edit
                 throw new BadRequestException();
 
             comment.Edit(
-                content: new CommentContent(request.CommentCommandDTO.Content)
+                content: new CommentContent(inputItem.Content)
             );
 
             var result = await _commentRepository.UpdateAsync(comment);

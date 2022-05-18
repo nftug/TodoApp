@@ -6,7 +6,7 @@ public class User
     public UserUserName UserName { get; private set; }
     public UserEmail Email { get; private set; }
 
-    private User(
+    public User(
         string id,
         UserUserName userName,
         UserEmail email
@@ -15,19 +15,6 @@ public class User
         Id = id;
         UserName = userName;
         Email = email;
-    }
-
-    public static User CreateFromRepository(
-        string id,
-        UserUserName userName,
-        UserEmail email
-    )
-    {
-        return new User(
-            id: id,
-            userName: userName,
-            email: email
-        );
     }
 
     public void Edit(

@@ -48,8 +48,8 @@ public class TodoRepository : ITodoRepository
         {
             Title = todo.Title.Value,
             Description = todo.Description?.Value,
-            BeginDateTime = todo.BeginDateTime,
-            DueDateTime = todo.DueDateTime,
+            BeginDateTime = todo.Period?.BeginDateTimeValue,
+            DueDateTime = todo.Period?.DueDateTimeValue,
             State = todo.State.Value,
             Comments = new List<CommentDataModel>(),
             CreatedDateTime = todo.CreatedDateTime,
@@ -62,8 +62,8 @@ public class TodoRepository : ITodoRepository
     {
         todoDataModel.Title = todo.Title.Value;
         todoDataModel.Description = todo.Description?.Value;
-        todoDataModel.BeginDateTime = todo.BeginDateTime;
-        todoDataModel.DueDateTime = todo.DueDateTime;
+        todoDataModel.BeginDateTime = todo.Period?.BeginDateTimeValue;
+        todoDataModel.DueDateTime = todo.Period?.DueDateTimeValue;
         todoDataModel.State = todo.State.Value;
         todoDataModel.CreatedDateTime = todo.CreatedDateTime;
         todoDataModel.UpdatedDateTime = todo.UpdatedDateTime;
@@ -86,7 +86,7 @@ public class TodoRepository : ITodoRepository
     private Todo ToModel(TodoDataModel todoDataModel)
     {
         var comments = todoDataModel.Comments.Select(x =>
-            Comment.CreateFromRepository(
+            new Comment(
                 x.Id,
                 new CommentContent(x.Content),
                 x.TodoId,
@@ -95,13 +95,12 @@ public class TodoRepository : ITodoRepository
                 x.OwnerUserId
             )).ToList();
 
-        return Todo.CreateFromRepository(
+        return new Todo(
             id: todoDataModel.Id,
             title: new TodoTitle(todoDataModel.Title),
             description: !string.IsNullOrWhiteSpace(todoDataModel.Description)
                 ? new TodoDescription(todoDataModel.Description) : null,
-            beginDateTime: todoDataModel.BeginDateTime,
-            dueDateTime: todoDataModel.DueDateTime,
+            period: new TodoPeriod(todoDataModel.BeginDateTime, todoDataModel.DueDateTime),
             state: new TodoState(todoDataModel.State),
             comments: comments,
             createdDateTime: todoDataModel.CreatedDateTime,

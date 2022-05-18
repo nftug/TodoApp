@@ -28,14 +28,15 @@ public class Create
 
         public async Task<TodoResultDTO> Handle(Command request, CancellationToken cancellationToken)
         {
+            var inputItem = request.TodoCommandDTO;
+
             var todo = Todo.CreateNew(
-                title: new TodoTitle(request.TodoCommandDTO.Title),
-                description: request.TodoCommandDTO.Description != null ?
-                    new TodoDescription(request.TodoCommandDTO.Description) : null,
-                beginDateTime: request.TodoCommandDTO.BeginDateTime,
-                dueDateTime: request.TodoCommandDTO.DueDateTime,
-                state: request.TodoCommandDTO.State != null ?
-                    new TodoState((int)request.TodoCommandDTO.State) : TodoState.Todo,
+                title: new TodoTitle(inputItem.Title),
+                description: !string.IsNullOrWhiteSpace(inputItem.Description) ?
+                    new TodoDescription(inputItem.Description) : null,
+                period: new TodoPeriod(inputItem.BeginDateTime, inputItem.DueDateTime),
+                state: inputItem.State != null ?
+                    new TodoState((int)inputItem.State) : TodoState.Todo,
                 ownerUserId: request.UserId
             );
 

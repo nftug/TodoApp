@@ -9,7 +9,7 @@ public class Comment
     public DateTime UpdatedDateTime { get; private set; }
     public string? OwnerUserId { get; private set; }
 
-    private Comment(
+    public Comment(
         Guid id,
         CommentContent content,
         Guid todoId,
@@ -40,25 +40,6 @@ public class Comment
             todoId: todoId,
             createdDateTime: operationDateTime,
             updatedDateTime: operationDateTime,
-            ownerUserId: ownerUserId
-        );
-    }
-
-    public static Comment CreateFromRepository(
-        Guid id,
-        CommentContent content,
-        Guid todoId,
-        DateTime createdDateTime,
-        DateTime updatedDateTime,
-        string? ownerUserId
-    )
-    {
-        return new Comment(
-            id: id,
-            content: content,
-            todoId: todoId,
-            createdDateTime: createdDateTime,
-            updatedDateTime: updatedDateTime,
             ownerUserId: ownerUserId
         );
     }

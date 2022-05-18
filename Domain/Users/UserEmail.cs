@@ -3,12 +3,16 @@ using Domain.Shared;
 
 namespace Domain.Users;
 
-public class UserEmail : ValueObject<UserEmail, string>
+public class UserEmail : ValueObject<UserEmail>
 {
-    public UserEmail(string value) : base(value)
+    public string Value { get; }
+
+    public UserEmail(string value)
     {
         if (!new EmailAddressAttribute().IsValid(value))
             throw CreateEmailException("正しいメールアドレスを入力してください");
+
+        Value = value;
     }
 
     protected override bool EqualsCore(UserEmail other) => Value == other.Value;

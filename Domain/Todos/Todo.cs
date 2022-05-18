@@ -8,20 +8,18 @@ public class Todo
     public Guid Id { get; set; }
     public TodoTitle Title { get; private set; }
     public TodoDescription? Description { get; private set; }
-    public DateTime? BeginDateTime { get; private set; }
-    public DateTime? DueDateTime { get; private set; }
+    public TodoPeriod? Period { get; private set; }
     public TodoState State { get; private set; }
     public ICollection<Comment> Comments { get; private set; } = new List<Comment>();
     public DateTime CreatedDateTime { get; private set; }
     public DateTime UpdatedDateTime { get; private set; }
     public string? OwnerUserId { get; private set; }
 
-    private Todo(
+    public Todo(
         Guid id,
         TodoTitle title,
         TodoDescription? description,
-        DateTime? beginDateTime,
-        DateTime? dueDateTime,
+        TodoPeriod? period,
         TodoState state,
         ICollection<Comment> comments,
         DateTime createdDateTime,
@@ -32,8 +30,7 @@ public class Todo
         Id = id;
         Title = title;
         Description = description;
-        BeginDateTime = beginDateTime;
-        DueDateTime = dueDateTime;
+        Period = period;
         State = state;
         Comments = comments;
         CreatedDateTime = createdDateTime;
@@ -44,22 +41,18 @@ public class Todo
     public static Todo CreateNew(
         TodoTitle title,
         TodoDescription? description,
-        DateTime? beginDateTime,
-        DateTime? dueDateTime,
+        TodoPeriod? period,
         TodoState state,
         string ownerUserId
     )
     {
         var operationDateTime = DateTime.Now;
 
-        ValidateBeginDueDateTime(beginDateTime, dueDateTime);
-
         return new Todo(
             id: new Guid(),
             title: title,
             description: description,
-            beginDateTime: beginDateTime,
-            dueDateTime: dueDateTime,
+            period: period,
             state: state,
             comments: new List<Comment>(),
             createdDateTime: operationDateTime,
@@ -68,56 +61,17 @@ public class Todo
         );
     }
 
-    public static Todo CreateFromRepository(
-        Guid id,
-        TodoTitle title,
-        TodoDescription? description,
-        DateTime? beginDateTime,
-        DateTime? dueDateTime,
-        TodoState state,
-        ICollection<Comment> comments,
-        DateTime createdDateTime,
-        DateTime updatedDateTime,
-        string? ownerUserId
-    )
-    {
-        return new Todo(
-            id: id,
-            title: title,
-            description: description,
-            beginDateTime: beginDateTime,
-            dueDateTime: dueDateTime,
-            state: state,
-            comments: comments,
-            createdDateTime: createdDateTime,
-            updatedDateTime: updatedDateTime,
-            ownerUserId: ownerUserId
-        );
-    }
-
     public void Edit(
         TodoTitle title,
         TodoDescription? description,
-        DateTime? beginDateTime,
-        DateTime? dueDateTime,
+        TodoPeriod? period,
         TodoState state
     )
     {
-        ValidateBeginDueDateTime(beginDateTime, dueDateTime);
-
         Title = title;
         Description = description;
-        BeginDateTime = beginDateTime;
-        DueDateTime = dueDateTime;
+        Period = period;
         State = state;
         UpdatedDateTime = DateTime.Now;
-    }
-
-    private static void ValidateBeginDueDateTime(DateTime? beginDateTime, DateTime? dueDateTime)
-    {
-        if (beginDateTime > dueDateTime)
-            throw new DomainException(
-                "beginAndDueDateTime", "開始日時が終了日時よりも前になるように指定してください"
-            );
     }
 }

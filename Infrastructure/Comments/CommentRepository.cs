@@ -75,7 +75,7 @@ public class CommentRepository : ICommentRepository
 
     private Comment ToModel(CommentDataModel commentDataModel)
     {
-        return Comment.CreateFromRepository(
+        return new Comment(
             id: commentDataModel.Id,
             content: new CommentContent(commentDataModel.Content),
             todoId: commentDataModel.TodoId,
