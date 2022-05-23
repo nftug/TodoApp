@@ -1,6 +1,7 @@
 using MediatR;
 using Pagination.EntityFrameworkCore.Extensions;
 using Infrastructure.Todos;
+using Domain.Todos;
 using Application.Comments;
 using Microsoft.EntityFrameworkCore;
 
@@ -34,7 +35,8 @@ public class List
         public async Task<Pagination<TodoResultDTO>> Handle
             (Query request, CancellationToken cancellationToken)
         {
-            var filteredQuery = _todoQuerySearchService.GetFilteredQuery(request.Param);
+            var filteredQuery = _todoQuerySearchService.GetFilteredQuery(request.Param)
+                                                       .OrderByDescending(x => x.CreatedDateTime);
             int page = (int)request.Param.Page!;
             int limit = (int)request.Param.Limit!;
 
@@ -47,7 +49,7 @@ public class List
                     x.Description,
                     x.BeginDateTime,
                     x.DueDateTime,
-                    x.State,
+                    new TodoState(x.State),
                     x.Comments.Select(
                         _ => new CommentResultDTO(
                                 _.Id,

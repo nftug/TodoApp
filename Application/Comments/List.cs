@@ -33,7 +33,8 @@ public class List
         public async Task<Pagination<CommentResultDTO>> Handle
             (Query request, CancellationToken cancellationToken)
         {
-            var filteredQuery = _commentQuerySearchService.GetFilteredQuery(request.Param);
+            var filteredQuery = _commentQuerySearchService.GetFilteredQuery(request.Param)
+                                                          .OrderByDescending(x => x.CreatedDateTime);
             int page = (int)request.Param.Page!;
             int limit = (int)request.Param.Limit!;
 
