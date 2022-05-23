@@ -1,4 +1,5 @@
 using Domain.Shared;
+using System.ComponentModel.DataAnnotations;
 
 namespace Domain.Todos;
 
@@ -6,23 +7,28 @@ public class TodoTitle : ValueObject<TodoTitle>
 {
     public string Value { get; }
 
-    public const int MaxTitleLength = 50;
-
-    public TodoTitle(string? value)
+    public TodoTitle(string value)
     {
-        if (string.IsNullOrWhiteSpace(value))
-            throw CreateTitleException("タイトルを入力してください");
-
-        if (value.Length > MaxTitleLength)
-            throw CreateTitleException($"{MaxTitleLength}文字以内で入力してください");
-
         Value = value;
     }
 
     protected override bool EqualsCore(TodoTitle other) => Value == other.Value;
+}
 
-    private DomainException CreateTitleException(string message)
+public class TodoTitleAttribute : ValidationAttribute
+{
+    public const int MaxTitleLength = 50;
+
+    protected override ValidationResult? IsValid
+        (object? value, ValidationContext validationContext)
     {
-        return new DomainException("title", message);
+        string? title = value as string;
+
+        if (string.IsNullOrWhiteSpace(title))
+            return new ValidationResult("タイトルを入力してください。");
+        if (title.Length > MaxTitleLength)
+            return new ValidationResult($"{MaxTitleLength}文字以内で入力してください。");
+
+        return ValidationResult.Success;
     }
 }

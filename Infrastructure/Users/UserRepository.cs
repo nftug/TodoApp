@@ -47,7 +47,7 @@ public class UserRepository : IUserRepository
     {
         return new User(
             id: userDataModel.Id,
-            userName: new UserUserName(userDataModel.UserName),
+            userName: new UserName(userDataModel.UserName),
             email: new UserEmail(userDataModel.Email)
         );
     }

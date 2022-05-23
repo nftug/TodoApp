@@ -29,14 +29,7 @@ public class TodosController : ApiControllerBase
     [HttpPut("{id}")]
     public async Task<IActionResult> PutTodo(Guid id, TodoCommandDTO TodoCommandDTO)
     {
-        return await HandleResult(() => Mediator.Send(new Edit.Command(id, TodoCommandDTO, _userId, false)));
-    }
-
-    // PATCH: api/Todos/5
-    [HttpPatch("{id}")]
-    public async Task<IActionResult> PutPatch(Guid id, TodoCommandDTO TodoCommandDTO)
-    {
-        return await HandleResult(() => Mediator.Send(new Edit.Command(id, TodoCommandDTO, _userId, true)));
+        return await HandleResult(() => Mediator.Send(new Edit.Command(id, TodoCommandDTO, _userId)));
     }
 
     // POST: api/Todos

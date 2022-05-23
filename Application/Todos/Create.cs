@@ -31,7 +31,7 @@ public class Create
             var inputItem = request.TodoCommandDTO;
 
             var todo = Todo.CreateNew(
-                title: new TodoTitle(inputItem.Title),
+                title: new TodoTitle(inputItem.Title!),
                 description: !string.IsNullOrWhiteSpace(inputItem.Description) ?
                     new TodoDescription(inputItem.Description) : null,
                 period: new TodoPeriod(inputItem.BeginDateTime, inputItem.DueDateTime),

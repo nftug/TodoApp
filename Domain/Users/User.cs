@@ -3,12 +3,12 @@ namespace Domain.Users;
 public class User
 {
     public string Id { get; set; }
-    public UserUserName UserName { get; private set; }
+    public UserName UserName { get; private set; }
     public UserEmail Email { get; private set; }
 
     public User(
         string id,
-        UserUserName userName,
+        UserName userName,
         UserEmail email
     )
     {
@@ -18,7 +18,7 @@ public class User
     }
 
     public void Edit(
-        UserUserName userName,
+        UserName userName,
         UserEmail email
     )
     {

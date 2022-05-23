@@ -7,20 +7,26 @@ public class UserEmail : ValueObject<UserEmail>
 {
     public string Value { get; }
 
-    public UserEmail(string? value)
+    public UserEmail(string value)
     {
-        if (string.IsNullOrWhiteSpace(value))
-            throw CreateEmailException("メールアドレスを入力してください");
-        if (!new EmailAddressAttribute().IsValid(value))
-            throw CreateEmailException("正しいメールアドレスを入力してください");
-
         Value = value;
     }
 
     protected override bool EqualsCore(UserEmail other) => Value == other.Value;
+}
 
-    private DomainException CreateEmailException(string message)
+public class UserEmailAttribute : ValidationAttribute
+{
+    protected override ValidationResult? IsValid
+        (object? value, ValidationContext validationContext)
     {
-        return new DomainException("email", message);
+        string? email = value as string;
+
+        if (string.IsNullOrWhiteSpace(email))
+            return new ValidationResult("メールアドレスを入力してください。");
+        if (!new EmailAddressAttribute().IsValid(email))
+            return new ValidationResult("正しいメールアドレスを入力してください。");
+
+        return ValidationResult.Success;
     }
 }

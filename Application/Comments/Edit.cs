@@ -11,14 +11,12 @@ public class Edit
         public CommentCommandDTO CommentCommandDTO { get; set; }
         public Guid Id { get; set; }
         public string UserId { get; set; }
-        public bool IsPartial { get; set; }
 
-        public Command(Guid id, CommentCommandDTO CommentItemDTO, string userId, bool isPartial)
+        public Command(Guid id, CommentCommandDTO CommentItemDTO, string userId)
         {
             CommentCommandDTO = CommentItemDTO;
             Id = id;
             UserId = userId;
-            IsPartial = isPartial;
         }
     }
 
@@ -36,7 +34,7 @@ public class Edit
             var inputItem = request.CommentCommandDTO;
 
             if (request.Id != inputItem.Id)
-                throw new DomainException("id", "IDが正しくありません");
+                throw new DomainException(nameof(inputItem.Id), "IDが正しくありません");
 
             var comment = await _commentRepository.FindAsync(request.Id);
             if (comment == null)
@@ -45,7 +43,7 @@ public class Edit
                 throw new BadRequestException();
 
             comment.Edit(
-                content: new CommentContent(inputItem.Content)
+                content: new CommentContent(inputItem.Content!)
             );
 
             var result = await _commentRepository.UpdateAsync(comment);

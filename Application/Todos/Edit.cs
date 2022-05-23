@@ -11,14 +11,12 @@ public class Edit
         public TodoCommandDTO TodoCommandDTO { get; set; }
         public Guid Id { get; set; }
         public string UserId { get; set; }
-        public bool IsPartial { get; set; }
 
-        public Command(Guid id, TodoCommandDTO todoItemDTO, string userId, bool isPartial)
+        public Command(Guid id, TodoCommandDTO todoItemDTO, string userId)
         {
             TodoCommandDTO = todoItemDTO;
             Id = id;
             UserId = userId;
-            IsPartial = isPartial;
         }
     }
 
@@ -36,7 +34,7 @@ public class Edit
             var inputItem = request.TodoCommandDTO;
 
             if (request.Id != inputItem.Id)
-                throw new DomainException("id", "IDが正しくありません");
+                throw new DomainException(nameof(inputItem.Id), "IDが正しくありません");
 
             var todo = await _todoRepository.FindAsync(request.Id);
             if (todo == null)
@@ -44,25 +42,14 @@ public class Edit
             if (todo.OwnerUserId != request.UserId)
                 throw new BadRequestException();
 
-            if (request.IsPartial)
-                todo.Edit(
-                    title: new TodoTitle(inputItem.Title ?? todo.Title.Value),
-                    description: new TodoDescription(inputItem.Description ?? todo.Description?.Value),
-                    period: new TodoPeriod(
-                        inputItem.BeginDateTime ?? todo.Period?.BeginDateTimeValue,
-                        inputItem.DueDateTime ?? todo.Period?.DueDateTimeValue
-                    ),
-                    state: new TodoState(inputItem.State ?? todo.State.Value)
-                );
-            else
-                todo.Edit(
-                    title: new TodoTitle(inputItem.Title),
-                    description: !string.IsNullOrEmpty(inputItem.Description) ?
-                        new TodoDescription(inputItem.Description) : null,
-                    period: new TodoPeriod(inputItem.BeginDateTime, inputItem.DueDateTime),
-                    state: inputItem.State != null ?
-                        new TodoState((int)inputItem.State) : TodoState.Todo
-                );
+            todo.Edit(
+                title: new TodoTitle(inputItem.Title!),
+                description: !string.IsNullOrEmpty(inputItem.Description) ?
+                    new TodoDescription(inputItem.Description) : null,
+                period: new TodoPeriod(inputItem.BeginDateTime, inputItem.DueDateTime),
+                state: inputItem.State != null ?
+                    new TodoState((int)inputItem.State) : TodoState.Todo
+            );
 
             var result = await _todoRepository.UpdateAsync(todo);
 

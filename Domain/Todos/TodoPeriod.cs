@@ -1,3 +1,4 @@
+using System.ComponentModel.DataAnnotations;
 using Domain.Shared;
 
 namespace Domain.Todos;
@@ -9,9 +10,6 @@ public class TodoPeriod : ValueObject<TodoPeriod>
 
     public TodoPeriod(DateTime? beginDateTimeValue, DateTime? dueDateTimeValue)
     {
-        if (beginDateTimeValue > dueDateTimeValue)
-            throw CreatePeriodException("開始日時が終了日時よりも前になるように指定してください");
-
         BeginDateTimeValue = beginDateTimeValue;
         DueDateTimeValue = dueDateTimeValue;
     }
@@ -19,10 +17,33 @@ public class TodoPeriod : ValueObject<TodoPeriod>
     protected override bool EqualsCore(TodoPeriod other) =>
         (BeginDateTimeValue == other.BeginDateTimeValue) &&
         (DueDateTimeValue == other.DueDateTimeValue);
+}
 
-    private DomainException CreatePeriodException(string message)
+public class TodoPeriodAttribute : ValidationAttribute
+{
+    public string OtherProperty { get; private set; }
+    public Period Period { get; private set; }
+
+    public TodoPeriodAttribute(Period period, string otherProperty)
     {
-        return new DomainException("period", message);
+        OtherProperty = otherProperty;
+        Period = period;
     }
 
+    protected override ValidationResult? IsValid
+        (object? value, ValidationContext validationContext)
+    {
+        var propertyInfo = validationContext.ObjectType.GetProperty(OtherProperty);
+        DateTime? other = propertyInfo?.GetValue(validationContext.ObjectInstance, null) as DateTime?;
+        DateTime? dateTime = value as DateTime?;
+
+        if (Period == Period.Begin && dateTime > other)
+            return new ValidationResult("終了日時よりも前になるように指定してください。");
+        if (Period == Period.Due && dateTime < other)
+            return new ValidationResult("開始日時よりも後になるように指定してください。");
+
+        return ValidationResult.Success;
+    }
 }
+
+public enum Period { Begin, Due }

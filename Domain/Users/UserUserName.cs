@@ -1,27 +1,34 @@
+using System.ComponentModel.DataAnnotations;
 using Domain.Shared;
 
 namespace Domain.Users;
 
-public class UserUserName : ValueObject<UserUserName>
+public class UserName : ValueObject<UserName>
 {
     public string Value { get; }
 
-    public const int MaxUserNameLength = 30;
-
-    public UserUserName(string? value)
+    public UserName(string value)
     {
-        if (string.IsNullOrWhiteSpace(value))
-            throw CreateUserNameException("ユーザー名を入力してください");
-        if (value.Length > MaxUserNameLength)
-            throw CreateUserNameException($"{MaxUserNameLength}文字以内で入力してください");
-
         Value = value;
     }
 
-    protected override bool EqualsCore(UserUserName other) => Value == other.Value;
+    protected override bool EqualsCore(UserName other) => Value == other.Value;
+}
 
-    private DomainException CreateUserNameException(string message)
+public class UserNameAttribute : ValidationAttribute
+{
+    public const int MaxUserNameLength = 30;
+
+    protected override ValidationResult? IsValid
+        (object? value, ValidationContext validationContext)
     {
-        return new DomainException("username", message);
+        string? username = value as string;
+
+        if (string.IsNullOrWhiteSpace(username))
+            return new ValidationResult("ユーザー名を入力してください。");
+        if (username.Length > MaxUserNameLength)
+            return new ValidationResult($"{MaxUserNameLength}文字以内で入力してください");
+
+        return ValidationResult.Success;
     }
 }

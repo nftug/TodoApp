@@ -10,13 +10,11 @@ public class Edit
     {
         public UserCommandDTO User { get; set; }
         public string UserId { get; set; }
-        public bool IsPartial { get; set; }
 
-        public Command(UserCommandDTO user, string userId, bool isPartial)
+        public Command(UserCommandDTO user, string userId)
         {
             User = user;
             UserId = userId;
-            IsPartial = isPartial;
         }
     }
 
@@ -37,16 +35,10 @@ public class Edit
             if (user == null)
                 throw new NotFoundException();
 
-            if (request.IsPartial)
-                user.Edit(
-                    new UserUserName(inputItem.Username ?? user.UserName.Value),
-                    new UserEmail(inputItem.Email ?? user.Email.Value)
-                );
-            else
-                user.Edit(
-                    new UserUserName(inputItem.Username),
-                    new UserEmail(inputItem.Email)
-                );
+            user.Edit(
+                new UserName(inputItem.Username!),
+                new UserEmail(inputItem.Email!)
+            );
 
             var result = await _userRepository.UpdateAsync(user);
 
