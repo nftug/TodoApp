@@ -23,9 +23,10 @@ public class TodoDescriptionAttribute : ValidationAttribute
         (object? value, ValidationContext validationContext)
     {
         string? description = value as string;
+        string[] memberNames = new[] { validationContext.MemberName! };
 
         if (description?.Length > MaxDescriptionLength)
-            return new ValidationResult($"{MaxDescriptionLength}文字以内で入力してください。");
+            return new ValidationResult($"{MaxDescriptionLength}文字以内で入力してください。", memberNames);
 
         return ValidationResult.Success;
     }

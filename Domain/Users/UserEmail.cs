@@ -21,11 +21,12 @@ public class UserEmailAttribute : ValidationAttribute
         (object? value, ValidationContext validationContext)
     {
         string? email = value as string;
+        string[] memberNames = new[] { validationContext.MemberName! };
 
         if (string.IsNullOrWhiteSpace(email))
-            return new ValidationResult("メールアドレスを入力してください。");
+            return new ValidationResult("メールアドレスを入力してください。", memberNames);
         if (!new EmailAddressAttribute().IsValid(email))
-            return new ValidationResult("正しいメールアドレスを入力してください。");
+            return new ValidationResult("正しいメールアドレスを入力してください。", memberNames);
 
         return ValidationResult.Success;
     }

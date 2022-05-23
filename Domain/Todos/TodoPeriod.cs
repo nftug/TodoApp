@@ -36,11 +36,12 @@ public class TodoPeriodAttribute : ValidationAttribute
         var propertyInfo = validationContext.ObjectType.GetProperty(OtherProperty);
         DateTime? other = propertyInfo?.GetValue(validationContext.ObjectInstance, null) as DateTime?;
         DateTime? dateTime = value as DateTime?;
+        string[] memberNames = new[] { validationContext.MemberName! };
 
         if (Period == Period.Begin && dateTime > other)
-            return new ValidationResult("終了日時よりも前になるように指定してください。");
+            return new ValidationResult("終了日時よりも前になるように指定してください。", memberNames);
         if (Period == Period.Due && dateTime < other)
-            return new ValidationResult("開始日時よりも後になるように指定してください。");
+            return new ValidationResult("開始日時よりも後になるように指定してください。", memberNames);
 
         return ValidationResult.Success;
     }

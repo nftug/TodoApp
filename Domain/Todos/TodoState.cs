@@ -37,9 +37,10 @@ public class TodoStateAttribute : ValidationAttribute
         (object? value, ValidationContext validationContext)
     {
         int? state = (int?)value;
+        string[] memberNames = new[] { validationContext.MemberName! };
 
         if (state < 0 || state > MaxStateValue)
-            return new ValidationResult($"0-{MaxStateValue}の間で指定してください。");
+            return new ValidationResult($"0-{MaxStateValue}の間で指定してください。", memberNames);
 
         return ValidationResult.Success;
     }

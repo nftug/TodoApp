@@ -23,11 +23,12 @@ public class UserNameAttribute : ValidationAttribute
         (object? value, ValidationContext validationContext)
     {
         string? username = value as string;
+        string[] memberNames = new[] { validationContext.MemberName! };
 
         if (string.IsNullOrWhiteSpace(username))
-            return new ValidationResult("ユーザー名を入力してください。");
+            return new ValidationResult("ユーザー名を入力してください。", memberNames);
         if (username.Length > MaxUserNameLength)
-            return new ValidationResult($"{MaxUserNameLength}文字以内で入力してください");
+            return new ValidationResult($"{MaxUserNameLength}文字以内で入力してください", memberNames);
 
         return ValidationResult.Success;
     }
