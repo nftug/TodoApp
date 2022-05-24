@@ -4,63 +4,53 @@ using Infrastructure.Shared;
 
 namespace Infrastructure.Todos;
 
-public class TodoQuerySearchService
+public class TodoQuerySearchService : QueryServiceBase<TodoDataModel, TodoQueryParameter>
 {
-    private readonly DataContext _context;
-
     public TodoQuerySearchService(DataContext context)
+        : base(context)
     {
-        _context = context;
     }
 
-    public IQueryable<TodoDataModel> GetFilteredQuery(TodoQueryParameter param)
+    public override IQueryable<TodoDataModel> GetFilteredQuery(TodoQueryParameter param)
     {
         var query = _context.Todos.Include(x => x.Comments)
                                   .Include(x => x.OwnerUser)
                                   .AsQueryable();
 
         // qで絞り込み
-        QuerySearchManager.ForEachKeyword(param.q, q =>
+        foreach (string keyword in Keywords(param.q))
         {
             query = query.Where(x =>
-                x.Title.ToLower().Contains(q) ||
-                x.Description!.ToLower().Contains(q) ||
-                x.Comments.Any(x => x.Content.ToLower().Contains(q)) ||
-                x.OwnerUser!.UserName.ToLower().Contains(q)
+                x.Title.ToLower().Contains(keyword) ||
+                x.Description!.ToLower().Contains(keyword) ||
+                x.Comments.Any(x => x.Content.ToLower().Contains(keyword)) ||
+                x.OwnerUser!.UserName.ToLower().Contains(keyword)
             );
-        });
+        }
 
         // タイトルで絞り込み
-        QuerySearchManager.ForEachKeyword(param.Title, name =>
+        foreach (string keyword in Keywords(param.Title))
         {
-            query = query.Where(x =>
-                x.Title.ToLower().Contains(name)
-            );
-        });
+            query = query.Where(x => x.Title.ToLower().Contains(keyword));
+        }
 
         // 説明文で絞り込み
-        QuerySearchManager.ForEachKeyword(param.Description, name =>
+        foreach (string keyword in Keywords(param.Description))
         {
-            query = query.Where(x =>
-                x.Description!.ToLower().Contains(name)
-            );
-        });
+            query = query.Where(x => x.Description!.ToLower().Contains(keyword));
+        }
 
         // コメントで絞り込み
-        QuerySearchManager.ForEachKeyword(param.Comment, comment =>
+        foreach (string keyword in Keywords(param.Comment))
         {
-            query = query.Where(x =>
-                x.Comments.Any(x => x.Content.ToLower().Contains(comment))
-            );
-        });
+            query = query.Where(x => x.Comments.Any(x => x.Content.ToLower().Contains(keyword)));
+        }
 
         // ユーザー名で絞り込み
-        QuerySearchManager.ForEachKeyword(param.UserName, username =>
+        foreach (string keyword in Keywords(param.UserName))
         {
-            query = query.Where(x =>
-                x.OwnerUser!.UserName.ToLower().Contains(username)
-            );
-        });
+            query = query.Where(x => x.OwnerUser!.UserName.ToLower().Contains(keyword));
+        }
 
         // ユーザーIDで絞り込み
         if (!string.IsNullOrEmpty(param.UserId))

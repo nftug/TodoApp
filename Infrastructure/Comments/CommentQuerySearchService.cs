@@ -4,43 +4,35 @@ using Infrastructure.Shared;
 
 namespace Infrastructure.Comments;
 
-public class CommentQuerySearchService
+public class CommentQuerySearchService : QueryServiceBase<CommentDataModel, CommentQueryParameter>
 {
-    private readonly DataContext _context;
-
     public CommentQuerySearchService(DataContext context)
+        : base(context)
     {
-        _context = context;
     }
 
-    public IQueryable<CommentDataModel> GetFilteredQuery(CommentQueryParameter param)
+    public override IQueryable<CommentDataModel> GetFilteredQuery(CommentQueryParameter param)
     {
         var query = _context.Comments.Include(x => x.OwnerUser)
                                      .AsQueryable();
 
         // qで絞り込み
-        QuerySearchManager.ForEachKeyword(param.q, q =>
+        foreach (string keyword in Keywords(param.q))
         {
-            query = query.Where(x =>
-                x.Content.ToLower().Contains(q)
-            );
-        });
+            query = query.Where(x => x.Content.ToLower().Contains(keyword));
+        }
 
         // 内容で絞り込み
-        QuerySearchManager.ForEachKeyword(param.Content, name =>
+        foreach (string keyword in Keywords(param.Content))
         {
-            query = query.Where(x =>
-                x.Content.ToLower().Contains(name)
-            );
-        });
+            query = query.Where(x => x.Content.ToLower().Contains(keyword));
+        }
 
         // ユーザー名で絞り込み
-        QuerySearchManager.ForEachKeyword(param.UserName, username =>
+        foreach (string keyword in Keywords(param.Content))
         {
-            query = query.Where(x =>
-                x.OwnerUser!.UserName.ToLower().Contains(username)
-            );
-        });
+            query = query.Where(x => x.OwnerUser!.UserName.ToLower().Contains(keyword));
+        }
 
         // ユーザーIDで絞り込み
         if (!string.IsNullOrEmpty(param.UserId))
