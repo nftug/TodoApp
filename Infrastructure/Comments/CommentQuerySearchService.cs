@@ -16,27 +16,36 @@ public class CommentQuerySearchService : QueryServiceBase<CommentDataModel, Comm
         var query = _context.Comments.Include(x => x.OwnerUser)
                                      .AsQueryable();
 
-        // qで絞り込み
-        foreach (string keyword in Keywords(param.q))
-        {
-            query = query.Where(x => x.Content.ToLower().Contains(keyword));
-        }
-
-        // 内容で絞り込み
-        foreach (string keyword in Keywords(param.Content))
-        {
-            query = query.Where(x => x.Content.ToLower().Contains(keyword));
-        }
-
-        // ユーザー名で絞り込み
-        foreach (string keyword in Keywords(param.Content))
-        {
-            query = query.Where(x => x.OwnerUser!.UserName.ToLower().Contains(keyword));
-        }
+        var expressionsNode = new List<QuerySearchExpression<CommentDataModel>>();
 
         // ユーザーIDで絞り込み
         if (!string.IsNullOrEmpty(param.UserId))
-            query = query.Where(x => x.OwnerUserId == param.UserId);
+            expressionsNode.AddExpression(
+                x => x.OwnerUserId == param.UserId, CombineMode.And, Guid.NewGuid()
+            );
+
+        // qで絞り込み
+        foreach (var (keyword, combineMode, blockId) in Keywords(param.q))
+            expressionsNode.AddExpression(
+                x => x.Content.ToLower().Contains(keyword),
+                combineMode, blockId
+            );
+
+        // 内容で絞り込み
+        foreach (var (keyword, combineMode, blockId) in Keywords(param.Content))
+            expressionsNode.AddExpression(
+                x => x.Content.ToLower().Contains(keyword),
+                combineMode, blockId
+            );
+
+        // ユーザー名で絞り込み
+        foreach (var (keyword, combineMode, blockId) in Keywords(param.UserName))
+            expressionsNode.AddExpression(
+                x => x.OwnerUser!.UserName.ToLower().Contains(keyword),
+                combineMode, blockId
+            );
+
+        query = query.ApplyExpressionsNode(expressionsNode);
 
         return query;
     }

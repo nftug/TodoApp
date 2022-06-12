@@ -17,48 +17,62 @@ public class TodoQuerySearchService : QueryServiceBase<TodoDataModel, TodoQueryP
                                   .Include(x => x.OwnerUser)
                                   .AsQueryable();
 
+        var expressionsNode = new List<QuerySearchExpression<TodoDataModel>>();
+
+        // ユーザーIDで絞り込み
+        if (!string.IsNullOrEmpty(param.UserId))
+            expressionsNode.AddExpression(
+                x => x.OwnerUserId == param.UserId, CombineMode.And, Guid.NewGuid()
+            );
+
+        // 状態で絞り込み
+        if (param.State != null)
+            expressionsNode.AddExpression(
+                x => x.State == param.State, CombineMode.And, Guid.NewGuid()
+            );
+
         // qで絞り込み
-        foreach (string keyword in Keywords(param.q))
+        foreach (var (keyword, combineMode, blockId) in Keywords(param.q))
         {
-            query = query.Where(x =>
-                x.Title.ToLower().Contains(keyword) ||
-                x.Description!.ToLower().Contains(keyword) ||
-                x.Comments.Any(x => x.Content.ToLower().Contains(keyword)) ||
-                x.OwnerUser!.UserName.ToLower().Contains(keyword)
+            expressionsNode.AddExpression(
+                x => x.Title.ToLower().Contains(keyword) ||
+                         x.Description!.ToLower().Contains(keyword) ||
+                         x.Comments.Any(x => x.Content.ToLower().Contains(keyword)) ||
+                         x.OwnerUser!.UserName.ToLower().Contains(keyword),
+                combineMode, blockId
             );
         }
 
         // タイトルで絞り込み
-        foreach (string keyword in Keywords(param.Title))
-        {
-            query = query.Where(x => x.Title.ToLower().Contains(keyword));
-        }
+        foreach (var (keyword, combineMode, blockId) in Keywords(param.Title))
+            expressionsNode.AddExpression(
+                x => x.Title.ToLower().Contains(keyword),
+                combineMode, blockId
+            );
 
         // 説明文で絞り込み
-        foreach (string keyword in Keywords(param.Description))
-        {
-            query = query.Where(x => x.Description!.ToLower().Contains(keyword));
-        }
+        foreach (var (keyword, combineMode, blockId) in Keywords(param.Description))
+            expressionsNode.AddExpression(
+                x => x.Description!.ToLower().Contains(keyword),
+                combineMode, blockId
+            );
 
         // コメントで絞り込み
-        foreach (string keyword in Keywords(param.Comment))
-        {
-            query = query.Where(x => x.Comments.Any(x => x.Content.ToLower().Contains(keyword)));
-        }
+        foreach (var (keyword, combineMode, blockId) in Keywords(param.Comment))
+            expressionsNode.AddExpression(
+                x => x.Comments.Any(x => x.Content.ToLower().Contains(keyword)),
+                combineMode, blockId
+            );
 
         // ユーザー名で絞り込み
-        foreach (string keyword in Keywords(param.UserName))
-        {
-            query = query.Where(x => x.OwnerUser!.UserName.ToLower().Contains(keyword));
-        }
+        foreach (var (keyword, combineMode, blockId) in Keywords(param.UserName))
+            expressionsNode.AddExpression(
+                x => x.OwnerUser!.UserName.ToLower().Contains(keyword),
+                combineMode, blockId
+            );
 
-        // ユーザーIDで絞り込み
-        if (!string.IsNullOrEmpty(param.UserId))
-            query = query.Where(x => x.OwnerUserId == param.UserId);
-
-        // 状態で絞り込み
-        if (param.State != null)
-            query = query.Where(x => x.State == param.State);
+        // クエリ式を作成する
+        query = query.ApplyExpressionsNode(expressionsNode);
 
         return query;
     }
