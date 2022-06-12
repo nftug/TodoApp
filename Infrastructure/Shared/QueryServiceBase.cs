@@ -26,17 +26,20 @@ public abstract class QueryServiceBase<T, TQueryParameter>
         {
             CombineMode oldMode = mode;
 
-            if (string.IsNullOrWhiteSpace(paramArray[i]))
-                continue;
-            if (paramArray[i] == "OR")
+            if (string.IsNullOrWhiteSpace(paramArray[i]) || paramArray[i] == "OR")
                 continue;
 
-            // 次の項目を先読みして、現在がORに当てはまるか判定
+            // 次の項目を読んで、現在がOR区分に当てはまるか判定
             if (i + 1 < paramArray.Length)
                 mode = paramArray[i + 1] == "OR" ? CombineMode.OrElse : CombineMode.And;
 
+            // 前の項目を読んで、現在がOR区分に当てはまるか判定
+            if (i - 1 > 0)
+                mode = paramArray[i - 1] == "OR" ? CombineMode.OrElse : CombineMode.And;
+
             // OR/ANDが変更されたら、ブロックを変える
-            if (oldMode != mode) blockId = Guid.NewGuid();
+            if (oldMode != mode)
+                blockId = Guid.NewGuid();
 
             yield return (paramArray[i].ToLower(), mode, blockId);
         }
