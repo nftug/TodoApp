@@ -1,19 +1,15 @@
-using Domain.Shared;
 using Domain.Comments;
+using Domain.Shared;
 
 namespace Domain.Todos;
 
-public class Todo
+public class Todo : ModelBase
 {
-    public Guid Id { get; set; }
     public TodoTitle Title { get; private set; }
     public TodoDescription? Description { get; private set; }
     public TodoPeriod? Period { get; private set; }
     public TodoState State { get; private set; }
     public ICollection<Comment> Comments { get; private set; } = new List<Comment>();
-    public DateTime CreatedDateTime { get; private set; }
-    public DateTime UpdatedDateTime { get; private set; }
-    public string? OwnerUserId { get; private set; }
 
     public Todo(
         Guid id,

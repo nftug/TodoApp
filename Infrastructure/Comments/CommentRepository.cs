@@ -1,115 +1,59 @@
 using Domain.Comments;
 using Domain.Shared;
-using Microsoft.EntityFrameworkCore;
 using Infrastructure.DataModels;
+using Infrastructure.Shared.Repository;
 
 namespace Infrastructure.Comments;
 
-public class CommentRepository : IRepository<Comment, CommentDataModel>
+public class CommentRepository : RepositoryBase<Comment, CommentDataModel>
 {
-    private readonly DataContext _context;
-
-    public CommentRepository(DataContext context)
+    public CommentRepository(DataContext context) : base(context)
     {
-        _context = context;
     }
 
-    public async Task<Comment> CreateAsync(Comment comment)
+    public override async Task<Comment> CreateAsync(Comment item)
     {
         // 外部キーの存在チェック
-        var todoDataModel = await _context.Todos.FindAsync(comment.TodoId);
+        var todoDataModel = await _context.Todos.FindAsync(item.TodoId);
         if (todoDataModel == null)
-            throw new DomainException(nameof(comment.TodoId), "このIDのTodoは存在しません");
+            throw new DomainException(nameof(item.TodoId), "このIDのTodoは存在しません");
 
-        var commentDataModel = ToDataModel(comment);
-        await _context.Comments.AddAsync(commentDataModel);
-        await _context.SaveChangesAsync();
-
-        return ToModel(commentDataModel);
+        return await base.CreateAsync(item);
     }
 
-    public async Task<Comment> UpdateAsync(Comment comment)
-    {
-        var foundCommentDataModel = await _context.Comments
-            .FirstOrDefaultAsync(x => x.Id == comment.Id);
-
-        if (foundCommentDataModel == null)
-            throw new NotFoundException();
-
-        var commentDataModel = Transfer(comment, foundCommentDataModel);
-
-        _context.Comments.Update(commentDataModel);
-        await _context.SaveChangesAsync();
-
-        return ToModel(commentDataModel);
-    }
-
-    public async Task<List<Comment>> GetPaginatedListAsync
-        (IQueryable<CommentDataModel> query, IQueryParameter param)
-    {
-        var (page, limit) = (param.Page, param.Limit);
-
-        return await query
-            .Skip((page - 1) * limit)
-            .Take(limit)
-            .Select(x => ToModel(x))
-            .ToListAsync();
-    }
-
-    public async Task<Comment?> FindAsync(Guid id)
-    {
-        var commentDataModel = await _context.Comments
-            .FirstOrDefaultAsync(x => x.Id == id);
-
-        return commentDataModel != null
-            ? ToModel(commentDataModel) : null;
-    }
-
-    public async Task RemoveAsync(Guid id)
-    {
-        var commentDataModel = await _context.Comments.FindAsync(id);
-
-        if (commentDataModel == null)
-            throw new NotFoundException();
-
-        _context.Comments.Remove(commentDataModel);
-        await _context.SaveChangesAsync();
-    }
-
-    private static CommentDataModel ToDataModel(Comment comment)
+    protected override CommentDataModel ToDataModel(Comment item)
     {
         return new()
         {
-            Content = comment.Content.Value,
-            TodoId = comment.TodoId,
-            CreatedDateTime = comment.CreatedDateTime,
-            UpdatedDateTime = comment.UpdatedDateTime,
-            OwnerUserId = comment.OwnerUserId
+            Content = item.Content.Value,
+            TodoId = item.TodoId,
+            CreatedDateTime = item.CreatedDateTime,
+            UpdatedDateTime = item.UpdatedDateTime,
+            OwnerUserId = item.OwnerUserId
         };
     }
 
-    private static CommentDataModel Transfer
-        (Comment comment, CommentDataModel CommentDataModel)
+    protected override CommentDataModel Transfer
+        (Comment item, CommentDataModel data)
     {
-        CommentDataModel.Content = comment.Content.Value;
-        CommentDataModel.TodoId = comment.TodoId;
-        CommentDataModel.CreatedDateTime = comment.CreatedDateTime;
-        CommentDataModel.UpdatedDateTime = comment.UpdatedDateTime;
-        CommentDataModel.OwnerUserId = comment.OwnerUserId;
+        data.Content = item.Content.Value;
+        data.TodoId = item.TodoId;
+        data.CreatedDateTime = item.CreatedDateTime;
+        data.UpdatedDateTime = item.UpdatedDateTime;
+        data.OwnerUserId = item.OwnerUserId;
 
-        return CommentDataModel;
+        return data;
     }
 
-    private static Comment ToModel
-        (CommentDataModel commentDataModel)
+    protected override Comment ToModel(CommentDataModel data)
     {
         return new(
-            id: commentDataModel.Id,
-            content: new(commentDataModel.Content),
-            todoId: commentDataModel.TodoId,
-            createdDateTime: commentDataModel.CreatedDateTime,
-            updatedDateTime: commentDataModel.UpdatedDateTime,
-            ownerUserId: commentDataModel?.OwnerUserId
+            id: data.Id,
+            content: new(data.Content),
+            todoId: data.TodoId,
+            createdDateTime: data.CreatedDateTime,
+            updatedDateTime: data.UpdatedDateTime,
+            ownerUserId: data?.OwnerUserId
         );
     }
 }

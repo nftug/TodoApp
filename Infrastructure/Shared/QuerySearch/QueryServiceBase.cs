@@ -1,4 +1,6 @@
-namespace Infrastructure.Shared;
+using Infrastructure.Shared.QuerySearch.Models;
+
+namespace Infrastructure.Shared.QuerySearch;
 
 public abstract class QueryServiceBase<T, TQueryParameter>
 {

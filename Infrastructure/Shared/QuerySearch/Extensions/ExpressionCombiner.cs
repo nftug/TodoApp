@@ -1,6 +1,7 @@
 using System.Linq.Expressions;
+using Infrastructure.Shared.QuerySearch.Models;
 
-namespace Infrastructure.Shared;
+namespace Infrastructure.Shared.QuerySearch.Extensions;
 
 public static class ExpressionCombiner
 {

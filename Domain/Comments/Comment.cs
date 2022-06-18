@@ -1,13 +1,11 @@
+using Domain.Shared;
+
 namespace Domain.Comments;
 
-public class Comment
+public class Comment : ModelBase
 {
-    public Guid Id { get; set; }
     public CommentContent Content { get; private set; }
     public Guid TodoId { get; private set; }
-    public DateTime CreatedDateTime { get; private set; }
-    public DateTime UpdatedDateTime { get; private set; }
-    public string? OwnerUserId { get; private set; }
 
     public Comment(
         Guid id,
@@ -44,9 +42,7 @@ public class Comment
         );
     }
 
-    public void Edit(
-        CommentContent content
-    )
+    public void Edit(CommentContent content)
     {
         Content = content;
         UpdatedDateTime = DateTime.Now;

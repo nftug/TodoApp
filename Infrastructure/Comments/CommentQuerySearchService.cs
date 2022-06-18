@@ -1,6 +1,8 @@
 using Microsoft.EntityFrameworkCore;
 using Infrastructure.DataModels;
-using Infrastructure.Shared;
+using Infrastructure.Shared.QuerySearch;
+using Infrastructure.Shared.QuerySearch.Models;
+using Infrastructure.Shared.QuerySearch.Extensions;
 
 namespace Infrastructure.Comments;
 

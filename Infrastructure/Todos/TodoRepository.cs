@@ -1,133 +1,84 @@
 using Domain.Todos;
 using Domain.Comments;
-using Domain.Shared;
 using Microsoft.EntityFrameworkCore;
 using Infrastructure.DataModels;
+using Infrastructure.Shared.Repository;
+using Domain.Shared;
 
 namespace Infrastructure.Todos;
 
-public class TodoRepository : IRepository<Todo, TodoDataModel>
+public class TodoRepository : RepositoryBase<Todo, TodoDataModel>
 {
-    private readonly DataContext _context;
-
-    public TodoRepository(DataContext context)
+    public TodoRepository(DataContext context) : base(context)
     {
-        _context = context;
     }
 
-    public async Task<Todo> CreateAsync(Todo todo)
+    public override async Task<Todo?> FindAsync(Guid id)
     {
-        var todoDataModel = ToDataModel(todo);
-        await _context.Todos.AddAsync(todoDataModel);
-        await _context.SaveChangesAsync();
-
-        return ToModel(todoDataModel);
-    }
-
-    public async Task<Todo> UpdateAsync(Todo todo)
-    {
-        var foundTodoDataModel = await _context.Todos
-            .FirstOrDefaultAsync(x => x.Id == todo.Id);
-
-        if (foundTodoDataModel == null)
-            throw new NotFoundException();
-
-        var todoDataModel = Transfer(todo, foundTodoDataModel);
-
-        _context.Todos.Update(todoDataModel);
-        await _context.SaveChangesAsync();
-
-        return ToModel(todoDataModel);
-    }
-
-    public async Task<Todo?> FindAsync(Guid id)
-    {
-        var todoDataModel = await _context.Todos
+        var data = await _context.Todos
             .Include(x => x.Comments)
             .FirstOrDefaultAsync(x => x.Id == id);
 
-        return todoDataModel != null
-            ? ToModel(todoDataModel) : null;
+        return data != null ? ToModel(data) : null;
     }
 
-    public async Task<List<Todo>> GetPaginatedListAsync
-        (IQueryable<TodoDataModel> query, IQueryParameter param)
-    {
-        var (page, limit) = (param.Page, param.Limit);
-
-        return await query
-            .Skip((page - 1) * limit)
-            .Take(limit)
-            .Select(x => ToModel(x))
-            .ToListAsync();
-    }
-
-    public async Task RemoveAsync(Guid id)
-    {
-        var todoDataModel = await _context.Todos.FindAsync(id);
-
-        if (todoDataModel == null)
-            throw new NotFoundException();
-
-        _context.Todos.Remove(todoDataModel);
-        await _context.SaveChangesAsync();
-    }
-
-    private static TodoDataModel ToDataModel(Todo todo)
+    protected override TodoDataModel ToDataModel(Todo item)
     {
         return new()
         {
-            Title = todo.Title.Value,
-            Description = todo.Description?.Value,
-            BeginDateTime = todo.Period?.BeginDateTimeValue,
-            DueDateTime = todo.Period?.DueDateTimeValue,
-            State = todo.State.Value,
+            Title = item.Title.Value,
+            Description = item.Description?.Value,
+            BeginDateTime = item.Period?.BeginDateTimeValue,
+            DueDateTime = item.Period?.DueDateTimeValue,
+            State = item.State.Value,
             Comments = new List<CommentDataModel>(),
-            CreatedDateTime = todo.CreatedDateTime,
-            UpdatedDateTime = todo.UpdatedDateTime,
-            OwnerUserId = todo.OwnerUserId
+            CreatedDateTime = item.CreatedDateTime,
+            UpdatedDateTime = item.UpdatedDateTime,
+            OwnerUserId = item.OwnerUserId
         };
     }
 
-    private static TodoDataModel Transfer
-        (Todo todo, TodoDataModel todoDataModel)
+    protected override TodoDataModel Transfer
+        (Todo item, TodoDataModel data)
     {
-        todoDataModel.Title = todo.Title.Value;
-        todoDataModel.Description = todo.Description?.Value;
-        todoDataModel.BeginDateTime = todo.Period?.BeginDateTimeValue;
-        todoDataModel.DueDateTime = todo.Period?.DueDateTimeValue;
-        todoDataModel.State = todo.State.Value;
-        todoDataModel.CreatedDateTime = todo.CreatedDateTime;
-        todoDataModel.UpdatedDateTime = todo.UpdatedDateTime;
-        todoDataModel.OwnerUserId = todo.OwnerUserId;
+        data.Title = item.Title.Value;
+        data.Description = item.Description?.Value;
+        data.BeginDateTime = item.Period?.BeginDateTimeValue;
+        data.DueDateTime = item.Period?.DueDateTimeValue;
+        data.State = item.State.Value;
+        data.CreatedDateTime = item.CreatedDateTime;
+        data.UpdatedDateTime = item.UpdatedDateTime;
+        data.OwnerUserId = item.OwnerUserId;
 
-        return todoDataModel;
+        return data;
     }
 
-    private static Todo ToModel(TodoDataModel todoDataModel)
+    protected override Todo ToModel(TodoDataModel data)
     {
-        var comments = todoDataModel.Comments
-            .Select(x => new Comment(
-                x.Id,
-                new(x.Content),
-                x.TodoId,
-                x.CreatedDateTime,
-                x.UpdatedDateTime,
-                x.OwnerUserId
-            ))
+        var comments = data.Comments
+            .Select(x =>
+                new Comment(
+                    x.Id,
+                    new(x.Content),
+                    x.TodoId,
+                    x.CreatedDateTime,
+                    x.UpdatedDateTime,
+                    x.OwnerUserId
+                )
+            )
             .ToList();
 
         return new(
-            id: todoDataModel.Id,
-            title: new(todoDataModel.Title),
-            description: !string.IsNullOrWhiteSpace(todoDataModel.Description)
-                ? new(todoDataModel.Description) : null,
-            period: new(todoDataModel.BeginDateTime, todoDataModel.DueDateTime),
-            state: new(todoDataModel.State),
+            id: data.Id,
+            title: new(data.Title),
+            description: !string.IsNullOrWhiteSpace(data.Description)
+                ? new(data.Description) : null,
+            period: new(data.BeginDateTime, data.DueDateTime),
+            state: new(data.State),
             comments: comments,
-            createdDateTime: todoDataModel.CreatedDateTime,
-            updatedDateTime: todoDataModel.UpdatedDateTime,
-            ownerUserId: todoDataModel?.OwnerUserId
+            createdDateTime: data.CreatedDateTime,
+            updatedDateTime: data.UpdatedDateTime,
+            ownerUserId: data?.OwnerUserId
         );
     }
 }

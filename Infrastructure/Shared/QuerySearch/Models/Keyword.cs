@@ -1,4 +1,4 @@
-namespace Infrastructure.Shared;
+namespace Infrastructure.Shared.QuerySearch.Models;
 
 public class Keyword
 {

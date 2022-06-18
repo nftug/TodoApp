@@ -1,6 +1,5 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
-using Domain;
 using Infrastructure.DataModels;
 
 namespace Infrastructure;
