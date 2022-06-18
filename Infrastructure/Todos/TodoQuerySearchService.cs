@@ -4,7 +4,6 @@ using Infrastructure.Shared.QuerySearch;
 using Infrastructure.Shared.QuerySearch.Models;
 using Infrastructure.Shared.QuerySearch.Extensions;
 using Domain.Interfaces;
-using Domain.Todos;
 
 namespace Infrastructure.Todos;
 

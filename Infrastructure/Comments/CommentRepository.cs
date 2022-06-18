@@ -1,5 +1,4 @@
 using Domain.Comments;
-using Domain.Interfaces;
 using Domain.Shared;
 using Infrastructure.DataModels;
 using Infrastructure.Shared.Repository;

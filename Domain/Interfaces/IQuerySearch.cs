@@ -1,6 +1,4 @@
-using Domain.Interfaces;
-
-namespace Infrastructure.Interfaces;
+namespace Domain.Interfaces;
 
 public interface IQuerySearch<TEntity>
     where TEntity : IEntity

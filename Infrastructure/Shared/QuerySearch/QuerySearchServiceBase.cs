@@ -1,6 +1,5 @@
 using Domain.Interfaces;
 using Infrastructure.DataModels;
-using Infrastructure.Interfaces;
 using Infrastructure.Shared.QuerySearch.Models;
 
 namespace Infrastructure.Shared.QuerySearch;
