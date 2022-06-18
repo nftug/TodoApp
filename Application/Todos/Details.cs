@@ -1,6 +1,7 @@
 using MediatR;
 using Domain.Todos;
 using Domain.Shared;
+using Infrastructure.DataModels;
 
 namespace Application.Todos;
 
@@ -20,21 +21,22 @@ public class Details
 
     public class Handler : IRequestHandler<Query, TodoResultDTO>
     {
-        private readonly ITodoRepository _todoRepository;
+        private readonly IRepository<Todo, TodoDataModel> _todoRepository;
 
-        public Handler(ITodoRepository todoRepository)
+        public Handler(IRepository<Todo, TodoDataModel> todoRepository)
         {
             _todoRepository = todoRepository;
         }
 
-        public async Task<TodoResultDTO> Handle(Query request, CancellationToken cancellationToken)
+        public async Task<TodoResultDTO> Handle
+            (Query request, CancellationToken cancellationToken)
         {
             var todo = await _todoRepository.FindAsync(request.Id);
 
             if (todo == null)
                 throw new NotFoundException();
 
-            return TodoResultDTO.CreateResultDTO(todo);
+            return new TodoResultDTO(todo);
         }
     }
 }

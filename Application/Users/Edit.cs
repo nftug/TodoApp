@@ -27,7 +27,8 @@ public class Edit
             _userRepository = userRepository;
         }
 
-        public async Task<UserResultDTO.Me> Handle(Command request, CancellationToken cancellationToken)
+        public async Task<UserResultDTO.Me> Handle
+            (Command request, CancellationToken cancellationToken)
         {
             var inputItem = request.User;
             var user = await _userRepository.FindAsync(request.UserId);

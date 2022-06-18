@@ -1,7 +1,7 @@
 using MediatR;
 using Domain.Comments;
-using Domain.Todos;
 using Domain.Shared;
+using Infrastructure.DataModels;
 
 namespace Application.Comments;
 
@@ -21,33 +21,27 @@ public class Create
 
     public class Handler : IRequestHandler<Command, CommentResultDTO>
     {
-        private readonly ICommentRepository _commentRepository;
-        private readonly ITodoRepository _todoRepository;
+        private readonly IRepository<Comment, CommentDataModel> _commentRepository;
 
         public Handler
-            (ICommentRepository commentRepository, ITodoRepository todoRepository)
+            (IRepository<Comment, CommentDataModel> commentRepository)
         {
             _commentRepository = commentRepository;
-            _todoRepository = todoRepository;
         }
 
-        public async Task<CommentResultDTO> Handle(Command request, CancellationToken cancellationToken)
+        public async Task<CommentResultDTO> Handle
+            (Command request, CancellationToken cancellationToken)
         {
             var inputItem = request.CommentCommandDTO;
 
-            // 外部キーの存在チェック
-            var todoDataModel = await _todoRepository.FindAsync(inputItem.TodoId);
-            if (todoDataModel == null)
-                throw new DomainException(nameof(inputItem.TodoId), "Todoアイテムが存在しません");
-
             var comment = Comment.CreateNew(
-                content: new CommentContent(inputItem.Content!),
+                content: new(inputItem.Content!),
                 todoId: inputItem.TodoId,
                 ownerUserId: request.UserId
             );
 
             var result = await _commentRepository.CreateAsync(comment);
-            return CommentResultDTO.CreateResultDTO(result);
+            return new CommentResultDTO(result);
         }
     }
 }

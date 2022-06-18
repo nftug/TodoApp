@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Infrastructure.DataModels;
 using API.Models;
-using API.Extensions;
+using API.Services;
 
 namespace API.Controllers;
 

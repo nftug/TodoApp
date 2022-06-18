@@ -1,5 +1,3 @@
-using Domain;
-
 namespace Infrastructure.DataModels;
 
 public class CommentDataModel

@@ -4,36 +4,30 @@ namespace Infrastructure.Shared;
 
 public static class ExpressionCombiner
 {
-    public static Expression<Func<T, bool>> OrElse<T>(
-        params Expression<Func<T, bool>>[] expressions)
-    {
-        return OrElse(expressions.AsEnumerable());
-    }
+    public static Expression<Func<T, bool>> OrElse<T>
+        (params Expression<Func<T, bool>>[] expressions)
+        => OrElse(expressions.AsEnumerable());
 
-    public static Expression<Func<T, bool>> OrElse<T>(
-        this IEnumerable<Expression<Func<T, bool>>> expressions)
-    {
-        return Combine(expressions, CombineMode.OrElse);
-    }
+    public static Expression<Func<T, bool>> OrElse<T>
+        (this IEnumerable<Expression<Func<T, bool>>> expressions)
+        => Combine(expressions, CombineMode.OrElse);
 
-    public static Expression<Func<T, bool>> And<T>(
-        params Expression<Func<T, bool>>[] expressions)
-    {
-        return And(expressions.AsEnumerable());
-    }
+    public static Expression<Func<T, bool>> And<T>
+        (params Expression<Func<T, bool>>[] expressions)
+        => And(expressions.AsEnumerable());
 
-    public static Expression<Func<T, bool>> And<T>(
-        this IEnumerable<Expression<Func<T, bool>>> expressions)
-    {
-        return Combine(expressions, CombineMode.And);
-    }
+    public static Expression<Func<T, bool>> And<T>
+        (this IEnumerable<Expression<Func<T, bool>>> expressions)
+        => Combine(expressions, CombineMode.And);
 
-    private static Expression<Func<T, bool>> Combine<T>(
-        IEnumerable<Expression<Func<T, bool>>> expressions, CombineMode mode)
+    private static Expression<Func<T, bool>> Combine<T>
+        (IEnumerable<Expression<Func<T, bool>>> expressions, CombineMode mode)
     {
         if (!expressions.Any())
         {
-            throw new ArgumentException($"parameter [{nameof(expressions)}] is empty.", nameof(expressions));
+            throw new ArgumentException(
+                $"parameter [{nameof(expressions)}] is empty.", nameof(expressions)
+            );
         }
 
         var lambda = expressions.First();

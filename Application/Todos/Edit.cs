@@ -1,6 +1,7 @@
 using MediatR;
 using Domain.Todos;
 using Domain.Shared;
+using Infrastructure.DataModels;
 
 namespace Application.Todos;
 
@@ -22,14 +23,15 @@ public class Edit
 
     public class Handler : IRequestHandler<Command, TodoResultDTO>
     {
-        private readonly ITodoRepository _todoRepository;
+        private readonly IRepository<Todo, TodoDataModel> _todoRepository;
 
-        public Handler(ITodoRepository todoRepository)
+        public Handler(IRepository<Todo, TodoDataModel> todoRepository)
         {
             _todoRepository = todoRepository;
         }
 
-        public async Task<TodoResultDTO> Handle(Command request, CancellationToken cancellationToken)
+        public async Task<TodoResultDTO> Handle
+            (Command request, CancellationToken cancellationToken)
         {
             var inputItem = request.TodoCommandDTO;
 
@@ -43,17 +45,17 @@ public class Edit
                 throw new BadRequestException();
 
             todo.Edit(
-                title: new TodoTitle(inputItem.Title!),
-                description: !string.IsNullOrEmpty(inputItem.Description) ?
-                    new TodoDescription(inputItem.Description) : null,
-                period: new TodoPeriod(inputItem.BeginDateTime, inputItem.DueDateTime),
-                state: inputItem.State != null ?
-                    new TodoState((int)inputItem.State) : TodoState.Todo
+                title: new(inputItem.Title!),
+                description: !string.IsNullOrEmpty(inputItem.Description)
+                    ? new(inputItem.Description) : null,
+                period: new(inputItem.BeginDateTime, inputItem.DueDateTime),
+                state: inputItem.State != null
+                    ? new((int)inputItem.State) : TodoState.Todo
             );
 
             var result = await _todoRepository.UpdateAsync(todo);
 
-            return TodoResultDTO.CreateResultDTO(result);
+            return new TodoResultDTO(result);
         }
     }
 }

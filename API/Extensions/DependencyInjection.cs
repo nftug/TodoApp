@@ -15,12 +15,15 @@ using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.Extensions.Options;
+using API.Services;
+using Domain.Shared;
 
 namespace API.Extensions;
 
 internal static class DependencyInjection
 {
-    internal static IServiceCollection AddApplications(this IServiceCollection services, IConfiguration config)
+    internal static IServiceCollection AddApplications
+        (this IServiceCollection services, IConfiguration config)
     {
         services.AddSwaggerGen(c =>
         {
@@ -55,8 +58,8 @@ internal static class DependencyInjection
         services.AddJwtService(config);
 
         // repositories
-        services.AddTransient<ITodoRepository, TodoRepository>();
-        services.AddTransient<ICommentRepository, CommentRepository>();
+        services.AddTransient<IRepository<Todo, TodoDataModel>, TodoRepository>();
+        services.AddTransient<IRepository<Comment, CommentDataModel>, CommentRepository>();
         services.AddTransient<IUserRepository, UserRepository>();
 
         // query services
@@ -70,7 +73,8 @@ internal static class DependencyInjection
     // https://book2525stack.com/2020/08/31/aspnetcore-jwt/
     // https://zenn.dev/mosuma/articles/ebfb55b9b7d629
 
-    private static IServiceCollection AddJwtService(this IServiceCollection services, IConfiguration config)
+    private static IServiceCollection AddJwtService
+        (this IServiceCollection services, IConfiguration config)
     {
         var jwtSettings = new JwtSettings();
         var section = config.GetSection(nameof(JwtSettings));

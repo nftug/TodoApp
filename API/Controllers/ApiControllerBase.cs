@@ -34,10 +34,5 @@ public abstract class ApiControllerBase : ControllerBase
             ModelState.AddModelError(exc.Field, exc.Message);
             return ValidationProblem();
         }
-        catch (Exception exc)
-        {
-            ModelState.AddModelError("unknown", exc.Message);
-            return BadRequest(ModelState);
-        }
     }
 }

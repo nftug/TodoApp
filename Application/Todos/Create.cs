@@ -1,5 +1,7 @@
 using MediatR;
 using Domain.Todos;
+using Infrastructure.DataModels;
+using Domain.Shared;
 
 namespace Application.Todos;
 
@@ -19,29 +21,30 @@ public class Create
 
     public class Handler : IRequestHandler<Command, TodoResultDTO>
     {
-        private readonly ITodoRepository _todoRepository;
+        private readonly IRepository<Todo, TodoDataModel> _todoRepository;
 
-        public Handler(ITodoRepository todoRepository)
+        public Handler(IRepository<Todo, TodoDataModel> todoRepository)
         {
             _todoRepository = todoRepository;
         }
 
-        public async Task<TodoResultDTO> Handle(Command request, CancellationToken cancellationToken)
+        public async Task<TodoResultDTO> Handle
+            (Command request, CancellationToken cancellationToken)
         {
             var inputItem = request.TodoCommandDTO;
 
             var todo = Todo.CreateNew(
-                title: new TodoTitle(inputItem.Title!),
+                title: new(inputItem.Title!),
                 description: !string.IsNullOrWhiteSpace(inputItem.Description) ?
-                    new TodoDescription(inputItem.Description) : null,
-                period: new TodoPeriod(inputItem.BeginDateTime, inputItem.DueDateTime),
+                    new(inputItem.Description) : null,
+                period: new(inputItem.BeginDateTime, inputItem.DueDateTime),
                 state: inputItem.State != null ?
-                    new TodoState((int)inputItem.State) : TodoState.Todo,
+                    new((int)inputItem.State) : TodoState.Todo,
                 ownerUserId: request.UserId
             );
 
             var result = await _todoRepository.CreateAsync(todo);
-            return TodoResultDTO.CreateResultDTO(result);
+            return new TodoResultDTO(result);
         }
     }
 }

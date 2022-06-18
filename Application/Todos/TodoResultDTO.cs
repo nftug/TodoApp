@@ -11,53 +11,24 @@ public class TodoResultDTO
     public DateTime? BeginDateTime { get; set; }
     public DateTime? DueDateTime { get; set; }
     public TodoState State { get; set; }
-    public ICollection<CommentResultDTO> Comments { get; set; } = null!;
+    public List<CommentResultDTO> Comments { get; set; } = null!;
     public DateTime CreatedDateTime { get; set; }
     public DateTime UpdatedDateTime { get; set; }
     public string? OwnerUserId { get; set; }
 
-    public TodoResultDTO(
-        Guid id,
-        string title,
-        string? description,
-        DateTime? beginDateTime,
-        DateTime? dueDateTime,
-        TodoState state,
-        ICollection<CommentResultDTO> comments,
-        DateTime createdDateTime,
-        DateTime updatedDateTime,
-        string? ownerUserId
-    )
+    public TodoResultDTO(Todo todo)
     {
-        Id = id;
-        Title = title;
-        Description = description;
-        BeginDateTime = beginDateTime;
-        DueDateTime = dueDateTime;
-        State = state;
-        Comments = comments;
-        CreatedDateTime = createdDateTime;
-        UpdatedDateTime = updatedDateTime;
-        OwnerUserId = ownerUserId;
-    }
-
-    public static TodoResultDTO CreateResultDTO(Todo todo)
-    {
-        var comments = todo.Comments.Select(x =>
-            CommentResultDTO.CreateResultDTO(x)
-        ).ToList();
-
-        return new TodoResultDTO(
-            id: todo.Id,
-            title: todo.Title.Value,
-            description: todo.Description?.Value,
-            beginDateTime: todo.Period?.BeginDateTimeValue,
-            dueDateTime: todo.Period?.DueDateTimeValue,
-            state: todo.State,
-            comments: comments,
-            createdDateTime: todo.CreatedDateTime,
-            updatedDateTime: todo.UpdatedDateTime,
-            ownerUserId: todo.OwnerUserId
-        );
+        Id = todo.Id;
+        Title = todo.Title.Value;
+        Description = todo.Description?.Value;
+        BeginDateTime = todo.Period?.BeginDateTimeValue;
+        DueDateTime = todo.Period?.DueDateTimeValue;
+        State = todo.State;
+        Comments = todo.Comments
+            .Select(x => new CommentResultDTO(x))
+            .ToList();
+        CreatedDateTime = todo.CreatedDateTime;
+        UpdatedDateTime = todo.UpdatedDateTime;
+        OwnerUserId = todo.OwnerUserId;
     }
 }

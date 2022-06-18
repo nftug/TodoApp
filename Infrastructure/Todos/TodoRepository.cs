@@ -6,7 +6,7 @@ using Infrastructure.DataModels;
 
 namespace Infrastructure.Todos;
 
-public class TodoRepository : ITodoRepository
+public class TodoRepository : IRepository<Todo, TodoDataModel>
 {
     private readonly DataContext _context;
 
@@ -27,10 +27,8 @@ public class TodoRepository : ITodoRepository
     public async Task<Todo> UpdateAsync(Todo todo)
     {
         var foundTodoDataModel = await _context.Todos
-                                               .Include(x => x.Comments)
-                                               .FirstOrDefaultAsync(
-                                                   x => x.Id == todo.Id
-                                               );
+            .FirstOrDefaultAsync(x => x.Id == todo.Id);
+
         if (foundTodoDataModel == null)
             throw new NotFoundException();
 
@@ -42,9 +40,42 @@ public class TodoRepository : ITodoRepository
         return ToModel(todoDataModel);
     }
 
-    private TodoDataModel ToDataModel(Todo todo)
+    public async Task<Todo?> FindAsync(Guid id)
     {
-        return new TodoDataModel
+        var todoDataModel = await _context.Todos
+            .Include(x => x.Comments)
+            .FirstOrDefaultAsync(x => x.Id == id);
+
+        return todoDataModel != null
+            ? ToModel(todoDataModel) : null;
+    }
+
+    public async Task<List<Todo>> GetPaginatedListAsync
+        (IQueryable<TodoDataModel> query, IQueryParameter param)
+    {
+        var (page, limit) = (param.Page, param.Limit);
+
+        return await query
+            .Skip((page - 1) * limit)
+            .Take(limit)
+            .Select(x => ToModel(x))
+            .ToListAsync();
+    }
+
+    public async Task RemoveAsync(Guid id)
+    {
+        var todoDataModel = await _context.Todos.FindAsync(id);
+
+        if (todoDataModel == null)
+            throw new NotFoundException();
+
+        _context.Todos.Remove(todoDataModel);
+        await _context.SaveChangesAsync();
+    }
+
+    private static TodoDataModel ToDataModel(Todo todo)
+    {
+        return new()
         {
             Title = todo.Title.Value,
             Description = todo.Description?.Value,
@@ -58,7 +89,8 @@ public class TodoRepository : ITodoRepository
         };
     }
 
-    private TodoDataModel Transfer(Todo todo, TodoDataModel todoDataModel)
+    private static TodoDataModel Transfer
+        (Todo todo, TodoDataModel todoDataModel)
     {
         todoDataModel.Title = todo.Title.Value;
         todoDataModel.Description = todo.Description?.Value;
@@ -72,51 +104,30 @@ public class TodoRepository : ITodoRepository
         return todoDataModel;
     }
 
-    public async Task<Todo?> FindAsync(Guid id)
+    private static Todo ToModel(TodoDataModel todoDataModel)
     {
-        var todoDataModel = await _context.Todos
-                                          .Include(x => x.Comments)
-                                          .FirstOrDefaultAsync(
-                                              x => x.Id == id
-                                          );
-
-        return todoDataModel != null ? ToModel(todoDataModel) : null;
-    }
-
-    private Todo ToModel(TodoDataModel todoDataModel)
-    {
-        var comments = todoDataModel.Comments.Select(x =>
-            new Comment(
+        var comments = todoDataModel.Comments
+            .Select(x => new Comment(
                 x.Id,
-                new CommentContent(x.Content),
+                new(x.Content),
                 x.TodoId,
                 x.CreatedDateTime,
                 x.UpdatedDateTime,
                 x.OwnerUserId
-            )).ToList();
+            ))
+            .ToList();
 
-        return new Todo(
+        return new(
             id: todoDataModel.Id,
-            title: new TodoTitle(todoDataModel.Title),
+            title: new(todoDataModel.Title),
             description: !string.IsNullOrWhiteSpace(todoDataModel.Description)
-                ? new TodoDescription(todoDataModel.Description) : null,
-            period: new TodoPeriod(todoDataModel.BeginDateTime, todoDataModel.DueDateTime),
-            state: new TodoState(todoDataModel.State),
+                ? new(todoDataModel.Description) : null,
+            period: new(todoDataModel.BeginDateTime, todoDataModel.DueDateTime),
+            state: new(todoDataModel.State),
             comments: comments,
             createdDateTime: todoDataModel.CreatedDateTime,
             updatedDateTime: todoDataModel.UpdatedDateTime,
             ownerUserId: todoDataModel?.OwnerUserId
         );
-    }
-
-    public async Task RemoveAsync(Guid id)
-    {
-        var todoDataModel = await _context.Todos.FindAsync(id);
-
-        if (todoDataModel == null)
-            throw new NotFoundException();
-
-        _context.Todos.Remove(todoDataModel);
-        await _context.SaveChangesAsync();
     }
 }

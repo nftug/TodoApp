@@ -1,6 +1,7 @@
 using MediatR;
 using Domain.Comments;
 using Domain.Shared;
+using Infrastructure.DataModels;
 
 namespace Application.Comments;
 
@@ -20,21 +21,22 @@ public class Details
 
     public class Handler : IRequestHandler<Query, CommentResultDTO>
     {
-        private readonly ICommentRepository _commentRepository;
+        private readonly IRepository<Comment, CommentDataModel> _commentRepository;
 
-        public Handler(ICommentRepository commentRepository)
+        public Handler(IRepository<Comment, CommentDataModel> commentRepository)
         {
             _commentRepository = commentRepository;
         }
 
-        public async Task<CommentResultDTO> Handle(Query request, CancellationToken cancellationToken)
+        public async Task<CommentResultDTO> Handle
+            (Query request, CancellationToken cancellationToken)
         {
             var comment = await _commentRepository.FindAsync(request.Id);
 
             if (comment == null)
                 throw new NotFoundException();
 
-            return CommentResultDTO.CreateResultDTO(comment);
+            return new CommentResultDTO(comment);
         }
     }
 }

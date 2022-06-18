@@ -1,6 +1,7 @@
 using MediatR;
 using Domain.Comments;
 using Domain.Shared;
+using Infrastructure.DataModels;
 
 namespace Application.Comments;
 
@@ -22,14 +23,15 @@ public class Edit
 
     public class Handler : IRequestHandler<Command, CommentResultDTO>
     {
-        private readonly ICommentRepository _commentRepository;
+        private readonly IRepository<Comment, CommentDataModel> _commentRepository;
 
-        public Handler(ICommentRepository commentRepository)
+        public Handler(IRepository<Comment, CommentDataModel> commentRepository)
         {
             _commentRepository = commentRepository;
         }
 
-        public async Task<CommentResultDTO> Handle(Command request, CancellationToken cancellationToken)
+        public async Task<CommentResultDTO> Handle
+            (Command request, CancellationToken cancellationToken)
         {
             var inputItem = request.CommentCommandDTO;
 
@@ -42,13 +44,11 @@ public class Edit
             if (comment.OwnerUserId != request.UserId)
                 throw new BadRequestException();
 
-            comment.Edit(
-                content: new CommentContent(inputItem.Content!)
-            );
+            comment.Edit(content: new(inputItem.Content!));
 
             var result = await _commentRepository.UpdateAsync(comment);
 
-            return CommentResultDTO.CreateResultDTO(result);
+            return new CommentResultDTO(result);
         }
     }
 }

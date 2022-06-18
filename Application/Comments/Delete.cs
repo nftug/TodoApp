@@ -1,6 +1,7 @@
 using MediatR;
 using Domain.Comments;
 using Domain.Shared;
+using Infrastructure.DataModels;
 
 namespace Application.Comments;
 
@@ -20,14 +21,15 @@ public class Delete
 
     public class Handler : IRequestHandler<Command, Unit>
     {
-        private readonly ICommentRepository _commentRepository;
+        private readonly IRepository<Comment, CommentDataModel> _commentRepository;
 
-        public Handler(ICommentRepository commentRepository)
+        public Handler(IRepository<Comment, CommentDataModel> commentRepository)
         {
             _commentRepository = commentRepository;
         }
 
-        public async Task<Unit> Handle(Command request, CancellationToken cancellationToken)
+        public async Task<Unit> Handle
+            (Command request, CancellationToken cancellationToken)
         {
             var comment = await _commentRepository.FindAsync(request.Id);
 

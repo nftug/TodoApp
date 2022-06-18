@@ -1,6 +1,7 @@
 using MediatR;
 using Domain.Todos;
 using Domain.Shared;
+using Infrastructure.DataModels;
 
 namespace Application.Todos;
 
@@ -20,14 +21,15 @@ public class Delete
 
     public class Handler : IRequestHandler<Command, Unit>
     {
-        private readonly ITodoRepository _todoRepository;
+        private readonly IRepository<Todo, TodoDataModel> _todoRepository;
 
-        public Handler(ITodoRepository todoRepository)
+        public Handler(IRepository<Todo, TodoDataModel> todoRepository)
         {
             _todoRepository = todoRepository;
         }
 
-        public async Task<Unit> Handle(Command request, CancellationToken cancellationToken)
+        public async Task<Unit> Handle
+            (Command request, CancellationToken cancellationToken)
         {
             var todo = await _todoRepository.FindAsync(request.Id);
 

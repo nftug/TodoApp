@@ -29,7 +29,8 @@ public class Details
                 _userRepository = userRepository;
             }
 
-            public async Task<UserResultDTO.Public> Handle(Query request, CancellationToken cancellationToken)
+            public async Task<UserResultDTO.Public> Handle
+                (Query request, CancellationToken cancellationToken)
             {
                 var user = await _userRepository.FindAsync(request.Id);
                 if (user == null)
@@ -62,7 +63,8 @@ public class Details
             }
 
 
-            public async Task<UserResultDTO.Me> Handle(Query request, CancellationToken cancellationToken)
+            public async Task<UserResultDTO.Me> Handle
+                (Query request, CancellationToken cancellationToken)
             {
                 var user = await _userRepository.FindAsync(request.UserId);
                 if (user == null)

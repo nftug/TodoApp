@@ -5,7 +5,7 @@ using Microsoft.IdentityModel.Tokens;
 using Infrastructure.DataModels;
 using API.Models;
 
-namespace API.Extensions;
+namespace API.Services;
 
 public class TokenService
 {

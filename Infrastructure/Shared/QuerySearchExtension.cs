@@ -2,17 +2,22 @@ using System.Linq.Expressions;
 
 namespace Infrastructure.Shared;
 
-public static class QuerySearchExtension
+internal static class QuerySearchExtension
 {
-    public static ICollection<QuerySearchExpression<T>> AddExpression<T>(
+    public static void AddExpression<T>(
         this ICollection<QuerySearchExpression<T>> expressionsNode,
         Expression<Func<T, bool>> expression,
-        CombineMode combineMode,
-        Guid blockId
+        Keyword keyword
     )
     {
-        expressionsNode.Add(new QuerySearchExpression<T>(expression, combineMode, blockId));
-        return expressionsNode;
+        expressionsNode.Add(
+            new QuerySearchExpression<T>(
+                expression,
+                keyword.CombineMode,
+                keyword.Id
+            )
+        );
+        return;
     }
 
     public static IQueryable<T> ApplyExpressionsNode<T>(
@@ -20,18 +25,21 @@ public static class QuerySearchExtension
         ICollection<QuerySearchExpression<T>> expressionsNode
     )
     {
-        var group = expressionsNode.GroupBy(g => g.BlockId);
+        var expressions = expressionsNode
+            .GroupBy(x => new
+            { x.BlockId, x.CombineMode }, (k, g) => new
+            {
+                k.CombineMode,
+                Expressions = g.Select(x => x.Expression)
+            })
+            .Select(x =>
+                x.CombineMode == CombineMode.OrElse
+                    ? x.Expressions.OrElse()
+                    : x.Expressions.And()
+            );
 
-        foreach (var item in group)
-        {
-            CombineMode combineMode = item.Select(x => x.CombineMode).First();
-            var expressions = item.Select(x => x.Expression);
-
-            if (combineMode == CombineMode.OrElse)
-                query = query.Where(expressions.OrElse());
-            else
-                query = query.Where(expressions.And());
-        }
+        foreach (var expression in expressions)
+            query = query.Where(expression);
 
         return query;
     }

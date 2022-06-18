@@ -4,71 +4,73 @@ using Infrastructure.Shared;
 
 namespace Infrastructure.Todos;
 
-public class TodoQuerySearchService : QueryServiceBase<TodoDataModel, TodoQueryParameter>
+public class TodoQuerySearchService
+    : QueryServiceBase<TodoDataModel, TodoQueryParameter>
 {
     public TodoQuerySearchService(DataContext context)
         : base(context)
     {
     }
 
-    public override IQueryable<TodoDataModel> GetFilteredQuery(TodoQueryParameter param)
+    public override IQueryable<TodoDataModel> GetFilteredQuery
+        (TodoQueryParameter param)
     {
-        var query = _context.Todos.Include(x => x.Comments)
-                                  .Include(x => x.OwnerUser)
-                                  .AsQueryable();
+        var query = _context.Todos
+            .Include(x => x.Comments)
+            .Include(x => x.OwnerUser)
+            .AsQueryable();
 
         var expressionsNode = new List<QuerySearchExpression<TodoDataModel>>();
 
         // ユーザーIDで絞り込み
         if (!string.IsNullOrEmpty(param.UserId))
             expressionsNode.AddExpression(
-                x => x.OwnerUserId == param.UserId, CombineMode.And, Guid.NewGuid()
+                x => x.OwnerUserId == param.UserId,
+                Keyword.CreateDummy()
             );
 
         // 状態で絞り込み
         if (param.State != null)
             expressionsNode.AddExpression(
-                x => x.State == param.State, CombineMode.And, Guid.NewGuid()
+                x => x.State == param.State,
+                Keyword.CreateDummy()
             );
 
         // qで絞り込み
-        foreach (var (keyword, combineMode, blockId) in Keywords(param.q))
-        {
-            expressionsNode.AddExpression(
-                x => x.Title.ToLower().Contains(keyword) ||
-                         x.Description!.ToLower().Contains(keyword) ||
-                         x.Comments.Any(x => x.Content.ToLower().Contains(keyword)) ||
-                         x.OwnerUser!.UserName.ToLower().Contains(keyword),
-                combineMode, blockId
+        foreach (var keyword in GetKeyword(param.q))
+            expressionsNode.AddExpression(x =>
+                    x.Title.ToLower().Contains(keyword.Value) ||
+                    x.Description!.ToLower().Contains(keyword.Value) ||
+                    x.Comments.Any(x => x.Content.ToLower().Contains(keyword.Value)),
+                keyword
             );
-        }
 
         // タイトルで絞り込み
-        foreach (var (keyword, combineMode, blockId) in Keywords(param.Title))
+        foreach (var keyword in GetKeyword(param.Title))
             expressionsNode.AddExpression(
-                x => x.Title.ToLower().Contains(keyword),
-                combineMode, blockId
+                x => x.Title.ToLower().Contains(keyword.Value),
+                keyword
             );
 
         // 説明文で絞り込み
-        foreach (var (keyword, combineMode, blockId) in Keywords(param.Description))
+        foreach (var keyword in GetKeyword(param.Description))
             expressionsNode.AddExpression(
-                x => x.Description!.ToLower().Contains(keyword),
-                combineMode, blockId
+                x => x.Description!.ToLower().Contains(keyword.Value),
+                keyword
             );
 
         // コメントで絞り込み
-        foreach (var (keyword, combineMode, blockId) in Keywords(param.Comment))
+        foreach (var keyword in GetKeyword(param.Comment))
             expressionsNode.AddExpression(
-                x => x.Comments.Any(x => x.Content.ToLower().Contains(keyword)),
-                combineMode, blockId
+                x => x.Comments.Any(x => x.Content.ToLower().Contains(keyword.Value)),
+                keyword
             );
 
         // ユーザー名で絞り込み
-        foreach (var (keyword, combineMode, blockId) in Keywords(param.UserName))
+        foreach (var keyword in GetKeyword(param.UserName))
             expressionsNode.AddExpression(
-                x => x.OwnerUser!.UserName.ToLower().Contains(keyword),
-                combineMode, blockId
+                x => x.OwnerUser!.UserName.ToLower().Contains(keyword.Value),
+                keyword
             );
 
         // クエリ式を作成する

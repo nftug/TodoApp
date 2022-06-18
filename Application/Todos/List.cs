@@ -4,6 +4,8 @@ using Infrastructure.Todos;
 using Domain.Todos;
 using Application.Comments;
 using Microsoft.EntityFrameworkCore;
+using Infrastructure.DataModels;
+using Domain.Shared;
 
 namespace Application.Todos;
 
@@ -18,57 +20,38 @@ public class List
         {
             Param = param;
             UserId = userId;
-            Param.Page ??= 1;
-            Param.Limit ??= 10;
         }
     }
 
     public class Handler : IRequestHandler<Query, Pagination<TodoResultDTO>>
     {
         private readonly TodoQuerySearchService _todoQuerySearchService;
+        private readonly IRepository<Todo, TodoDataModel> _todoRepository;
 
-        public Handler(TodoQuerySearchService todoQuerySearchService)
+        public Handler(
+            IRepository<Todo, TodoDataModel> todoRepository,
+            TodoQuerySearchService todoQuerySearchService
+        )
         {
+            _todoRepository = todoRepository;
             _todoQuerySearchService = todoQuerySearchService;
         }
 
         public async Task<Pagination<TodoResultDTO>> Handle
             (Query request, CancellationToken cancellationToken)
         {
-            var filteredQuery = _todoQuerySearchService.GetFilteredQuery(request.Param)
-                                                       .OrderByDescending(x => x.CreatedDateTime);
-            int page = (int)request.Param.Page!;
-            int limit = (int)request.Param.Limit!;
+            var filteredQuery = _todoQuerySearchService
+                .GetFilteredQuery(request.Param)
+                .OrderByDescending(x => x.CreatedDateTime);
 
-            var paginatedQuery = filteredQuery.Skip((page - 1) * limit).Take(limit);
-
-            var results = await paginatedQuery.Select(
-                x => new TodoResultDTO(
-                    x.Id,
-                    x.Title,
-                    x.Description,
-                    x.BeginDateTime,
-                    x.DueDateTime,
-                    new TodoState(x.State),
-                    x.Comments.Select(
-                        _ => new CommentResultDTO(
-                                _.Id,
-                                _.Content,
-                                _.TodoId,
-                                _.CreatedDateTime,
-                                _.UpdatedDateTime,
-                                _.OwnerUserId
-                            )
-                        ).ToList(),
-                    x.CreatedDateTime,
-                    x.UpdatedDateTime,
-                    x.OwnerUserId
-                )
-            ).ToListAsync();
+            var results = (await _todoRepository
+                .GetPaginatedListAsync(filteredQuery, request.Param))
+                .Select(x => new TodoResultDTO(x));
 
             var count = await filteredQuery.CountAsync();
 
-            return new Pagination<TodoResultDTO>(results, count, page, limit);
+            return new Pagination<TodoResultDTO>
+                (results, count, request.Param.Page, request.Param.Limit);
         }
     }
 }

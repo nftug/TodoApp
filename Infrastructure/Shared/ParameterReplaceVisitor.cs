@@ -9,17 +9,18 @@ public class ParameterReplaceVisitor : ExpressionVisitor
 
     public ParameterReplaceVisitor(
         ParameterExpression originalParameter,
-        ParameterExpression newParameter)
+        ParameterExpression newParameter
+    )
     {
-        this._originalParameter = originalParameter;
-        this._newParameter = newParameter;
+        _originalParameter = originalParameter;
+        _newParameter = newParameter;
     }
 
     protected override Expression VisitParameter(ParameterExpression node)
     {
-        if (node == this._originalParameter)
+        if (node == _originalParameter)
         {
-            return this._newParameter;
+            return _newParameter;
         }
 
         return base.VisitParameter(node);
