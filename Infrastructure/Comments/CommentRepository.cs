@@ -1,4 +1,5 @@
 using Domain.Comments;
+using Domain.Interfaces;
 using Domain.Shared;
 using Infrastructure.DataModels;
 using Infrastructure.Shared.Repository;
@@ -23,7 +24,7 @@ public class CommentRepository : RepositoryBase<Comment, CommentDataModel>
 
     protected override CommentDataModel ToDataModel(Comment item)
     {
-        return new()
+        return new CommentDataModel()
         {
             Content = item.Content.Value,
             TodoId = item.TodoId,

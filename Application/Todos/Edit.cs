@@ -1,6 +1,7 @@
 using MediatR;
 using Domain.Todos;
 using Domain.Shared;
+using Domain.Interfaces;
 using Infrastructure.DataModels;
 
 namespace Application.Todos;

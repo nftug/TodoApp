@@ -1,12 +1,13 @@
+using Domain.Interfaces;
 using Domain.Shared;
 using Infrastructure.DataModels;
 using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.Shared.Repository;
 
-public abstract class RepositoryBase<T, TDataModel> : IRepository<T, TDataModel>
+public abstract class RepositoryBase<T, TEntity> : IRepository<T, TEntity>
     where T : ModelBase
-    where TDataModel : DataModelBase
+    where TEntity : DataModelBase
 {
     protected readonly DataContext _context;
 
@@ -18,7 +19,7 @@ public abstract class RepositoryBase<T, TDataModel> : IRepository<T, TDataModel>
     public virtual async Task<T> CreateAsync(T item)
     {
         var data = ToDataModel(item);
-        await _context.Set<TDataModel>().AddAsync(data);
+        await _context.Set<TEntity>().AddAsync(data);
         await _context.SaveChangesAsync();
 
         return ToModel(data);
@@ -27,7 +28,7 @@ public abstract class RepositoryBase<T, TDataModel> : IRepository<T, TDataModel>
     public virtual async Task<T> UpdateAsync(T item)
     {
         var foundData = await _context
-            .Set<TDataModel>()
+            .Set<TEntity>()
             .FirstOrDefaultAsync(x => x.Id == item.Id);
 
         if (foundData == null)
@@ -35,7 +36,7 @@ public abstract class RepositoryBase<T, TDataModel> : IRepository<T, TDataModel>
 
         var data = Transfer(item, foundData);
 
-        _context.Set<TDataModel>().Update(data);
+        _context.Set<TEntity>().Update(data);
         await _context.SaveChangesAsync();
 
         return ToModel(data);
@@ -44,14 +45,14 @@ public abstract class RepositoryBase<T, TDataModel> : IRepository<T, TDataModel>
     public virtual async Task<T?> FindAsync(Guid id)
     {
         var data = await _context
-            .Set<TDataModel>()
+            .Set<TEntity>()
             .FirstOrDefaultAsync(x => x.Id == id);
 
         return data != null ? ToModel(data) : null;
     }
 
     public virtual async Task<List<T>> GetPaginatedListAsync
-        (IQueryable<TDataModel> query, IQueryParameter param)
+        (IQueryable<TEntity> query, IQueryParameter<TEntity> param)
     {
         var (page, limit) = (param.Page, param.Limit);
 
@@ -65,18 +66,18 @@ public abstract class RepositoryBase<T, TDataModel> : IRepository<T, TDataModel>
 
     public virtual async Task RemoveAsync(Guid id)
     {
-        var TDataModel = await _context.Set<TDataModel>().FindAsync(id);
+        var data = await _context.Set<TEntity>().FindAsync(id);
 
-        if (TDataModel == null)
+        if (data == null)
             throw new NotFoundException();
 
-        _context.Set<TDataModel>().Remove(TDataModel);
+        _context.Set<TEntity>().Remove(data);
         await _context.SaveChangesAsync();
     }
 
-    protected abstract TDataModel ToDataModel(T item);
+    protected abstract TEntity ToDataModel(T item);
 
-    protected abstract TDataModel Transfer(T item, TDataModel data);
+    protected abstract TEntity Transfer(T item, TEntity data);
 
-    protected abstract T ToModel(TDataModel data);
+    protected abstract T ToModel(TEntity data);
 }

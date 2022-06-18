@@ -3,7 +3,7 @@ using Infrastructure.Shared.QuerySearch.Models;
 
 namespace Infrastructure.Shared.QuerySearch.Extensions;
 
-public static class ExpressionCombiner
+internal static class ExpressionCombiner
 {
     public static Expression<Func<T, bool>> OrElse<T>
         (params Expression<Func<T, bool>>[] expressions)

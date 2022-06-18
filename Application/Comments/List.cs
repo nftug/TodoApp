@@ -3,8 +3,8 @@ using Pagination.EntityFrameworkCore.Extensions;
 using Infrastructure.Comments;
 using Microsoft.EntityFrameworkCore;
 using Domain.Comments;
+using Domain.Interfaces;
 using Infrastructure.DataModels;
-using Domain.Shared;
 
 namespace Application.Comments;
 
@@ -12,10 +12,10 @@ public class List
 {
     public class Query : IRequest<Pagination<CommentResultDTO>>
     {
-        public CommentQueryParameter Param { get; set; }
+        public IQueryParameter<CommentDataModel> Param { get; set; }
         public string? UserId { get; set; }
 
-        public Query(CommentQueryParameter param, string? userId)
+        public Query(IQueryParameter<CommentDataModel> param, string? userId)
         {
             Param = param;
             UserId = userId;

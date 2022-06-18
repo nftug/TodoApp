@@ -3,11 +3,13 @@ using Infrastructure.DataModels;
 using Infrastructure.Shared.QuerySearch;
 using Infrastructure.Shared.QuerySearch.Models;
 using Infrastructure.Shared.QuerySearch.Extensions;
+using Domain.Interfaces;
+using Domain.Todos;
 
 namespace Infrastructure.Todos;
 
 public class TodoQuerySearchService
-    : QueryServiceBase<TodoDataModel, TodoQueryParameter>
+    : QuerySearchServiceBase<TodoDataModel>
 {
     public TodoQuerySearchService(DataContext context)
         : base(context)
@@ -15,8 +17,10 @@ public class TodoQuerySearchService
     }
 
     public override IQueryable<TodoDataModel> GetFilteredQuery
-        (TodoQueryParameter param)
+        (IQueryParameter<TodoDataModel> param)
     {
+        var _param = (TodoQueryParameter)param;
+
         var query = _context.Todos
             .Include(x => x.Comments)
             .Include(x => x.OwnerUser)
@@ -25,21 +29,21 @@ public class TodoQuerySearchService
         var expressionsNode = new List<QuerySearchExpression<TodoDataModel>>();
 
         // ユーザーIDで絞り込み
-        if (!string.IsNullOrEmpty(param.UserId))
+        if (!string.IsNullOrEmpty(_param.UserId))
             expressionsNode.AddExpression(
-                x => x.OwnerUserId == param.UserId,
+                x => x.OwnerUserId == _param.UserId,
                 Keyword.CreateDummy()
             );
 
         // 状態で絞り込み
-        if (param.State != null)
+        if (_param.State != null)
             expressionsNode.AddExpression(
-                x => x.State == param.State,
+                x => x.State == _param.State,
                 Keyword.CreateDummy()
             );
 
         // qで絞り込み
-        foreach (var keyword in GetKeyword(param.q))
+        foreach (var keyword in GetKeyword(_param.q))
             expressionsNode.AddExpression(x =>
                     x.Title.ToLower().Contains(keyword.Value) ||
                     x.Description!.ToLower().Contains(keyword.Value) ||
@@ -48,28 +52,28 @@ public class TodoQuerySearchService
             );
 
         // タイトルで絞り込み
-        foreach (var keyword in GetKeyword(param.Title))
+        foreach (var keyword in GetKeyword(_param.Title))
             expressionsNode.AddExpression(
                 x => x.Title.ToLower().Contains(keyword.Value),
                 keyword
             );
 
         // 説明文で絞り込み
-        foreach (var keyword in GetKeyword(param.Description))
+        foreach (var keyword in GetKeyword(_param.Description))
             expressionsNode.AddExpression(
                 x => x.Description!.ToLower().Contains(keyword.Value),
                 keyword
             );
 
         // コメントで絞り込み
-        foreach (var keyword in GetKeyword(param.Comment))
+        foreach (var keyword in GetKeyword(_param.Comment))
             expressionsNode.AddExpression(
                 x => x.Comments.Any(x => x.Content.ToLower().Contains(keyword.Value)),
                 keyword
             );
 
         // ユーザー名で絞り込み
-        foreach (var keyword in GetKeyword(param.UserName))
+        foreach (var keyword in GetKeyword(_param.UserName))
             expressionsNode.AddExpression(
                 x => x.OwnerUser!.UserName.ToLower().Contains(keyword.Value),
                 keyword

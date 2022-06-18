@@ -16,7 +16,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.Extensions.Options;
 using API.Services;
-using Domain.Shared;
+using Domain.Interfaces;
 
 namespace API.Extensions;
 

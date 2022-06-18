@@ -3,11 +3,12 @@ using Infrastructure.DataModels;
 using Infrastructure.Shared.QuerySearch;
 using Infrastructure.Shared.QuerySearch.Models;
 using Infrastructure.Shared.QuerySearch.Extensions;
+using Domain.Interfaces;
 
 namespace Infrastructure.Comments;
 
 public class CommentQuerySearchService
-    : QueryServiceBase<CommentDataModel, CommentQueryParameter>
+    : QuerySearchServiceBase<CommentDataModel>
 {
     public CommentQuerySearchService(DataContext context)
         : base(context)
@@ -15,35 +16,36 @@ public class CommentQuerySearchService
     }
 
     public override IQueryable<CommentDataModel> GetFilteredQuery
-        (CommentQueryParameter param)
+        (IQueryParameter<CommentDataModel> param)
     {
+        var _param = (CommentQueryParameter)param;
         var query = _context.Comments.Include(x => x.OwnerUser).AsQueryable();
 
         var expressionsNode = new List<QuerySearchExpression<CommentDataModel>>();
 
         // ユーザーIDで絞り込み
-        if (!string.IsNullOrEmpty(param.UserId))
+        if (!string.IsNullOrEmpty(_param.UserId))
             expressionsNode.AddExpression(
-                x => x.OwnerUserId == param.UserId,
+                x => x.OwnerUserId == _param.UserId,
                 Keyword.CreateDummy()
             );
 
         // qで絞り込み
-        foreach (var keyword in GetKeyword(param.q))
+        foreach (var keyword in GetKeyword(_param.q))
             expressionsNode.AddExpression(
                 x => x.Content.ToLower().Contains(keyword.Value),
                 keyword
             );
 
         // 内容で絞り込み
-        foreach (var keyword in GetKeyword(param.Content))
+        foreach (var keyword in GetKeyword(_param.Content))
             expressionsNode.AddExpression(
                 x => x.Content.ToLower().Contains(keyword.Value),
                 keyword
             );
 
         // ユーザー名で絞り込み
-        foreach (var keyword in GetKeyword(param.UserName))
+        foreach (var keyword in GetKeyword(_param.UserName))
             expressionsNode.AddExpression(
                 x => x.OwnerUser!.UserName.ToLower().Contains(keyword.Value),
                 keyword

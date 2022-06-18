@@ -1,8 +1,9 @@
-using Domain.Shared;
+using Domain.Interfaces;
+using Infrastructure.DataModels;
 
 namespace Infrastructure.Todos;
 
-public class TodoQueryParameter : IQueryParameter
+public class TodoQueryParameter : IQueryParameter<TodoDataModel>
 {
     public string? q { get; set; }
     public string? Title { get; set; }

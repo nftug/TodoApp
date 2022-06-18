@@ -2,7 +2,7 @@ using System.Linq.Expressions;
 
 namespace Infrastructure.Shared.QuerySearch.Models;
 
-public class ParameterReplaceVisitor : ExpressionVisitor
+internal class ParameterReplaceVisitor : ExpressionVisitor
 {
     private readonly ParameterExpression _originalParameter;
     private readonly ParameterExpression _newParameter;

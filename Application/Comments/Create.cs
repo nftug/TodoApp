@@ -1,6 +1,6 @@
 using MediatR;
 using Domain.Comments;
-using Domain.Shared;
+using Domain.Interfaces;
 using Infrastructure.DataModels;
 
 namespace Application.Comments;

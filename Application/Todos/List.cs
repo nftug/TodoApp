@@ -2,10 +2,9 @@ using MediatR;
 using Pagination.EntityFrameworkCore.Extensions;
 using Infrastructure.Todos;
 using Domain.Todos;
-using Application.Comments;
 using Microsoft.EntityFrameworkCore;
+using Domain.Interfaces;
 using Infrastructure.DataModels;
-using Domain.Shared;
 
 namespace Application.Todos;
 

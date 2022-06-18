@@ -3,7 +3,7 @@ using Domain.Comments;
 using Microsoft.EntityFrameworkCore;
 using Infrastructure.DataModels;
 using Infrastructure.Shared.Repository;
-using Domain.Shared;
+using Domain.Interfaces;
 
 namespace Infrastructure.Todos;
 
@@ -24,7 +24,7 @@ public class TodoRepository : RepositoryBase<Todo, TodoDataModel>
 
     protected override TodoDataModel ToDataModel(Todo item)
     {
-        return new()
+        return new TodoDataModel()
         {
             Title = item.Title.Value,
             Description = item.Description?.Value,
@@ -56,17 +56,17 @@ public class TodoRepository : RepositoryBase<Todo, TodoDataModel>
     protected override Todo ToModel(TodoDataModel data)
     {
         var comments = data.Comments
-            .Select(x =>
-                new Comment(
-                    x.Id,
-                    new(x.Content),
-                    x.TodoId,
-                    x.CreatedDateTime,
-                    x.UpdatedDateTime,
-                    x.OwnerUserId
-                )
-            )
-            .ToList();
+             .Select(x =>
+                 new Comment(
+                     x.Id,
+                     new(x.Content),
+                     x.TodoId,
+                     x.CreatedDateTime,
+                     x.UpdatedDateTime,
+                     x.OwnerUserId
+                 )
+             )
+             .ToList();
 
         return new(
             id: data.Id,
