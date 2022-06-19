@@ -1,3 +1,4 @@
+using AutoMapper;
 using Domain.Interfaces;
 using Domain.Shared;
 using Infrastructure.DataModels;
@@ -10,36 +11,38 @@ public abstract class RepositoryBase<T, TEntity> : IRepository<T, TEntity>
     where TEntity : DataModelBase
 {
     protected readonly DataContext _context;
+    protected readonly IMapper _mapper;
 
-    public RepositoryBase(DataContext context)
+    public RepositoryBase(DataContext context, IMapper mapper)
     {
         _context = context;
+        _mapper = mapper;
     }
 
     public virtual async Task<T> CreateAsync(T item)
     {
-        var data = ToDataModel(item);
+        var data = _mapper.Map<TEntity>(item);
         await _context.Set<TEntity>().AddAsync(data);
         await _context.SaveChangesAsync();
 
-        return ToModel(data);
+        return _mapper.Map<T>(data);
     }
 
     public virtual async Task<T> UpdateAsync(T item)
     {
-        var foundData = await _context
+        var data = await _context
             .Set<TEntity>()
             .FirstOrDefaultAsync(x => x.Id == item.Id);
 
-        if (foundData == null)
+        if (data == null)
             throw new NotFoundException();
 
-        var data = Transfer(item, foundData);
+        _mapper.Map(item, data);
 
         _context.Set<TEntity>().Update(data);
         await _context.SaveChangesAsync();
 
-        return ToModel(data);
+        return _mapper.Map<T>(data);
     }
 
     public virtual async Task<T?> FindAsync(Guid id)
@@ -48,7 +51,7 @@ public abstract class RepositoryBase<T, TEntity> : IRepository<T, TEntity>
             .Set<TEntity>()
             .FirstOrDefaultAsync(x => x.Id == id);
 
-        return data != null ? ToModel(data) : null;
+        return data != null ? _mapper.Map<T>(data) : null;
     }
 
     public virtual async Task<List<T>> GetPaginatedListAsync
@@ -60,7 +63,7 @@ public abstract class RepositoryBase<T, TEntity> : IRepository<T, TEntity>
             .Skip((page - 1) * limit)
             .Take(limit)
             .ToListAsync())
-            .Select(x => ToModel(x))
+            .Select(x => _mapper.Map<T>(x))
             .ToList();
     }
 
@@ -74,10 +77,4 @@ public abstract class RepositoryBase<T, TEntity> : IRepository<T, TEntity>
         _context.Set<TEntity>().Remove(data);
         await _context.SaveChangesAsync();
     }
-
-    protected abstract TEntity ToDataModel(T item);
-
-    protected abstract TEntity Transfer(T item, TEntity data);
-
-    protected abstract T ToModel(TEntity data);
 }

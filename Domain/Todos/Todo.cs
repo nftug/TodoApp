@@ -5,34 +5,11 @@ namespace Domain.Todos;
 
 public class Todo : ModelBase
 {
-    public TodoTitle Title { get; private set; }
-    public TodoDescription Description { get; private set; }
-    public TodoPeriod Period { get; private set; }
-    public TodoState State { get; private set; }
+    public TodoTitle Title { get; private set; } = null!;
+    public TodoDescription Description { get; private set; } = null!;
+    public TodoPeriod Period { get; private set; } = null!;
+    public TodoState State { get; private set; } = null!;
     public ICollection<Comment> Comments { get; private set; } = new List<Comment>();
-
-    public Todo(
-        Guid id,
-        TodoTitle title,
-        TodoDescription description,
-        TodoPeriod period,
-        TodoState state,
-        ICollection<Comment> comments,
-        DateTime createdDateTime,
-        DateTime updatedDateTime,
-        string? ownerUserId
-    )
-    {
-        Id = id;
-        Title = title;
-        Description = description;
-        Period = period;
-        State = state;
-        Comments = comments;
-        CreatedDateTime = createdDateTime;
-        UpdatedDateTime = updatedDateTime;
-        OwnerUserId = ownerUserId;
-    }
 
     public static Todo CreateNew(
         TodoTitle title,
@@ -44,17 +21,16 @@ public class Todo : ModelBase
     {
         var operationDateTime = DateTime.Now;
 
-        return new Todo(
-            id: new Guid(),
-            title: title,
-            description: description,
-            period: period,
-            state: state,
-            comments: new List<Comment>(),
-            createdDateTime: operationDateTime,
-            updatedDateTime: operationDateTime,
-            ownerUserId: ownerUserId
-        );
+        return new()
+        {
+            Title = title,
+            Description = description,
+            Period = period,
+            State = state,
+            CreatedDateTime = operationDateTime,
+            UpdatedDateTime = operationDateTime,
+            OwnerUserId = ownerUserId
+        };
     }
 
     public void Edit(

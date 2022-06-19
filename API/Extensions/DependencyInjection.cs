@@ -2,7 +2,6 @@ using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 using Infrastructure;
-using Application.Todos;
 using Domain.Todos;
 using Domain.Comments;
 using Domain.Users;
@@ -53,7 +52,7 @@ internal static class DependencyInjection
             opt.SignIn.RequireConfirmedAccount = false
         ).AddEntityFrameworkStores<DataContext>();
 
-        services.AddMediatR(typeof(List.Query).Assembly);
+        services.AddMediatR(typeof(Application.Todos.List.Query).Assembly);
 
         services.AddJwtService(config);
 
@@ -65,6 +64,10 @@ internal static class DependencyInjection
         // query services
         services.AddTransient<TodoQuerySearchService>();
         services.AddTransient<CommentQuerySearchService>();
+
+        // AutoMapper
+        services.AddAutoMapper(typeof(TodoRepositoryMapping).Assembly);
+        services.AddAutoMapper(typeof(CommentRepositoryMapping).Assembly);
 
         return services;
     }

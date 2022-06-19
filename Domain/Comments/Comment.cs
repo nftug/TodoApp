@@ -4,25 +4,8 @@ namespace Domain.Comments;
 
 public class Comment : ModelBase
 {
-    public CommentContent Content { get; private set; }
+    public CommentContent Content { get; private set; } = null!;
     public Guid TodoId { get; private set; }
-
-    public Comment(
-        Guid id,
-        CommentContent content,
-        Guid todoId,
-        DateTime createdDateTime,
-        DateTime updatedDateTime,
-        string? ownerUserId
-    )
-    {
-        Id = id;
-        Content = content;
-        TodoId = todoId;
-        CreatedDateTime = createdDateTime;
-        UpdatedDateTime = updatedDateTime;
-        OwnerUserId = ownerUserId;
-    }
 
     public static Comment CreateNew(
         CommentContent content,
@@ -32,14 +15,14 @@ public class Comment : ModelBase
     {
         var operationDateTime = DateTime.Now;
 
-        return new Comment(
-            id: new Guid(),  // Guidの生成はEF Coreに任せる
-            content: content,
-            todoId: todoId,
-            createdDateTime: operationDateTime,
-            updatedDateTime: operationDateTime,
-            ownerUserId: ownerUserId
-        );
+        return new()
+        {
+            Content = content,
+            TodoId = todoId,
+            CreatedDateTime = operationDateTime,
+            UpdatedDateTime = operationDateTime,
+            OwnerUserId = ownerUserId
+        };
     }
 
     public void Edit(CommentContent content)
@@ -47,5 +30,4 @@ public class Comment : ModelBase
         Content = content;
         UpdatedDateTime = DateTime.Now;
     }
-
 }

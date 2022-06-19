@@ -1,3 +1,4 @@
+using AutoMapper;
 using Domain.Comments;
 using Domain.Shared;
 using Infrastructure.DataModels;
@@ -7,7 +8,8 @@ namespace Infrastructure.Comments;
 
 public class CommentRepository : RepositoryBase<Comment, CommentDataModel>
 {
-    public CommentRepository(DataContext context) : base(context)
+    public CommentRepository(DataContext context, IMapper mapper)
+        : base(context, mapper)
     {
     }
 
@@ -19,41 +21,5 @@ public class CommentRepository : RepositoryBase<Comment, CommentDataModel>
             throw new DomainException(nameof(item.TodoId), "このIDのTodoは存在しません");
 
         return await base.CreateAsync(item);
-    }
-
-    protected override CommentDataModel ToDataModel(Comment item)
-    {
-        return new CommentDataModel()
-        {
-            Content = item.Content.Value,
-            TodoId = item.TodoId,
-            CreatedDateTime = item.CreatedDateTime,
-            UpdatedDateTime = item.UpdatedDateTime,
-            OwnerUserId = item.OwnerUserId
-        };
-    }
-
-    protected override CommentDataModel Transfer
-        (Comment item, CommentDataModel data)
-    {
-        data.Content = item.Content.Value;
-        data.TodoId = item.TodoId;
-        data.CreatedDateTime = item.CreatedDateTime;
-        data.UpdatedDateTime = item.UpdatedDateTime;
-        data.OwnerUserId = item.OwnerUserId;
-
-        return data;
-    }
-
-    protected override Comment ToModel(CommentDataModel data)
-    {
-        return new(
-            id: data.Id,
-            content: new(data.Content),
-            todoId: data.TodoId,
-            createdDateTime: data.CreatedDateTime,
-            updatedDateTime: data.UpdatedDateTime,
-            ownerUserId: data?.OwnerUserId
-        );
     }
 }

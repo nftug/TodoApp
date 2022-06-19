@@ -47,11 +47,9 @@ public class Edit
 
             todo.Edit(
                 title: new(inputItem.Title!),
-                description: !string.IsNullOrEmpty(inputItem.Description)
-                    ? new(inputItem.Description) : null,
+                description: new(inputItem.Description),
                 period: new(inputItem.BeginDateTime, inputItem.DueDateTime),
-                state: inputItem.State != null
-                    ? new((int)inputItem.State) : TodoState.Todo
+                state: new(inputItem.State)
             );
 
             var result = await _todoRepository.UpdateAsync(todo);
