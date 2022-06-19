@@ -35,11 +35,9 @@ public class Create
 
             var todo = Todo.CreateNew(
                 title: new(inputItem.Title!),
-                description: !string.IsNullOrWhiteSpace(inputItem.Description) ?
-                    new(inputItem.Description) : null,
+                description: new(inputItem.Description),
                 period: new(inputItem.BeginDateTime, inputItem.DueDateTime),
-                state: inputItem.State != null ?
-                    new((int)inputItem.State) : TodoState.Todo,
+                state: new(inputItem.State),
                 ownerUserId: request.UserId
             );
 

@@ -44,9 +44,9 @@ public class TodoQuerySearchService
         // qで絞り込み
         foreach (var keyword in GetKeyword(_param.q))
             expressionsNode.AddExpression(x =>
-                    x.Title.ToLower().Contains(keyword.Value) ||
-                    x.Description!.ToLower().Contains(keyword.Value) ||
-                    x.Comments.Any(x => x.Content.ToLower().Contains(keyword.Value)),
+                x.Title.ToLower().Contains(keyword.Value) ||
+                x.Description!.ToLower().Contains(keyword.Value) ||
+                x.Comments.Any(x => x.Content.ToLower().Contains(keyword.Value)),
                 keyword
             );
 

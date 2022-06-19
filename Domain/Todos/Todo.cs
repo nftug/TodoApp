@@ -6,7 +6,7 @@ namespace Domain.Todos;
 public class Todo : ModelBase
 {
     public TodoTitle Title { get; private set; }
-    public TodoDescription? Description { get; private set; }
+    public TodoDescription Description { get; private set; }
     public TodoPeriod? Period { get; private set; }
     public TodoState State { get; private set; }
     public ICollection<Comment> Comments { get; private set; } = new List<Comment>();
@@ -14,8 +14,8 @@ public class Todo : ModelBase
     public Todo(
         Guid id,
         TodoTitle title,
-        TodoDescription? description,
-        TodoPeriod? period,
+        TodoDescription description,
+        TodoPeriod period,
         TodoState state,
         ICollection<Comment> comments,
         DateTime createdDateTime,
@@ -36,8 +36,8 @@ public class Todo : ModelBase
 
     public static Todo CreateNew(
         TodoTitle title,
-        TodoDescription? description,
-        TodoPeriod? period,
+        TodoDescription description,
+        TodoPeriod period,
         TodoState state,
         string ownerUserId
     )
@@ -59,8 +59,8 @@ public class Todo : ModelBase
 
     public void Edit(
         TodoTitle title,
-        TodoDescription? description,
-        TodoPeriod? period,
+        TodoDescription description,
+        TodoPeriod period,
         TodoState state
     )
     {

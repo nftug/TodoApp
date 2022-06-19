@@ -5,15 +5,15 @@ namespace Domain.Todos;
 
 public class TodoState : ValueObject<TodoState>
 {
-    public int Value { get; set; }
+    public int Value { get; }
 
-    public static readonly TodoState Todo = new TodoState(0);
-    public static readonly TodoState Doing = new TodoState(1);
-    public static readonly TodoState Done = new TodoState(2);
+    public static readonly TodoState Todo = new(0);
+    public static readonly TodoState Doing = new(1);
+    public static readonly TodoState Done = new(2);
 
-    public TodoState(int value)
+    public TodoState(int? value)
     {
-        Value = value;
+        Value = value != null ? (int)value : Todo.Value;
     }
 
     protected override bool EqualsCore(TodoState other) => Value == other.Value;

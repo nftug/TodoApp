@@ -1,5 +1,3 @@
-using Domain.Shared;
-
 namespace Domain.Interfaces;
 
 public interface IQueryParameter<T>

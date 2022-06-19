@@ -71,8 +71,7 @@ public class TodoRepository : RepositoryBase<Todo, TodoDataModel>
         return new(
             id: data.Id,
             title: new(data.Title),
-            description: !string.IsNullOrWhiteSpace(data.Description)
-                ? new(data.Description) : null,
+            description: new(data.Description),
             period: new(data.BeginDateTime, data.DueDateTime),
             state: new(data.State),
             comments: comments,

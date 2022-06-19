@@ -5,11 +5,11 @@ namespace Domain.Todos;
 
 public class TodoDescription : ValueObject<TodoDescription>
 {
-    public string? Value { get; set; }
+    public string? Value { get; }
 
     public TodoDescription(string? value)
     {
-        Value = value;
+        Value = string.IsNullOrWhiteSpace(value) ? null : value;
     }
 
     protected override bool EqualsCore(TodoDescription other) => Value == other.Value;
