@@ -32,22 +32,26 @@ public class CommentQuerySearchService
 
         // qで絞り込み
         foreach (var keyword in GetKeyword(_param.Q))
-            expressionsNode.AddExpression(
-                x => x.Content.ToLower().Contains(keyword.Value),
+            expressionsNode.AddExpression(x =>
+                (keyword.InQuotes ? x.Content : x.Content.ToLower())
+                    .Contains(keyword.Value),
                 keyword
             );
 
         // 内容で絞り込み
         foreach (var keyword in GetKeyword(_param.Content))
-            expressionsNode.AddExpression(
-                x => x.Content.ToLower().Contains(keyword.Value),
+            expressionsNode.AddExpression(x =>
+                (keyword.InQuotes ? x.Content : x.Content.ToLower())
+                    .Contains(keyword.Value),
                 keyword
             );
 
         // ユーザー名で絞り込み
         foreach (var keyword in GetKeyword(_param.UserName))
-            expressionsNode.AddExpression(
-                x => x.OwnerUser!.UserName.ToLower().Contains(keyword.Value),
+            expressionsNode.AddExpression(x =>
+                (keyword.InQuotes
+                    ? x.OwnerUser!.UserName : x.OwnerUser!.UserName.ToLower())
+                    .Contains(keyword.Value),
                 keyword
             );
 

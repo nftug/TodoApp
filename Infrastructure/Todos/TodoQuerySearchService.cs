@@ -44,37 +44,48 @@ public class TodoQuerySearchService
         // qで絞り込み
         foreach (var keyword in GetKeyword(_param.Q))
             expressionsNode.AddExpression(x =>
-                x.Title.ToLower().Contains(keyword.Value) ||
-                x.Description!.ToLower().Contains(keyword.Value) ||
-                x.Comments.Any(x => x.Content.ToLower().Contains(keyword.Value)),
+                (keyword.InQuotes ? x.Title : x.Title.ToLower())
+                    .Contains(keyword.Value) ||
+                (keyword.InQuotes ? x.Description! : x.Description!.ToLower())
+                    .Contains(keyword.Value) ||
+                x.Comments.Any(x =>
+                    (keyword.InQuotes ? x.Content : x.Content!.ToLower())
+                        .Contains(keyword.Value)),
                 keyword
             );
 
         // タイトルで絞り込み
         foreach (var keyword in GetKeyword(_param.Title))
-            expressionsNode.AddExpression(
-                x => x.Title.ToLower().Contains(keyword.Value),
+            expressionsNode.AddExpression(x =>
+                (keyword.InQuotes ? x.Title : x.Title.ToLower())
+                    .Contains(keyword.Value),
                 keyword
             );
 
         // 説明文で絞り込み
         foreach (var keyword in GetKeyword(_param.Description))
-            expressionsNode.AddExpression(
-                x => x.Description!.ToLower().Contains(keyword.Value),
+            expressionsNode.AddExpression(x =>
+                (keyword.InQuotes ? x.Description! : x.Description!.ToLower())
+                    .Contains(keyword.Value),
                 keyword
             );
 
+
         // コメントで絞り込み
         foreach (var keyword in GetKeyword(_param.Comment))
-            expressionsNode.AddExpression(
-                x => x.Comments.Any(x => x.Content.ToLower().Contains(keyword.Value)),
+            expressionsNode.AddExpression(x =>
+                x.Comments.Any(x =>
+                    (keyword.InQuotes ? x.Content : x.Content!.ToLower())
+                        .Contains(keyword.Value)),
                 keyword
             );
 
         // ユーザー名で絞り込み
         foreach (var keyword in GetKeyword(_param.UserName))
-            expressionsNode.AddExpression(
-                x => x.OwnerUser!.UserName.ToLower().Contains(keyword.Value),
+            expressionsNode.AddExpression(x =>
+                (keyword.InQuotes
+                    ? x.OwnerUser!.UserName : x.OwnerUser!.UserName.ToLower())
+                    .Contains(keyword.Value),
                 keyword
             );
 

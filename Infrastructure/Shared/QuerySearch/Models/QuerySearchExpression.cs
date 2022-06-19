@@ -4,18 +4,7 @@ namespace Infrastructure.Shared.QuerySearch.Models;
 
 public class QuerySearchExpression<T>
 {
-    public Expression<Func<T, bool>> Expression { get; }
-    public CombineMode CombineMode { get; }
-    public Guid BlockId { get; }
-
-    public QuerySearchExpression(
-        Expression<Func<T, bool>> expression,
-        CombineMode combineMode,
-        Guid blockId
-    )
-    {
-        Expression = expression;
-        CombineMode = combineMode;
-        BlockId = blockId;
-    }
+    public Expression<Func<T, bool>> Expression { get; init; } = null!;
+    public CombineMode CombineMode { get; init; }
+    public Guid BlockId { get; init; }
 }

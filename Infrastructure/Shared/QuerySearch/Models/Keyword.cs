@@ -1,20 +1,13 @@
+using System.Text.RegularExpressions;
+
 namespace Infrastructure.Shared.QuerySearch.Models;
 
 public class Keyword
 {
+    public Guid Id { get; init; } = Guid.NewGuid();
     public string Value { get; init; } = string.Empty;
     public CombineMode CombineMode { get; init; }
-    public Guid Id { get; init; } = Guid.NewGuid();
-
-    private Keyword() { }
-
-    public Keyword
-        (string value, CombineMode combineMode, Guid id)
-    {
-        Value = value;
-        CombineMode = combineMode;
-        Id = id;
-    }
+    public bool InQuotes { get; init; } = false;
 
     public static Keyword CreateDummy()
         => new() { CombineMode = CombineMode.And };
@@ -24,31 +17,53 @@ public class Keyword
         if (string.IsNullOrWhiteSpace(param))
             yield break;
 
-        string[] paramArray = param.Replace("\u3000", " ").Split(' ');
+        // 二重引用符に囲まれた文字列を抽出
+        var quotesRegex = new Regex("\"(.*?)\"");
+        var quotesList = quotesRegex.Matches(param);
+        for (int i = 0; i < quotesList.Count; i++)
+            param = quotesRegex.Replace(param, $"#{i}#", 1);
 
-        CombineMode mode = CombineMode.And;
+        string[] paramWords = param.Replace("\u3000", " ").Split(' ');
+
+        var combineMode = CombineMode.And;
         Guid blockId = Guid.NewGuid();
 
-        for (int i = 0; i < paramArray.Length; i++)
+        for (int i = 0; i < paramWords.Length; i++)
         {
-            CombineMode oldMode = mode;
-
-            if (string.IsNullOrWhiteSpace(paramArray[i]) || paramArray[i] == "OR")
+            string current = paramWords[i];
+            if (string.IsNullOrWhiteSpace(current) || current == "OR")
                 continue;
 
+            bool inQuotes = false;
+            var matchQuote = Regex.Match(current, "^#([0-9]+)#$");
+            if (matchQuote.Success)
+            {
+                int index = int.Parse(matchQuote.Groups[1].Value);
+                current = quotesList[index].Groups[1].Value;
+                inQuotes = true;
+            }
+
+            var combineModeOld = combineMode;
+
             // 次の項目を読んで、現在がOR区分に当てはまるか判定
-            if (i + 1 < paramArray.Length)
-                mode = paramArray[i + 1] == "OR" ? CombineMode.OrElse : CombineMode.And;
+            if (i + 1 < paramWords.Length)
+                combineMode = paramWords[i + 1] == "OR" ? CombineMode.OrElse : CombineMode.And;
 
             // 前の項目を読んで、現在がOR区分に当てはまるか判定
             if (i - 1 > 0)
-                mode = paramArray[i - 1] == "OR" ? CombineMode.OrElse : CombineMode.And;
+                combineMode = paramWords[i - 1] == "OR" ? CombineMode.OrElse : CombineMode.And;
 
             // OR/ANDが変更されたら、ブロックを変える
-            if (oldMode != mode)
+            if (combineModeOld != combineMode)
                 blockId = Guid.NewGuid();
 
-            yield return new(paramArray[i].ToLower(), mode, blockId);
+            yield return new()
+            {
+                Id = blockId,
+                Value = inQuotes ? current : current.ToLower(),
+                CombineMode = combineMode,
+                InQuotes = inQuotes
+            };
         }
     }
 }

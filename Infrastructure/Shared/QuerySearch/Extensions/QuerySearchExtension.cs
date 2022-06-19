@@ -12,11 +12,12 @@ internal static class QuerySearchExtension
     )
     {
         expressionsNode.Add(
-            new QuerySearchExpression<T>(
-                expression,
-                keyword.CombineMode,
-                keyword.Id
-            )
+            new QuerySearchExpression<T>()
+            {
+                Expression = expression,
+                CombineMode = keyword.CombineMode,
+                BlockId = keyword.Id,
+            }
         );
         return;
     }
