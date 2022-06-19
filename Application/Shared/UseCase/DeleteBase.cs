@@ -10,8 +10,8 @@ public abstract class DeleteBase<TDomain, TEntity>
 {
     public class Command : IRequest<Unit>
     {
-        public Guid Id { get; set; }
-        public string UserId { get; set; }
+        public Guid Id { get; init; }
+        public string UserId { get; init; }
 
         public Command(Guid id, string userId)
         {

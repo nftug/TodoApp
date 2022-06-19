@@ -6,14 +6,14 @@ namespace Application.Todos;
 public class TodoCommandDTO : ICommandDTO<Todo>
 {
     public Guid Id { get; init; }
-    [TodoTitleAttribute]
+    [TodoTitle]
     public string? Title { get; init; }
-    [TodoDescriptionAttribute]
+    [TodoDescription]
     public string? Description { get; init; }
-    [TodoPeriodAttribute(Period.Begin, "DueDateTime")]
+    [TodoPeriod(Period.Begin, "DueDateTime")]
     public DateTime? BeginDateTime { get; init; }
-    [TodoPeriodAttribute(Period.Due, "BeginDateTime")]
+    [TodoPeriod(Period.Due, "BeginDateTime")]
     public DateTime? DueDateTime { get; init; }
-    [TodoStateAttribute]
+    [TodoState]
     public int? State { get; init; }
 }

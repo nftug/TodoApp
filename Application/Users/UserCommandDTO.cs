@@ -4,7 +4,7 @@ namespace Application.Users;
 
 public class UserCommandDTO
 {
-    [UserEmailAttribute]
+    [UserEmail]
     public string? Username { get; set; } = string.Empty;
     public string? Email { get; set; } = string.Empty;
 }

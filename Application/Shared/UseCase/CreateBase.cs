@@ -13,8 +13,8 @@ public abstract class CreateBase<TDomain, TEntity, TResultDTO, TCommandDTO>
 {
     public class Command : IRequest<TResultDTO>
     {
-        public TCommandDTO Item { get; set; }
-        public string UserId { get; set; }
+        public TCommandDTO Item { get; init; }
+        public string UserId { get; init; }
 
         public Command(TCommandDTO item, string usedId)
         {

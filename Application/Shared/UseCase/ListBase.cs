@@ -14,8 +14,8 @@ public abstract class ListBase<TDomain, TEntity, TResultDTO>
 {
     public class Query : IRequest<Pagination<TResultDTO>>
     {
-        public IQueryParameter<TEntity> Param { get; set; }
-        public string? UserId { get; set; }
+        public IQueryParameter<TEntity> Param { get; init; }
+        public string? UserId { get; init; }
 
         public Query(IQueryParameter<TEntity> param, string? userId)
         {

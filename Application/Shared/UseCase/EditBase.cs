@@ -13,9 +13,9 @@ public abstract class EditBase<TDomain, TEntity, TResultDTO, TCommandDTO>
 {
     public class Command : IRequest<TResultDTO>
     {
-        public TCommandDTO Item { get; set; }
-        public Guid Id { get; set; }
-        public string UserId { get; set; }
+        public TCommandDTO Item { get; init; }
+        public Guid Id { get; init; }
+        public string UserId { get; init; }
 
         public Command(Guid id, TCommandDTO item, string userId)
         {

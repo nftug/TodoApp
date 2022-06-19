@@ -6,8 +6,8 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.Shared.Repository;
 
-public abstract class RepositoryBase<T, TEntity> : IRepository<T, TEntity>
-    where T : ModelBase
+public abstract class RepositoryBase<TDomain, TEntity> : IRepository<TDomain, TEntity>
+    where TDomain : ModelBase
     where TEntity : DataModelBase
 {
     protected readonly DataContext _context;
@@ -19,16 +19,16 @@ public abstract class RepositoryBase<T, TEntity> : IRepository<T, TEntity>
         _mapper = mapper;
     }
 
-    public virtual async Task<T> CreateAsync(T item)
+    public virtual async Task<TDomain> CreateAsync(TDomain item)
     {
         var data = _mapper.Map<TEntity>(item);
         await _context.Set<TEntity>().AddAsync(data);
         await _context.SaveChangesAsync();
 
-        return _mapper.Map<T>(data);
+        return _mapper.Map<TDomain>(data);
     }
 
-    public virtual async Task<T> UpdateAsync(T item)
+    public virtual async Task<TDomain> UpdateAsync(TDomain item)
     {
         var data = await _context
             .Set<TEntity>()
@@ -42,19 +42,19 @@ public abstract class RepositoryBase<T, TEntity> : IRepository<T, TEntity>
         _context.Set<TEntity>().Update(data);
         await _context.SaveChangesAsync();
 
-        return _mapper.Map<T>(data);
+        return _mapper.Map<TDomain>(data);
     }
 
-    public virtual async Task<T?> FindAsync(Guid id)
+    public virtual async Task<TDomain?> FindAsync(Guid id)
     {
         var data = await _context
             .Set<TEntity>()
             .FirstOrDefaultAsync(x => x.Id == id);
 
-        return data != null ? _mapper.Map<T>(data) : null;
+        return data != null ? _mapper.Map<TDomain>(data) : null;
     }
 
-    public virtual async Task<List<T>> GetPaginatedListAsync
+    public virtual async Task<List<TDomain>> GetPaginatedListAsync
         (IQueryable<TEntity> query, IQueryParameter<TEntity> param)
     {
         var (page, limit) = (param.Page, param.Limit);
@@ -63,7 +63,7 @@ public abstract class RepositoryBase<T, TEntity> : IRepository<T, TEntity>
             .Skip((page - 1) * limit)
             .Take(limit)
             .ToListAsync())
-            .Select(x => _mapper.Map<T>(x))
+            .Select(x => _mapper.Map<TDomain>(x))
             .ToList();
     }
 

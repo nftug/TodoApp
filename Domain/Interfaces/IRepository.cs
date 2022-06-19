@@ -2,14 +2,14 @@ using Domain.Shared;
 
 namespace Domain.Interfaces;
 
-public interface IRepository<T, TEntity>
-    where T : ModelBase
+public interface IRepository<TDomain, TEntity>
+    where TDomain : ModelBase
     where TEntity : IEntity
 {
-    Task<T> CreateAsync(T item);
-    Task<T> UpdateAsync(T item);
-    Task<T?> FindAsync(Guid id);
+    Task<TDomain> CreateAsync(TDomain item);
+    Task<TDomain> UpdateAsync(TDomain item);
+    Task<TDomain?> FindAsync(Guid id);
     Task RemoveAsync(Guid id);
-    Task<List<T>> GetPaginatedListAsync
+    Task<List<TDomain>> GetPaginatedListAsync
         (IQueryable<TEntity> query, IQueryParameter<TEntity> param);
 }

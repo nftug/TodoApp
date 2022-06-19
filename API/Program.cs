@@ -1,6 +1,4 @@
 using API.Extensions;
-using Infrastructure;
-using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -8,22 +6,8 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
 IConfiguration config = builder.Configuration;
-builder.Services.AddApplications(config);
-
-using (var services = builder.Services.BuildServiceProvider())
-{
-    try
-    {
-        var context = services.GetRequiredService<DataContext>();
-        await context.Database.MigrateAsync();
-        // await Seed.SeedData(context);
-    }
-    catch (Exception exc)
-    {
-        var logger = services.GetRequiredService<ILogger<Program>>();
-        logger.LogError(exc, "An Error occurred during migration");
-    }
-}
+builder.Services.AddApplicationServices(config);
+builder.Services.AddIdentityServices(config);
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
@@ -40,8 +24,9 @@ if (app.Environment.IsDevelopment())
 
 // app.UseHttpsRedirection();
 
-app.UseAuthentication();
+app.UseCors("CorsPolicy");
 
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();

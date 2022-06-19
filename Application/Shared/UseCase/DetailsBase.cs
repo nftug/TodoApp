@@ -12,8 +12,8 @@ public abstract class DetailsBase<TDomain, TEntity, TResultDTO>
 {
     public class Query : IRequest<TResultDTO>
     {
-        public Guid Id { get; set; }
-        public string? UserId { get; set; }
+        public Guid Id { get; init; }
+        public string? UserId { get; init; }
 
         public Query(Guid id, string? userId)
         {
