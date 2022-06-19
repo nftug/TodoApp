@@ -1,43 +1,19 @@
-using MediatR;
 using Domain.Todos;
-using Domain.Shared;
 using Domain.Interfaces;
 using Infrastructure.DataModels;
+using Application.Shared.UseCase;
 
 namespace Application.Todos;
 
-public class Details
+public class Details : DetailsBase<Todo, TodoDataModel, TodoResultDTO>
 {
-    public class Query : IRequest<TodoResultDTO>
+    public class Handler : HandlerBase
     {
-        public Guid Id { get; set; }
-        public string? UserId { get; set; }
-
-        public Query(Guid id, string? userId)
+        public Handler(IRepository<Todo, TodoDataModel> repository)
+            : base(repository)
         {
-            Id = id;
-            UserId = userId;
-        }
-    }
-
-    public class Handler : IRequestHandler<Query, TodoResultDTO>
-    {
-        private readonly IRepository<Todo, TodoDataModel> _todoRepository;
-
-        public Handler(IRepository<Todo, TodoDataModel> todoRepository)
-        {
-            _todoRepository = todoRepository;
         }
 
-        public async Task<TodoResultDTO> Handle
-            (Query request, CancellationToken cancellationToken)
-        {
-            var todo = await _todoRepository.FindAsync(request.Id);
-
-            if (todo == null)
-                throw new NotFoundException();
-
-            return new TodoResultDTO(todo);
-        }
+        protected override TodoResultDTO CreateDTO(Todo item) => new(item);
     }
 }

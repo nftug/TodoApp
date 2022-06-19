@@ -31,7 +31,7 @@ public class CommentQuerySearchService
             );
 
         // qで絞り込み
-        foreach (var keyword in GetKeyword(_param.q))
+        foreach (var keyword in GetKeyword(_param.Q))
             expressionsNode.AddExpression(
                 x => x.Content.ToLower().Contains(keyword.Value),
                 keyword

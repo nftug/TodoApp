@@ -1,48 +1,29 @@
-using MediatR;
 using Domain.Todos;
 using Infrastructure.DataModels;
 using Domain.Interfaces;
+using Application.Shared.UseCase;
 
 namespace Application.Todos;
 
 public class Create
+    : CreateBase<Todo, TodoDataModel, TodoResultDTO, TodoCommandDTO>
 {
-    public class Command : IRequest<TodoResultDTO>
+    public class Handler : HandlerBase
     {
-        public TodoCommandDTO TodoCommandDTO { get; set; }
-        public string UserId { get; set; }
-
-        public Command(TodoCommandDTO todoItemDTO, string usedId)
+        public Handler(IRepository<Todo, TodoDataModel> repository)
+            : base(repository)
         {
-            TodoCommandDTO = todoItemDTO;
-            UserId = usedId;
-        }
-    }
-
-    public class Handler : IRequestHandler<Command, TodoResultDTO>
-    {
-        private readonly IRepository<Todo, TodoDataModel> _todoRepository;
-
-        public Handler(IRepository<Todo, TodoDataModel> todoRepository)
-        {
-            _todoRepository = todoRepository;
         }
 
-        public async Task<TodoResultDTO> Handle
-            (Command request, CancellationToken cancellationToken)
-        {
-            var inputItem = request.TodoCommandDTO;
-
-            var todo = Todo.CreateNew(
-                title: new(inputItem.Title!),
-                description: new(inputItem.Description),
-                period: new(inputItem.BeginDateTime, inputItem.DueDateTime),
-                state: new(inputItem.State),
+        protected override Todo CreateDomain(Command request)
+            => Todo.CreateNew(
+                title: new(request.Item.Title!),
+                description: new(request.Item.Description),
+                period: new(request.Item.BeginDateTime, request.Item.DueDateTime),
+                state: new(request.Item.State),
                 ownerUserId: request.UserId
             );
 
-            var result = await _todoRepository.CreateAsync(todo);
-            return new TodoResultDTO(result);
-        }
+        protected override TodoResultDTO CreateDTO(Todo item) => new(item);
     }
 }

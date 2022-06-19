@@ -1,9 +1,7 @@
 using Domain.Todos;
-using Domain.Comments;
 using Microsoft.EntityFrameworkCore;
 using Infrastructure.DataModels;
 using Infrastructure.Shared.Repository;
-using Domain.Interfaces;
 using AutoMapper;
 
 namespace Infrastructure.Todos;

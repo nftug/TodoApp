@@ -1,47 +1,28 @@
-using MediatR;
 using Domain.Comments;
 using Domain.Interfaces;
 using Infrastructure.DataModels;
+using Application.Shared.UseCase;
 
 namespace Application.Comments;
 
 public class Create
+    : CreateBase<Comment, CommentDataModel, CommentResultDTO, CommentCommandDTO>
 {
-    public class Command : IRequest<CommentResultDTO>
+    public class Handler : HandlerBase
     {
-        public CommentCommandDTO CommentCommandDTO { get; set; }
-        public string UserId { get; set; }
-
-        public Command(CommentCommandDTO CommentItemDTO, string usedId)
+        public Handler(IRepository<Comment, CommentDataModel> repository)
+            : base(repository)
         {
-            CommentCommandDTO = CommentItemDTO;
-            UserId = usedId;
-        }
-    }
-
-    public class Handler : IRequestHandler<Command, CommentResultDTO>
-    {
-        private readonly IRepository<Comment, CommentDataModel> _commentRepository;
-
-        public Handler
-            (IRepository<Comment, CommentDataModel> commentRepository)
-        {
-            _commentRepository = commentRepository;
         }
 
-        public async Task<CommentResultDTO> Handle
-            (Command request, CancellationToken cancellationToken)
-        {
-            var inputItem = request.CommentCommandDTO;
+        protected override Comment CreateDomain(Command request)
+            => Comment.CreateNew(
+                    content: new(request.Item.Content!),
+                    todoId: request.Item.TodoId,
+                    ownerUserId: request.UserId
+                );
 
-            var comment = Comment.CreateNew(
-                content: new(inputItem.Content!),
-                todoId: inputItem.TodoId,
-                ownerUserId: request.UserId
-            );
-
-            var result = await _commentRepository.CreateAsync(comment);
-            return new CommentResultDTO(result);
-        }
+        protected override CommentResultDTO CreateDTO(Comment item)
+            => new(item);
     }
 }

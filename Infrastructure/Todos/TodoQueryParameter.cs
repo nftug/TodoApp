@@ -5,13 +5,13 @@ namespace Infrastructure.Todos;
 
 public class TodoQueryParameter : IQueryParameter<TodoDataModel>
 {
-    public string? q { get; set; }
-    public string? Title { get; set; }
-    public string? Description { get; set; }
-    public string? Comment { get; set; }
-    public string? UserName { get; set; }
-    public int? State { get; set; }
+    public string? Q { get; init; }
+    public string? Title { get; init; }
+    public string? Description { get; init; }
+    public string? Comment { get; init; }
+    public string? UserName { get; init; }
+    public int? State { get; init; }
     public string? UserId { get; set; }
-    public int Page { get; set; } = 1;
-    public int Limit { get; set; } = 10;
+    public int Page { get; init; } = 1;
+    public int Limit { get; init; } = 10;
 }

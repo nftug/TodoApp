@@ -1,56 +1,23 @@
-using MediatR;
-using Pagination.EntityFrameworkCore.Extensions;
-using Infrastructure.Comments;
-using Microsoft.EntityFrameworkCore;
 using Domain.Comments;
 using Domain.Interfaces;
 using Infrastructure.DataModels;
+using Application.Shared.UseCase;
 
 namespace Application.Comments;
 
-public class List
+public class List : ListBase<Comment, CommentDataModel, CommentResultDTO>
 {
-    public class Query : IRequest<Pagination<CommentResultDTO>>
+    public class Handler : HandlerBase
     {
-        public IQueryParameter<CommentDataModel> Param { get; set; }
-        public string? UserId { get; set; }
-
-        public Query(IQueryParameter<CommentDataModel> param, string? userId)
-        {
-            Param = param;
-            UserId = userId;
-        }
-    }
-
-    public class Handler : IRequestHandler<Query, Pagination<CommentResultDTO>>
-    {
-        private readonly CommentQuerySearchService _commentQuerySearchService;
-        private readonly IRepository<Comment, CommentDataModel> _commentRepository;
-
         public Handler(
-            IRepository<Comment, CommentDataModel> commentRepository,
-            CommentQuerySearchService commentQuerySearchService
+            IRepository<Comment, CommentDataModel> repository,
+            IQuerySearch<CommentDataModel> querySearch
         )
+            : base(repository, querySearch)
         {
-            _commentRepository = commentRepository;
-            _commentQuerySearchService = commentQuerySearchService;
         }
 
-        public async Task<Pagination<CommentResultDTO>> Handle
-            (Query request, CancellationToken cancellationToken)
-        {
-            var filteredQuery = _commentQuerySearchService
-                .GetFilteredQuery(request.Param)
-                .OrderByDescending(x => x.CreatedDateTime);
-
-            var results = (await _commentRepository
-                .GetPaginatedListAsync(filteredQuery, request.Param))
-                .Select(x => new CommentResultDTO(x));
-
-            var count = await filteredQuery.CountAsync();
-
-            return new Pagination<CommentResultDTO>
-                (results, count, request.Param.Page, request.Param.Limit);
-        }
+        protected override CommentResultDTO CreateDTO(Comment item)
+            => new(item);
     }
 }

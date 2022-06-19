@@ -1,18 +1,19 @@
+using Application.Shared.Interfaces;
 using Domain.Todos;
 
 namespace Application.Todos;
 
-public class TodoCommandDTO
+public class TodoCommandDTO : ICommandDTO<Todo>
 {
-    public Guid Id { get; set; }
+    public Guid Id { get; init; }
     [TodoTitleAttribute]
-    public string? Title { get; set; }
+    public string? Title { get; init; }
     [TodoDescriptionAttribute]
-    public string? Description { get; set; }
+    public string? Description { get; init; }
     [TodoPeriodAttribute(Period.Begin, "DueDateTime")]
-    public DateTime? BeginDateTime { get; set; }
+    public DateTime? BeginDateTime { get; init; }
     [TodoPeriodAttribute(Period.Due, "BeginDateTime")]
-    public DateTime? DueDateTime { get; set; }
+    public DateTime? DueDateTime { get; init; }
     [TodoStateAttribute]
-    public int? State { get; set; }
+    public int? State { get; init; }
 }

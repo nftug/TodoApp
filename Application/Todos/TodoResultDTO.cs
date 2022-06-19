@@ -1,20 +1,21 @@
 using Domain.Todos;
 using Application.Comments;
+using Application.Shared.Interfaces;
 
 namespace Application.Todos;
 
-public class TodoResultDTO
+public class TodoResultDTO : IResultDTO<Todo>
 {
-    public Guid Id { get; set; }
-    public string Title { get; set; } = string.Empty;
-    public string? Description { get; set; }
-    public DateTime? BeginDateTime { get; set; }
-    public DateTime? DueDateTime { get; set; }
-    public TodoState State { get; set; }
-    public List<CommentResultDTO> Comments { get; set; } = null!;
-    public DateTime CreatedDateTime { get; set; }
-    public DateTime UpdatedDateTime { get; set; }
-    public string? OwnerUserId { get; set; }
+    public Guid Id { get; }
+    public string Title { get; } = string.Empty;
+    public string? Description { get; }
+    public DateTime? BeginDateTime { get; }
+    public DateTime? DueDateTime { get; }
+    public TodoState State { get; }
+    public List<CommentResultDTO> Comments { get; } = null!;
+    public DateTime CreatedDateTime { get; }
+    public DateTime UpdatedDateTime { get; }
+    public string? OwnerUserId { get; }
 
     public TodoResultDTO(Todo todo)
     {

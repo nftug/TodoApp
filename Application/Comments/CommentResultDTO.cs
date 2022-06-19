@@ -1,15 +1,16 @@
+using Application.Shared.Interfaces;
 using Domain.Comments;
 
 namespace Application.Comments;
 
-public class CommentResultDTO
+public class CommentResultDTO : IResultDTO<Comment>
 {
-    public Guid Id { get; set; }
-    public string Content { get; set; } = string.Empty;
-    public Guid TodoId { get; set; }
-    public DateTime CreatedDateTime { get; set; }
-    public DateTime UpdatedDateTime { get; set; }
-    public string? OwnerUserId { get; set; }
+    public Guid Id { get; }
+    public string Content { get; } = string.Empty;
+    public Guid TodoId { get; }
+    public DateTime CreatedDateTime { get; }
+    public DateTime UpdatedDateTime { get; }
+    public string? OwnerUserId { get; }
 
     public CommentResultDTO(Comment comment)
     {

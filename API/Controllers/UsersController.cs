@@ -4,6 +4,7 @@ using Application.Users;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Infrastructure.Todos;
 using Infrastructure.Comments;
+using AutoMapper;
 
 namespace API.Controllers.Account;
 

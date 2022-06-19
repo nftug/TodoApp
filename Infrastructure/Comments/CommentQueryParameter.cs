@@ -5,10 +5,10 @@ namespace Infrastructure.Comments;
 
 public class CommentQueryParameter : IQueryParameter<CommentDataModel>
 {
-    public string? q { get; set; }
-    public string? Content { get; set; }
-    public string? UserName { get; set; }
+    public string? Q { get; init; }
+    public string? Content { get; init; }
+    public string? UserName { get; init; }
     public string? UserId { get; set; }
-    public int Page { get; set; } = 1;
-    public int Limit { get; set; } = 10;
+    public int Page { get; init; } = 1;
+    public int Limit { get; init; } = 10;
 }

@@ -62,8 +62,8 @@ internal static class DependencyInjection
         services.AddTransient<IUserRepository, UserRepository>();
 
         // query services
-        services.AddTransient<TodoQuerySearchService>();
-        services.AddTransient<CommentQuerySearchService>();
+        services.AddTransient<IQuerySearch<TodoDataModel>, TodoQuerySearchService>();
+        services.AddTransient<IQuerySearch<CommentDataModel>, CommentQuerySearchService>();
 
         // AutoMapper
         services.AddAutoMapper(typeof(TodoRepositoryMapping).Assembly);

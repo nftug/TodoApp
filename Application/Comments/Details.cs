@@ -1,43 +1,20 @@
-using MediatR;
 using Domain.Comments;
-using Domain.Shared;
 using Domain.Interfaces;
 using Infrastructure.DataModels;
+using Application.Shared.UseCase;
 
 namespace Application.Comments;
 
-public class Details
+public class Details : DetailsBase<Comment, CommentDataModel, CommentResultDTO>
 {
-    public class Query : IRequest<CommentResultDTO>
+    public class Handler : HandlerBase
     {
-        public Guid Id { get; set; }
-        public string? UserId { get; set; }
-
-        public Query(Guid id, string? userId)
+        public Handler(IRepository<Comment, CommentDataModel> repository)
+            : base(repository)
         {
-            Id = id;
-            UserId = userId;
-        }
-    }
-
-    public class Handler : IRequestHandler<Query, CommentResultDTO>
-    {
-        private readonly IRepository<Comment, CommentDataModel> _commentRepository;
-
-        public Handler(IRepository<Comment, CommentDataModel> commentRepository)
-        {
-            _commentRepository = commentRepository;
         }
 
-        public async Task<CommentResultDTO> Handle
-            (Query request, CancellationToken cancellationToken)
-        {
-            var comment = await _commentRepository.FindAsync(request.Id);
-
-            if (comment == null)
-                throw new NotFoundException();
-
-            return new CommentResultDTO(comment);
-        }
+        protected override CommentResultDTO CreateDTO(Comment item)
+            => new(item);
     }
 }

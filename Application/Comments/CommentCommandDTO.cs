@@ -1,11 +1,12 @@
+using Application.Shared.Interfaces;
 using Domain.Comments;
 
 namespace Application.Comments;
 
-public class CommentCommandDTO
+public class CommentCommandDTO : ICommandDTO<Comment>
 {
-    public Guid Id { get; set; }
+    public Guid Id { get; init; }
     [CommentContentAttribute]
-    public string? Content { get; set; } = null!;
-    public Guid TodoId { get; set; }
+    public string? Content { get; init; } = null!;
+    public Guid TodoId { get; init; }
 }

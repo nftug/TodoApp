@@ -1,60 +1,30 @@
-using MediatR;
 using Domain.Todos;
-using Domain.Shared;
 using Domain.Interfaces;
 using Infrastructure.DataModels;
+using Application.Shared.UseCase;
 
 namespace Application.Todos;
 
 public class Edit
+    : EditBase<Todo, TodoDataModel, TodoResultDTO, TodoCommandDTO>
 {
-    public class Command : IRequest<TodoResultDTO>
+    public class Handler : HandlerBase
     {
-        public TodoCommandDTO TodoCommandDTO { get; set; }
-        public Guid Id { get; set; }
-        public string UserId { get; set; }
-
-        public Command(Guid id, TodoCommandDTO todoItemDTO, string userId)
+        public Handler(IRepository<Todo, TodoDataModel> repository)
+            : base(repository)
         {
-            TodoCommandDTO = todoItemDTO;
-            Id = id;
-            UserId = userId;
-        }
-    }
-
-    public class Handler : IRequestHandler<Command, TodoResultDTO>
-    {
-        private readonly IRepository<Todo, TodoDataModel> _todoRepository;
-
-        public Handler(IRepository<Todo, TodoDataModel> todoRepository)
-        {
-            _todoRepository = todoRepository;
         }
 
-        public async Task<TodoResultDTO> Handle
-            (Command request, CancellationToken cancellationToken)
+        protected override TodoResultDTO CreateDTO(Todo item) => new(item);
+
+        protected override void Put(Todo item, Command request)
         {
-            var inputItem = request.TodoCommandDTO;
-
-            if (request.Id != inputItem.Id)
-                throw new DomainException(nameof(inputItem.Id), "IDが正しくありません");
-
-            var todo = await _todoRepository.FindAsync(request.Id);
-            if (todo == null)
-                throw new NotFoundException();
-            if (todo.OwnerUserId != request.UserId)
-                throw new BadRequestException();
-
-            todo.Edit(
-                title: new(inputItem.Title!),
-                description: new(inputItem.Description),
-                period: new(inputItem.BeginDateTime, inputItem.DueDateTime),
-                state: new(inputItem.State)
+            item.Edit(
+                title: new(request.Item.Title!),
+                description: new(request.Item.Description),
+                period: new(request.Item.BeginDateTime, request.Item.DueDateTime),
+                state: new(request.Item.State)
             );
-
-            var result = await _todoRepository.UpdateAsync(todo);
-
-            return new TodoResultDTO(result);
         }
     }
 }
