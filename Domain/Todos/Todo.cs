@@ -7,7 +7,7 @@ public class Todo : ModelBase
 {
     public TodoTitle Title { get; private set; }
     public TodoDescription Description { get; private set; }
-    public TodoPeriod? Period { get; private set; }
+    public TodoPeriod Period { get; private set; }
     public TodoState State { get; private set; }
     public ICollection<Comment> Comments { get; private set; } = new List<Comment>();
 
