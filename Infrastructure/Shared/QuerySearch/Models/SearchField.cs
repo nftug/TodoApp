@@ -23,7 +23,7 @@ public class SearchField<T>
     {
         if (string.IsNullOrWhiteSpace(param))
             return CombineMode.And;
-        else if (Regex.IsMatch(param, "^OR"))
+        else if (Regex.IsMatch(param, "^OR( |\u3000)"))
             return CombineMode.OrElse;
         else
             return CombineMode.And;
