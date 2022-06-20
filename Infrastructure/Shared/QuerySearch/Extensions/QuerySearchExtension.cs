@@ -22,12 +22,14 @@ internal static class QuerySearchExtension
         return;
     }
 
-    public static IQueryable<T> ApplyExpressionsNode<T>(
-        this IQueryable<T> query,
-        ICollection<QuerySearchExpression<T>> expressionsNode
+    public static void AddExpressionNode<T>(
+        this ICollection<ExpressionGroup<T>> nodes,
+        SearchField<T> field
     )
     {
-        var expressions = expressionsNode
+        if (field.Node.Count == 0) return;
+
+        var expression = field.Node
             .GroupBy(x => new
             { x.BlockId, x.CombineMode }, (k, g) => new
             {
@@ -37,11 +39,37 @@ internal static class QuerySearchExtension
             .Select(x =>
                 x.CombineMode == CombineMode.OrElse
                     ? x.Expressions.OrElse()
-                    : x.Expressions.And()
-            );
+                    : x.Expressions.And())
+            .And();
 
-        foreach (var expression in expressions)
-            query = query.Where(expression);
+        nodes.Add(
+            new ExpressionGroup<T>()
+            {
+                CombineMode = field.CombineMode,
+                Expression = expression
+            }
+        );
+    }
+
+    public static IQueryable<T> ApplyExpressionGroup<T>(
+        this IQueryable<T> query,
+        ICollection<ExpressionGroup<T>> nodes
+    )
+    {
+        var expression = nodes
+            .GroupBy(x => new
+            { x.CombineMode }, (k, g) => new
+            {
+                k.CombineMode,
+                Expressions = g.Select(x => x.Expression)
+            })
+            .Select(x =>
+                x.CombineMode == CombineMode.OrElse
+                    ? x.Expressions.OrElse()
+                    : x.Expressions.And())
+            .And();
+
+        query = query.Where(expression);
 
         return query;
     }
