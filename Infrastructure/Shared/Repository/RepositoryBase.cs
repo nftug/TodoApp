@@ -1,4 +1,3 @@
-using AutoMapper;
 using Domain.Interfaces;
 using Domain.Shared;
 using Microsoft.EntityFrameworkCore;
@@ -10,12 +9,11 @@ public abstract class RepositoryBase<TDomain> : IRepository<TDomain>
 {
     protected readonly DataContext _context;
     protected readonly IDataSource<TDomain> _source;
-    protected readonly IMapper _mapper;
 
-    public RepositoryBase(DataContext context, IMapper mapper, IDataSource<TDomain> source)
+    public RepositoryBase
+        (DataContext context, IDataSource<TDomain> source)
     {
         _context = context;
-        _mapper = mapper;
         _source = source;
     }
 
@@ -28,7 +26,7 @@ public abstract class RepositoryBase<TDomain> : IRepository<TDomain>
         return _source.MapToDomain(data);
     }
 
-    public virtual async Task<TDomain> UpdateAsync(TDomain item)
+    public virtual async Task<TDomain?> UpdateAsync(TDomain item)
     {
         var data = await _source.Source
             .FirstOrDefaultAsync(x => x.Id == item.Id);
@@ -41,15 +39,14 @@ public abstract class RepositoryBase<TDomain> : IRepository<TDomain>
         _source.UpdateEntity(data);
         await _context.SaveChangesAsync();
 
-        return _source.MapToDomain(data);
+        return await FindAsync(data.Id);
     }
 
     public virtual async Task<TDomain?> FindAsync(Guid id)
     {
-        var data = await _source.Source
+        return await _source
+            .DomainSource
             .FirstOrDefaultAsync(x => x.Id == id);
-
-        return data != null ? _source.MapToDomain(data) : null;
     }
 
     public virtual async Task<List<TDomain>> GetPaginatedListAsync
@@ -61,13 +58,14 @@ public abstract class RepositoryBase<TDomain> : IRepository<TDomain>
             .Skip((page - 1) * limit)
             .Take(limit)
             .ToListAsync())
-            .Select(x => _mapper.Map<TDomain>(x))
+            .Select(x => _source.MapToDomain(x))
             .ToList();
     }
 
     public virtual async Task RemoveAsync(Guid id)
     {
-        var data = await _source.Source.FirstOrDefaultAsync(x => x.Id == id);
+        var data = await _source.Source
+            .FirstOrDefaultAsync(x => x.Id == id);
 
         if (data == null)
             throw new NotFoundException();

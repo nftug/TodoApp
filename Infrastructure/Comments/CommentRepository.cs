@@ -1,25 +1,27 @@
-using AutoMapper;
 using Domain.Comments;
 using Domain.Interfaces;
 using Domain.Shared;
 using Infrastructure.Shared.Repository;
+using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.Comments;
 
 public class CommentRepository : RepositoryBase<Comment>
 {
     public CommentRepository
-        (DataContext context, IMapper mapper, IDataSource<Comment> source)
-        : base(context, mapper, source)
+        (DataContext context, IDataSource<Comment> source)
+        : base(context, source)
     {
     }
 
     public override async Task<Comment> CreateAsync(Comment item)
     {
         // 外部キーの存在チェック
-        var todoDataModel = await _context.Todos.FindAsync(item.TodoId);
-        if (todoDataModel == null)
-            throw new DomainException(nameof(item.TodoId), "このIDのTodoは存在しません");
+        var existsParent = await _context.Todos
+            .AnyAsync(x => x.Id == item.TodoId);
+        if (!existsParent)
+            throw new DomainException
+                (nameof(item.TodoId), "このIDのTodoは存在しません");
 
         return await base.CreateAsync(item);
     }

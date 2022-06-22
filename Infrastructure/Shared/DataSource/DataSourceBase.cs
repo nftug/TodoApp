@@ -17,11 +17,19 @@ public abstract class DataSourceBase<TDomain> : IDataSource<TDomain>
     }
 
     public abstract IQueryable<IEntity<TDomain>> Source { get; }
+
     public abstract IEntity<TDomain> MapToEntity(TDomain item);
+
     public abstract TDomain MapToDomain(IEntity<TDomain> entity);
+
     public abstract void Transfer(TDomain item, IEntity<TDomain> entity);
 
     public abstract Task AddEntityAsync(IEntity<TDomain> entity);
+
     public abstract void UpdateEntity(IEntity<TDomain> entity);
+
     public abstract void RemoveEntity(IEntity<TDomain> entity);
+
+    public virtual IQueryable<TDomain> DomainSource
+        => _mapper.ProjectTo<TDomain>(Source);
 }

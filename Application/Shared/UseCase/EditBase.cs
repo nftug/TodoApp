@@ -49,6 +49,9 @@ public abstract class EditBase<TDomain, TResultDTO, TCommandDTO>
 
             var result = await _repository.UpdateAsync(item);
 
+            if (result == null)
+                throw new DomainException("保存に失敗しました");
+
             return CreateDTO(result);
         }
 
