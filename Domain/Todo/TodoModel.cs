@@ -27,8 +27,8 @@ public class TodoModel : ModelBase
             Description = description,
             Period = period,
             State = state,
-            CreatedDateTime = operationDateTime,
-            UpdatedDateTime = operationDateTime,
+            CreatedOn = operationDateTime,
+            UpdatedOn = operationDateTime,
             OwnerUserId = ownerUserId
         };
     }
@@ -44,6 +44,6 @@ public class TodoModel : ModelBase
         Description = description;
         Period = period;
         State = state;
-        UpdatedDateTime = DateTime.Now;
+        UpdatedOn = DateTime.Now;
     }
 }

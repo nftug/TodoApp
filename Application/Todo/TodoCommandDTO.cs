@@ -10,10 +10,10 @@ public class TodoCommandDTO : ICommandDTO<TodoModel>
     public string? Title { get; init; }
     [TodoDescription]
     public string? Description { get; init; }
-    [TodoPeriod(Period.Begin, "DueDateTime")]
-    public DateTime? BeginDateTime { get; init; }
-    [TodoPeriod(Period.Due, "BeginDateTime")]
-    public DateTime? DueDateTime { get; init; }
+    [TodoPeriod(Period.Begin, "EndDate")]
+    public DateTime? StartDate { get; init; }
+    [TodoPeriod(Period.Due, "StartDate")]
+    public DateTime? EndDate { get; init; }
     [TodoState]
     public int? State { get; init; }
 }

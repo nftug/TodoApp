@@ -19,8 +19,8 @@ public class CommentModel : ModelBase
         {
             Content = content,
             TodoId = todoId,
-            CreatedDateTime = operationDateTime,
-            UpdatedDateTime = operationDateTime,
+            CreatedOn = operationDateTime,
+            UpdatedOn = operationDateTime,
             OwnerUserId = ownerUserId
         };
     }
@@ -28,6 +28,6 @@ public class CommentModel : ModelBase
     public void Edit(CommentContent content)
     {
         Content = content;
-        UpdatedDateTime = DateTime.Now;
+        UpdatedOn = DateTime.Now;
     }
 }

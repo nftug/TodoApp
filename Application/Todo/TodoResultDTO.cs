@@ -9,12 +9,12 @@ public class TodoResultDTO : IResultDTO<TodoModel>
     public Guid Id { get; }
     public string Title { get; } = string.Empty;
     public string? Description { get; }
-    public DateTime? BeginDateTime { get; }
-    public DateTime? DueDateTime { get; }
+    public DateTime? StartDate { get; }
+    public DateTime? EndDate { get; }
     public TodoState State { get; }
     public List<CommentResultDTO> Comments { get; } = null!;
-    public DateTime CreatedDateTime { get; }
-    public DateTime UpdatedDateTime { get; }
+    public DateTime CreatedOn { get; }
+    public DateTime UpdatedOn { get; }
     public Guid? OwnerUserId { get; }
 
     public TodoResultDTO(TodoModel todo)
@@ -22,14 +22,14 @@ public class TodoResultDTO : IResultDTO<TodoModel>
         Id = todo.Id;
         Title = todo.Title.Value;
         Description = todo.Description?.Value;
-        BeginDateTime = todo.Period?.BeginDateTimeValue;
-        DueDateTime = todo.Period?.DueDateTimeValue;
+        StartDate = todo.Period?.StartDateValue;
+        EndDate = todo.Period?.EndDateValue;
         State = todo.State;
         Comments = todo.Comments
             .Select(x => new CommentResultDTO(x))
             .ToList();
-        CreatedDateTime = todo.CreatedDateTime;
-        UpdatedDateTime = todo.UpdatedDateTime;
+        CreatedOn = todo.CreatedOn;
+        UpdatedOn = todo.UpdatedOn;
         OwnerUserId = todo.OwnerUserId;
     }
 }

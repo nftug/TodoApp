@@ -5,18 +5,18 @@ namespace Domain.Todo;
 
 public class TodoPeriod : ValueObject<TodoPeriod>
 {
-    public DateTime? BeginDateTimeValue { get; }
-    public DateTime? DueDateTimeValue { get; }
+    public DateTime? StartDateValue { get; }
+    public DateTime? EndDateValue { get; }
 
-    public TodoPeriod(DateTime? beginDateTimeValue, DateTime? dueDateTimeValue)
+    public TodoPeriod(DateTime? startDate, DateTime? endDate)
     {
-        BeginDateTimeValue = beginDateTimeValue;
-        DueDateTimeValue = dueDateTimeValue;
+        StartDateValue = startDate;
+        EndDateValue = endDate;
     }
 
     protected override bool EqualsCore(TodoPeriod other) =>
-        (BeginDateTimeValue == other.BeginDateTimeValue) &&
-        (DueDateTimeValue == other.DueDateTimeValue);
+        (StartDateValue == other.StartDateValue) &&
+        (EndDateValue == other.EndDateValue);
 }
 
 public class TodoPeriodAttribute : ValidationAttribute

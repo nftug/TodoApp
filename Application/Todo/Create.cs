@@ -18,7 +18,7 @@ public class Create
             => TodoModel.CreateNew(
                 title: new(request.Item.Title!),
                 description: new(request.Item.Description),
-                period: new(request.Item.BeginDateTime, request.Item.DueDateTime),
+                period: new(request.Item.StartDate, request.Item.EndDate),
                 state: new(request.Item.State),
                 ownerUserId: request.UserId
             );

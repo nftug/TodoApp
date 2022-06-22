@@ -42,7 +42,7 @@ public abstract class ListBase<TDomain, TResultDTO>
         {
             var filteredQuery = _querySearch
                 .GetFilteredQuery(request.Param)
-                .OrderByDescending(x => x.CreatedDateTime);
+                .OrderByDescending(x => x.CreatedOn);
 
             var results = (await _repository
                 .GetPaginatedListAsync(filteredQuery, request.Param))

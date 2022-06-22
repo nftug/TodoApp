@@ -6,7 +6,7 @@ public interface IResultDTO<TDomain>
     where TDomain : ModelBase
 {
     Guid Id { get; }
-    DateTime CreatedDateTime { get; }
-    DateTime UpdatedDateTime { get; }
+    DateTime CreatedOn { get; }
+    DateTime UpdatedOn { get; }
     Guid? OwnerUserId { get; }
 }

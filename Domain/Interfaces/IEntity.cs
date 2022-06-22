@@ -6,8 +6,7 @@ public interface IEntity<TDomain>
     where TDomain : ModelBase
 {
     Guid Id { get; set; }
-    DateTime CreatedDateTime { get; set; }
-    DateTime UpdatedDateTime { get; set; }
+    DateTime CreatedOn { get; set; }
+    DateTime UpdatedOn { get; set; }
     Guid? OwnerUserId { get; set; }
-    // UserDataModel? OwnerUser { get; set; }
 }

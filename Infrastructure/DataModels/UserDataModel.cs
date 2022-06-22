@@ -7,7 +7,7 @@ namespace Infrastructure.DataModels;
 public class UserDataModel<T> : IdentityUser<Guid>, IEntity<UserModel>
     where T : struct
 {
-    public DateTime CreatedDateTime { get; set; }
-    public DateTime UpdatedDateTime { get; set; }
+    public DateTime CreatedOn { get; set; }
+    public DateTime UpdatedOn { get; set; }
     public Guid? OwnerUserId { get; set; }
 }

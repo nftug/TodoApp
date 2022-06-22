@@ -10,8 +10,8 @@ public class UserResultDTO
         public Guid Id { get; set; }
         public string Username { get; }
         public string Email { get; }
-        public DateTime CreatedDateTime { get; }
-        public DateTime UpdatedDateTime { get; }
+        public DateTime CreatedOn { get; }
+        public DateTime UpdatedOn { get; }
         public Guid? OwnerUserId { get; }
 
         public Me(UserModel user)
@@ -19,8 +19,8 @@ public class UserResultDTO
             Id = user.Id;
             Username = user.UserName.Value;
             Email = user.Email.Value;
-            CreatedDateTime = user.CreatedDateTime;
-            UpdatedDateTime = user.UpdatedDateTime;
+            CreatedOn = user.CreatedOn;
+            UpdatedOn = user.UpdatedOn;
             OwnerUserId = user.OwnerUserId;
         }
     }
@@ -29,16 +29,16 @@ public class UserResultDTO
     {
         public Guid Id { get; set; }
         public string Username { get; }
-        public DateTime CreatedDateTime { get; }
-        public DateTime UpdatedDateTime { get; }
+        public DateTime CreatedOn { get; }
+        public DateTime UpdatedOn { get; }
         public Guid? OwnerUserId { get; }
 
         public Public(UserModel user)
         {
             Id = user.Id;
             Username = user.UserName.Value;
-            CreatedDateTime = user.CreatedDateTime;
-            UpdatedDateTime = user.UpdatedDateTime;
+            CreatedOn = user.CreatedOn;
+            UpdatedOn = user.UpdatedOn;
             OwnerUserId = user.OwnerUserId;
         }
     }

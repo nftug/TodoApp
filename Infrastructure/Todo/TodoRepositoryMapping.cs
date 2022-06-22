@@ -18,12 +18,12 @@ public class TodoRepositoryMapping : Profile
                 o => o.MapFrom(s => s.Description.Value)
             )
             .ForMember(
-                d => d.BeginDateTime,
-                o => o.MapFrom(s => s.Period!.BeginDateTimeValue)
+                d => d.StartDate,
+                o => o.MapFrom(s => s.Period!.StartDateValue)
             )
             .ForMember(
-                d => d.DueDateTime,
-                o => o.MapFrom(s => s.Period!.DueDateTimeValue)
+                d => d.EndDate,
+                o => o.MapFrom(s => s.Period!.EndDateValue)
             )
             .ForMember(
                 d => d.State,
@@ -48,7 +48,7 @@ public class TodoRepositoryMapping : Profile
             )
             .ForMember(
                 d => d.Period,
-                o => o.MapFrom(s => new TodoPeriod(s.BeginDateTime, s.DueDateTime))
+                o => o.MapFrom(s => new TodoPeriod(s.StartDate, s.EndDate))
             )
             .ForMember(
                 d => d.State,

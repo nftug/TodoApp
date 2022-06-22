@@ -59,8 +59,8 @@ public class AuthController : ControllerBase
             Id = id,
             Email = registerModel.Email,
             UserName = registerModel.Username,
-            CreatedDateTime = now,
-            UpdatedDateTime = now,
+            CreatedOn = now,
+            UpdatedOn = now,
             OwnerUserId = id
         };
 
