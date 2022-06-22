@@ -14,9 +14,9 @@ public abstract class ListBase<TDomain, TResultDTO>
     public class Query : IRequest<Pagination<TResultDTO>>
     {
         public IQueryParameter<TDomain> Param { get; init; }
-        public string? UserId { get; init; }
+        public Guid? UserId { get; init; }
 
-        public Query(IQueryParameter<TDomain> param, string? userId)
+        public Query(IQueryParameter<TDomain> param, Guid? userId)
         {
             Param = param;
             UserId = userId;

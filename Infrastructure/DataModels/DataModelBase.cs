@@ -9,6 +9,6 @@ public class DataModelBase<TDomain> : IEntity<TDomain>
     public Guid Id { get; set; }
     public DateTime CreatedDateTime { get; set; }
     public DateTime UpdatedDateTime { get; set; }
-    public string? OwnerUserId { get; set; }
-    public UserDataModel? OwnerUser { get; set; }
+    public Guid? OwnerUserId { get; set; }
+    public UserDataModel<Guid>? OwnerUser { get; set; }
 }

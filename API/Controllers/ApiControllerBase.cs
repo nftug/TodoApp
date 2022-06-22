@@ -10,7 +10,7 @@ public abstract class ApiControllerBase : ControllerBase
     private ISender? _mediator;
     protected ISender Mediator => _mediator ??= HttpContext.RequestServices.GetService<ISender>()!;
 
-    protected string _userId => User.FindFirstValue(ClaimTypes.NameIdentifier);
+    protected Guid _userId => Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
 
     protected async Task<IActionResult> HandleResult<T>(Func<Task<T>> cb)
     {
@@ -34,5 +34,10 @@ public abstract class ApiControllerBase : ControllerBase
             ModelState.AddModelError(exc.Field, exc.Message);
             return ValidationProblem();
         }
+    }
+
+    protected async Task<IActionResult> HandleRequest<T>(IRequest<T> request)
+    {
+        return await HandleResult(() => Mediator.Send(request));
     }
 }

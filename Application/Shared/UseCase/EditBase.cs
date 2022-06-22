@@ -14,9 +14,9 @@ public abstract class EditBase<TDomain, TResultDTO, TCommandDTO>
     {
         public TCommandDTO Item { get; init; }
         public Guid Id { get; init; }
-        public string UserId { get; init; }
+        public Guid UserId { get; init; }
 
-        public Command(Guid id, TCommandDTO item, string userId)
+        public Command(Guid id, TCommandDTO item, Guid userId)
         {
             Item = item;
             Id = id;
@@ -36,9 +36,6 @@ public abstract class EditBase<TDomain, TResultDTO, TCommandDTO>
         public virtual async Task<TResultDTO> Handle
             (Command request, CancellationToken cancellationToken)
         {
-            if (request.Id != request.Item.Id)
-                throw new DomainException(nameof(request.Item.Id), "IDが正しくありません");
-
             var item = await _repository.FindAsync(request.Id);
             if (item == null)
                 throw new NotFoundException();

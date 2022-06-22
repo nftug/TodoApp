@@ -8,6 +8,6 @@ public interface IEntity<TDomain>
     Guid Id { get; set; }
     DateTime CreatedDateTime { get; set; }
     DateTime UpdatedDateTime { get; set; }
-    string? OwnerUserId { get; set; }
+    Guid? OwnerUserId { get; set; }
     // UserDataModel? OwnerUser { get; set; }
 }

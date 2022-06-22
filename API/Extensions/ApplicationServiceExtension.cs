@@ -2,14 +2,13 @@ using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 using Infrastructure;
-using Domain.Todos;
-using Domain.Comments;
-using Domain.Users;
-using Infrastructure.DataModels;
-using Infrastructure.Todos;
-using Infrastructure.Comments;
-using Infrastructure.Users;
+using Domain.Todo;
+using Domain.Comment;
+using Infrastructure.Todo;
+using Infrastructure.Comment;
+using Infrastructure.User;
 using Domain.Interfaces;
+using Domain.User;
 
 namespace API.Extensions;
 
@@ -37,23 +36,25 @@ internal static class ApplicationServiceExtension
             });
         });
 
-        services.AddMediatR(typeof(Application.Todos.List.Query).Assembly);
+        services.AddMediatR(typeof(Application.Todo.List.Query).Assembly);
 
         // repositories
-        services.AddTransient<IRepository<Todo>, TodoRepository>();
-        services.AddTransient<IRepository<Comment>, CommentRepository>();
-        services.AddTransient<IUserRepository, UserRepository>();
+        services.AddTransient<IRepository<TodoModel>, TodoRepository>();
+        services.AddTransient<IRepository<CommentModel>, CommentRepository>();
+        services.AddTransient<IRepository<UserModel>, UserRepository>();
 
         // query services
-        services.AddTransient<IQuerySearch<Todo>, TodoQuerySearchService>();
-        services.AddTransient<IQuerySearch<Comment>, CommentQuerySearchService>();
+        services.AddTransient<IQuerySearch<TodoModel>, TodoQuerySearchService>();
+        services.AddTransient<IQuerySearch<CommentModel>, CommentQuerySearchService>();
 
         // AutoMapper
         services.AddAutoMapper(typeof(TodoRepositoryMapping).Assembly);
         services.AddAutoMapper(typeof(CommentRepositoryMapping).Assembly);
+        services.AddAutoMapper(typeof(UserRepositoryMapping).Assembly);
 
-        services.AddTransient<IDataSource<Todo>, TodoDataSource>();
-        services.AddTransient<IDataSource<Comment>, CommentDataSource>();
+        services.AddTransient<IDataSource<TodoModel>, TodoDataSource>();
+        services.AddTransient<IDataSource<CommentModel>, CommentDataSource>();
+        services.AddTransient<IDataSource<UserModel>, UserDataSource>();
 
         return services;
     }

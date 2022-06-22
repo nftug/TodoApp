@@ -1,8 +1,8 @@
-using Domain.Todos;
+using Domain.Todo;
 
 namespace Infrastructure.DataModels;
 
-public class TodoDataModel : DataModelBase<Todo>
+public class TodoDataModel : DataModelBase<TodoModel>
 {
     public string Title { get; set; } = string.Empty;
     public string? Description { get; set; }

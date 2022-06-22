@@ -16,11 +16,11 @@ public class TokenService
         _settings = settings;
     }
 
-    public string CreateToken(UserDataModel user)
+    public string CreateToken(UserDataModel<Guid> user)
     {
         var claims = new List<Claim> {
                 new Claim(ClaimTypes.Name, user.UserName),
-                new Claim(ClaimTypes.NameIdentifier, user.Id),
+                new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
                 new Claim(ClaimTypes.Email, user.Email)
             };
 

@@ -12,13 +12,13 @@ namespace API.Controllers;
 [Route("api/[controller]")]
 public class AuthController : ControllerBase
 {
-    private readonly UserManager<UserDataModel> _userManager;
-    private readonly SignInManager<UserDataModel> _signInManager;
+    private readonly UserManager<UserDataModel<Guid>> _userManager;
+    private readonly SignInManager<UserDataModel<Guid>> _signInManager;
     private readonly TokenService _tokenService;
 
     public AuthController(
-        UserManager<UserDataModel> userManager,
-        SignInManager<UserDataModel> signInManager,
+        UserManager<UserDataModel<Guid>> userManager,
+        SignInManager<UserDataModel<Guid>> signInManager,
         TokenService tokenService
     )
     {
@@ -51,10 +51,17 @@ public class AuthController : ControllerBase
             return ValidationProblem();
         }
 
-        var user = new UserDataModel
+        var now = DateTime.Now;
+        var id = Guid.NewGuid();
+
+        var user = new UserDataModel<Guid>
         {
+            Id = id,
             Email = registerModel.Email,
-            UserName = registerModel.Username
+            UserName = registerModel.Username,
+            CreatedDateTime = now,
+            UpdatedDateTime = now,
+            OwnerUserId = id
         };
 
         var result = await _userManager.CreateAsync(user, registerModel.Password);
@@ -69,8 +76,8 @@ public class AuthController : ControllerBase
         return CreateUserObject(user);
     }
 
-    private TokenModel CreateUserObject(UserDataModel user)
-        => new TokenModel
+    private TokenModel CreateUserObject(UserDataModel<Guid> user)
+        => new()
         {
             Token = _tokenService.CreateToken(user)
         };

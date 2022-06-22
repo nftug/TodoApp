@@ -13,9 +13,9 @@ public abstract class CreateBase<TDomain, TResultDTO, TCommandDTO>
     public class Command : IRequest<TResultDTO>
     {
         public TCommandDTO Item { get; init; }
-        public string UserId { get; init; }
+        public Guid UserId { get; init; }
 
-        public Command(TCommandDTO item, string usedId)
+        public Command(TCommandDTO item, Guid usedId)
         {
             Item = item;
             UserId = usedId;

@@ -14,7 +14,7 @@ internal static class IdentityServiceExtension
     internal static IServiceCollection AddIdentityServices
         (this IServiceCollection services, IConfiguration config)
     {
-        services.AddDefaultIdentity<UserDataModel>(opt =>
+        services.AddDefaultIdentity<UserDataModel<Guid>>(opt =>
             opt.SignIn.RequireConfirmedAccount = false
         ).AddEntityFrameworkStores<DataContext>();
 

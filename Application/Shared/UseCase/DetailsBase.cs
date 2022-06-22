@@ -12,9 +12,9 @@ public abstract class DetailsBase<TDomain, TResultDTO>
     public class Query : IRequest<TResultDTO>
     {
         public Guid Id { get; init; }
-        public string? UserId { get; init; }
+        public Guid? UserId { get; init; }
 
-        public Query(Guid id, string? userId)
+        public Query(Guid id, Guid? userId)
         {
             Id = id;
             UserId = userId;
