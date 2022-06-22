@@ -1,9 +1,10 @@
 using Domain.Interfaces;
+using Domain.Todos;
 using Infrastructure.DataModels;
 
 namespace Infrastructure.Todos;
 
-public class TodoQueryParameter : IQueryParameter<TodoDataModel>
+public class TodoQueryParameter : IQueryParameter<Todo>
 {
     public string? Q { get; init; }
     public string? Title { get; init; }

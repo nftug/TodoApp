@@ -5,9 +5,8 @@ using Application.Shared.Interfaces;
 
 namespace Application.Shared.UseCase;
 
-public abstract class DetailsBase<TDomain, TEntity, TResultDTO>
+public abstract class DetailsBase<TDomain, TResultDTO>
     where TDomain : ModelBase
-    where TEntity : IEntity
     where TResultDTO : IResultDTO<TDomain>
 {
     public class Query : IRequest<TResultDTO>
@@ -24,9 +23,9 @@ public abstract class DetailsBase<TDomain, TEntity, TResultDTO>
 
     public abstract class HandlerBase : IRequestHandler<Query, TResultDTO>
     {
-        private readonly IRepository<TDomain, TEntity> _repository;
+        private readonly IRepository<TDomain> _repository;
 
-        public HandlerBase(IRepository<TDomain, TEntity> repository)
+        public HandlerBase(IRepository<TDomain> repository)
         {
             _repository = repository;
         }

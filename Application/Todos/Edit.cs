@@ -1,16 +1,15 @@
 using Domain.Todos;
 using Domain.Interfaces;
-using Infrastructure.DataModels;
 using Application.Shared.UseCase;
 
 namespace Application.Todos;
 
 public class Edit
-    : EditBase<Todo, TodoDataModel, TodoResultDTO, TodoCommandDTO>
+    : EditBase<Todo, TodoResultDTO, TodoCommandDTO>
 {
     public class Handler : HandlerBase
     {
-        public Handler(IRepository<Todo, TodoDataModel> repository)
+        public Handler(IRepository<Todo> repository)
             : base(repository)
         {
         }

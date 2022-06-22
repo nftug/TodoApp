@@ -5,9 +5,8 @@ using Application.Shared.Interfaces;
 
 namespace Application.Shared.UseCase;
 
-public abstract class EditBase<TDomain, TEntity, TResultDTO, TCommandDTO>
+public abstract class EditBase<TDomain, TResultDTO, TCommandDTO>
     where TDomain : ModelBase
-    where TEntity : IEntity
     where TResultDTO : IResultDTO<TDomain>
     where TCommandDTO : ICommandDTO<TDomain>
 {
@@ -27,9 +26,9 @@ public abstract class EditBase<TDomain, TEntity, TResultDTO, TCommandDTO>
 
     public abstract class HandlerBase : IRequestHandler<Command, TResultDTO>
     {
-        private readonly IRepository<TDomain, TEntity> _repository;
+        private readonly IRepository<TDomain> _repository;
 
-        public HandlerBase(IRepository<TDomain, TEntity> repository)
+        public HandlerBase(IRepository<TDomain> repository)
         {
             _repository = repository;
         }

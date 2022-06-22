@@ -1,11 +1,11 @@
 using Domain.Interfaces;
-using Infrastructure.DataModels;
+using Domain.Shared;
 using Infrastructure.Shared.QuerySearch.Models;
 
 namespace Infrastructure.Shared.QuerySearch;
 
-public abstract class QuerySearchServiceBase<TEntity> : IQuerySearch<TEntity>
-    where TEntity : DataModelBase
+public abstract class QuerySearchServiceBase<TDomain> : IQuerySearch<TDomain>
+    where TDomain : ModelBase
 {
     protected readonly DataContext _context;
 
@@ -14,8 +14,9 @@ public abstract class QuerySearchServiceBase<TEntity> : IQuerySearch<TEntity>
         _context = context;
     }
 
-    public abstract IQueryable<TEntity> GetFilteredQuery(IQueryParameter<TEntity> param);
+    public abstract IQueryable<IEntity<TDomain>> GetFilteredQuery(IQueryParameter<TDomain> param);
 
     protected static IEnumerable<Keyword> GetKeyword(string? param)
         => Keyword.CreateFromRawString(param);
+
 }

@@ -1,6 +1,9 @@
+using Domain.Shared;
+
 namespace Domain.Interfaces;
 
-public interface IEntity
+public interface IEntity<TDomain>
+    where TDomain : ModelBase
 {
     Guid Id { get; set; }
     DateTime CreatedDateTime { get; set; }

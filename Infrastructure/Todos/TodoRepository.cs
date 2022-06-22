@@ -1,15 +1,16 @@
 using Domain.Todos;
 using Microsoft.EntityFrameworkCore;
-using Infrastructure.DataModels;
-using Infrastructure.Shared.Repository;
 using AutoMapper;
+using Infrastructure.Shared.Repository;
+using Domain.Interfaces;
 
 namespace Infrastructure.Todos;
 
-public class TodoRepository : RepositoryBase<Todo, TodoDataModel>
+public class TodoRepository : RepositoryBase<Todo>
 {
-    public TodoRepository(DataContext context, IMapper mapper)
-        : base(context, mapper)
+    public TodoRepository
+        (DataContext context, IMapper mapper, IDataSource<Todo> source)
+        : base(context, mapper, source)
     {
     }
 

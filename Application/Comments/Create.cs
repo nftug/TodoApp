@@ -1,16 +1,15 @@
 using Domain.Comments;
 using Domain.Interfaces;
-using Infrastructure.DataModels;
 using Application.Shared.UseCase;
 
 namespace Application.Comments;
 
 public class Create
-    : CreateBase<Comment, CommentDataModel, CommentResultDTO, CommentCommandDTO>
+    : CreateBase<Comment, CommentResultDTO, CommentCommandDTO>
 {
     public class Handler : HandlerBase
     {
-        public Handler(IRepository<Comment, CommentDataModel> repository)
+        public Handler(IRepository<Comment> repository)
             : base(repository)
         {
         }

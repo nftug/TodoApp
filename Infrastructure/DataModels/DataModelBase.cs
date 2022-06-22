@@ -1,8 +1,10 @@
 using Domain.Interfaces;
+using Domain.Shared;
 
 namespace Infrastructure.DataModels;
 
-public class DataModelBase : IEntity
+public class DataModelBase<TDomain> : IEntity<TDomain>
+    where TDomain : ModelBase
 {
     public Guid Id { get; set; }
     public DateTime CreatedDateTime { get; set; }

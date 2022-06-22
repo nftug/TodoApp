@@ -4,9 +4,8 @@ using Domain.Shared;
 
 namespace Application.Shared.UseCase;
 
-public abstract class DeleteBase<TDomain, TEntity>
+public abstract class DeleteBase<TDomain>
     where TDomain : ModelBase
-    where TEntity : IEntity
 {
     public class Command : IRequest<Unit>
     {
@@ -22,9 +21,9 @@ public abstract class DeleteBase<TDomain, TEntity>
 
     public abstract class HandlerBase : IRequestHandler<Command, Unit>
     {
-        private readonly IRepository<TDomain, TEntity> _repository;
+        private readonly IRepository<TDomain> _repository;
 
-        public HandlerBase(IRepository<TDomain, TEntity> repository)
+        public HandlerBase(IRepository<TDomain> repository)
         {
             _repository = repository;
         }

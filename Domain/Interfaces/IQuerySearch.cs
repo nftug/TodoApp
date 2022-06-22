@@ -1,7 +1,9 @@
+using Domain.Shared;
+
 namespace Domain.Interfaces;
 
-public interface IQuerySearch<TEntity>
-    where TEntity : IEntity
+public interface IQuerySearch<TDomain>
+    where TDomain : ModelBase
 {
-    IQueryable<TEntity> GetFilteredQuery(IQueryParameter<TEntity> param);
+    IQueryable<IEntity<TDomain>> GetFilteredQuery(IQueryParameter<TDomain> param);
 }

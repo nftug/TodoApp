@@ -1,61 +1,59 @@
 using AutoMapper;
 using Domain.Interfaces;
 using Domain.Shared;
-using Infrastructure.DataModels;
 using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.Shared.Repository;
 
-public abstract class RepositoryBase<TDomain, TEntity> : IRepository<TDomain, TEntity>
+public abstract class RepositoryBase<TDomain> : IRepository<TDomain>
     where TDomain : ModelBase
-    where TEntity : DataModelBase
 {
     protected readonly DataContext _context;
+    protected readonly IDataSource<TDomain> _source;
     protected readonly IMapper _mapper;
 
-    public RepositoryBase(DataContext context, IMapper mapper)
+    public RepositoryBase(DataContext context, IMapper mapper, IDataSource<TDomain> source)
     {
         _context = context;
         _mapper = mapper;
+        _source = source;
     }
 
     public virtual async Task<TDomain> CreateAsync(TDomain item)
     {
-        var data = _mapper.Map<TEntity>(item);
-        await _context.Set<TEntity>().AddAsync(data);
+        var data = _source.MapToEntity(item);
+        await _source.AddEntityAsync(data);
         await _context.SaveChangesAsync();
 
-        return _mapper.Map<TDomain>(data);
+        return _source.MapToDomain(data);
     }
 
     public virtual async Task<TDomain> UpdateAsync(TDomain item)
     {
-        var data = await _context
-            .Set<TEntity>()
+        var data = await _source.Source
             .FirstOrDefaultAsync(x => x.Id == item.Id);
 
         if (data == null)
             throw new NotFoundException();
 
-        _mapper.Map(item, data);
+        _source.Transfer(item, data);
 
-        _context.Set<TEntity>().Update(data);
+        _source.UpdateEntity(data);
         await _context.SaveChangesAsync();
 
-        return _mapper.Map<TDomain>(data);
+        return _source.MapToDomain(data);
     }
 
     public virtual async Task<TDomain?> FindAsync(Guid id)
     {
-        var data = await _context
-            .Set<TEntity>()
+        var data = await _source.Source
             .FirstOrDefaultAsync(x => x.Id == id);
 
-        return data != null ? _mapper.Map<TDomain>(data) : null;
+        return data != null ? _source.MapToDomain(data) : null;
     }
 
     public virtual async Task<List<TDomain>> GetPaginatedListAsync
-        (IQueryable<TEntity> query, IQueryParameter<TEntity> param)
+        (IQueryable<IEntity<TDomain>> query, IQueryParameter<TDomain> param)
     {
         var (page, limit) = (param.Page, param.Limit);
 
@@ -69,12 +67,12 @@ public abstract class RepositoryBase<TDomain, TEntity> : IRepository<TDomain, TE
 
     public virtual async Task RemoveAsync(Guid id)
     {
-        var data = await _context.Set<TEntity>().FindAsync(id);
+        var data = await _source.Source.FirstOrDefaultAsync(x => x.Id == id);
 
         if (data == null)
             throw new NotFoundException();
 
-        _context.Set<TEntity>().Remove(data);
+        _source.RemoveEntity(data);
         await _context.SaveChangesAsync();
     }
 }

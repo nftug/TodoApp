@@ -7,17 +7,16 @@ using Application.Shared.Interfaces;
 
 namespace Application.Shared.UseCase;
 
-public abstract class ListBase<TDomain, TEntity, TResultDTO>
+public abstract class ListBase<TDomain, TResultDTO>
     where TDomain : ModelBase
-    where TEntity : IEntity
     where TResultDTO : IResultDTO<TDomain>
 {
     public class Query : IRequest<Pagination<TResultDTO>>
     {
-        public IQueryParameter<TEntity> Param { get; init; }
+        public IQueryParameter<TDomain> Param { get; init; }
         public string? UserId { get; init; }
 
-        public Query(IQueryParameter<TEntity> param, string? userId)
+        public Query(IQueryParameter<TDomain> param, string? userId)
         {
             Param = param;
             UserId = userId;
@@ -26,12 +25,12 @@ public abstract class ListBase<TDomain, TEntity, TResultDTO>
 
     public abstract class HandlerBase : IRequestHandler<Query, Pagination<TResultDTO>>
     {
-        private readonly IRepository<TDomain, TEntity> _repository;
-        private readonly IQuerySearch<TEntity> _querySearch;
+        private readonly IRepository<TDomain> _repository;
+        private readonly IQuerySearch<TDomain> _querySearch;
 
         public HandlerBase(
-            IRepository<TDomain, TEntity> repository,
-            IQuerySearch<TEntity> querySearch
+            IRepository<TDomain> repository,
+            IQuerySearch<TDomain> querySearch
         )
         {
             _repository = repository;

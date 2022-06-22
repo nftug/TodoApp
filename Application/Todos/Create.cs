@@ -1,16 +1,15 @@
 using Domain.Todos;
-using Infrastructure.DataModels;
 using Domain.Interfaces;
 using Application.Shared.UseCase;
 
 namespace Application.Todos;
 
 public class Create
-    : CreateBase<Todo, TodoDataModel, TodoResultDTO, TodoCommandDTO>
+    : CreateBase<Todo, TodoResultDTO, TodoCommandDTO>
 {
     public class Handler : HandlerBase
     {
-        public Handler(IRepository<Todo, TodoDataModel> repository)
+        public Handler(IRepository<Todo> repository)
             : base(repository)
         {
         }

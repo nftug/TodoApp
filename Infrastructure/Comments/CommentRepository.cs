@@ -1,15 +1,16 @@
 using AutoMapper;
 using Domain.Comments;
+using Domain.Interfaces;
 using Domain.Shared;
-using Infrastructure.DataModels;
 using Infrastructure.Shared.Repository;
 
 namespace Infrastructure.Comments;
 
-public class CommentRepository : RepositoryBase<Comment, CommentDataModel>
+public class CommentRepository : RepositoryBase<Comment>
 {
-    public CommentRepository(DataContext context, IMapper mapper)
-        : base(context, mapper)
+    public CommentRepository
+        (DataContext context, IMapper mapper, IDataSource<Comment> source)
+        : base(context, mapper, source)
     {
     }
 

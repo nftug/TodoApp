@@ -40,17 +40,20 @@ internal static class ApplicationServiceExtension
         services.AddMediatR(typeof(Application.Todos.List.Query).Assembly);
 
         // repositories
-        services.AddTransient<IRepository<Todo, TodoDataModel>, TodoRepository>();
-        services.AddTransient<IRepository<Comment, CommentDataModel>, CommentRepository>();
+        services.AddTransient<IRepository<Todo>, TodoRepository>();
+        services.AddTransient<IRepository<Comment>, CommentRepository>();
         services.AddTransient<IUserRepository, UserRepository>();
 
         // query services
-        services.AddTransient<IQuerySearch<TodoDataModel>, TodoQuerySearchService>();
-        services.AddTransient<IQuerySearch<CommentDataModel>, CommentQuerySearchService>();
+        services.AddTransient<IQuerySearch<Todo>, TodoQuerySearchService>();
+        services.AddTransient<IQuerySearch<Comment>, CommentQuerySearchService>();
 
         // AutoMapper
         services.AddAutoMapper(typeof(TodoRepositoryMapping).Assembly);
         services.AddAutoMapper(typeof(CommentRepositoryMapping).Assembly);
+
+        services.AddTransient<IDataSource<Todo>, TodoDataSource>();
+        services.AddTransient<IDataSource<Comment>, CommentDataSource>();
 
         return services;
     }

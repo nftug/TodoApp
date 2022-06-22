@@ -4,11 +4,12 @@ using Infrastructure.Shared.QuerySearch;
 using Infrastructure.Shared.QuerySearch.Models;
 using Infrastructure.Shared.QuerySearch.Extensions;
 using Domain.Interfaces;
+using Domain.Todos;
 
 namespace Infrastructure.Todos;
 
 public class TodoQuerySearchService
-    : QuerySearchServiceBase<TodoDataModel>
+    : QuerySearchServiceBase<Todo>
 {
     public TodoQuerySearchService(DataContext context)
         : base(context)
@@ -16,7 +17,7 @@ public class TodoQuerySearchService
     }
 
     public override IQueryable<TodoDataModel> GetFilteredQuery
-        (IQueryParameter<TodoDataModel> param)
+        (IQueryParameter<Todo> param)
     {
         var _param = (TodoQueryParameter)param;
 

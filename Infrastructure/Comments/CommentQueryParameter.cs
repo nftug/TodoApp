@@ -1,9 +1,9 @@
+using Domain.Comments;
 using Domain.Interfaces;
-using Infrastructure.DataModels;
 
 namespace Infrastructure.Comments;
 
-public class CommentQueryParameter : IQueryParameter<CommentDataModel>
+public class CommentQueryParameter : IQueryParameter<Comment>
 {
     public string? Q { get; init; }
     public string? Content { get; init; }

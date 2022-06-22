@@ -56,6 +56,8 @@ internal static class QuerySearchExtension
         ICollection<ExpressionGroup<T>> nodes
     )
     {
+        if (nodes.Count == 0) return query;
+
         var expression = nodes
             .GroupBy(x => new
             { x.CombineMode }, (k, g) => new

@@ -1,14 +1,15 @@
 using Microsoft.EntityFrameworkCore;
-using Infrastructure.DataModels;
 using Infrastructure.Shared.QuerySearch;
 using Infrastructure.Shared.QuerySearch.Models;
 using Infrastructure.Shared.QuerySearch.Extensions;
 using Domain.Interfaces;
+using Domain.Comments;
+using Infrastructure.DataModels;
 
 namespace Infrastructure.Comments;
 
 public class CommentQuerySearchService
-    : QuerySearchServiceBase<CommentDataModel>
+    : QuerySearchServiceBase<Comment>
 {
     public CommentQuerySearchService(DataContext context)
         : base(context)
@@ -16,7 +17,7 @@ public class CommentQuerySearchService
     }
 
     public override IQueryable<CommentDataModel> GetFilteredQuery
-        (IQueryParameter<CommentDataModel> param)
+        (IQueryParameter<Comment> param)
     {
         var _param = (CommentQueryParameter)param;
         var query = _context.Comments.Include(x => x.OwnerUser).AsQueryable();
