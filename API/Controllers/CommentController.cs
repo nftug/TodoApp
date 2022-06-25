@@ -1,8 +1,8 @@
 using Microsoft.AspNetCore.Mvc;
 using Application.Comment;
-using Infrastructure.Comment;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Domain.Comment;
 
 namespace API.Controllers;
 

@@ -1,8 +1,6 @@
 using Domain.Comment;
 using Domain.Interfaces;
 using Application.Shared.UseCase;
-using Domain.Todo;
-using Domain.Shared;
 
 namespace Application.Comment;
 

@@ -1,8 +1,8 @@
 using Microsoft.AspNetCore.Mvc;
 using Application.Todo;
-using Infrastructure.Todo;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Domain.Todo;
 
 namespace API.Controllers;
 

@@ -47,18 +47,15 @@ internal static class ApplicationServiceExtension
         services.AddTransient<IQueryService<TodoModel>, TodoQueryService>();
         services.AddTransient<IQueryService<CommentModel>, CommentQueryService>();
 
+        // domain services
+        services.AddScoped<IDomainService<TodoModel>, TodoService>();
+        services.AddScoped<IDomainService<CommentModel>, CommentService>();
+        services.AddScoped<IDomainService<UserModel>, UserService>();
+
         // AutoMapper
         services.AddAutoMapper(typeof(TodoRepositoryMapping).Assembly);
         services.AddAutoMapper(typeof(CommentRepositoryMapping).Assembly);
         services.AddAutoMapper(typeof(UserRepositoryMapping).Assembly);
-
-        services.AddTransient<IDataSource<TodoModel>, TodoDataSource>();
-        services.AddTransient<IDataSource<CommentModel>, CommentDataSource>();
-        services.AddTransient<IDataSource<UserModel>, UserDataSource>();
-
-        services.AddScoped<IDomainService<TodoModel>, TodoService>();
-        services.AddScoped<IDomainService<CommentModel>, CommentService>();
-        services.AddScoped<IDomainService<UserModel>, UserService>();
 
         return services;
     }

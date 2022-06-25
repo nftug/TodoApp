@@ -1,7 +1,6 @@
 using Domain.Interfaces;
-using Domain.Todo;
 
-namespace Infrastructure.Todo;
+namespace Domain.Todo;
 
 public class TodoQueryParameter : IQueryParameter<TodoModel>
 {

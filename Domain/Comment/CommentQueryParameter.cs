@@ -1,7 +1,6 @@
-using Domain.Comment;
 using Domain.Interfaces;
 
-namespace Infrastructure.Comment;
+namespace Domain.Comment;
 
 public class CommentQueryParameter : IQueryParameter<CommentModel>
 {

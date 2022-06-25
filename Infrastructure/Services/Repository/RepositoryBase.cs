@@ -1,3 +1,4 @@
+using AutoMapper;
 using Domain.Interfaces;
 using Domain.Shared;
 using Microsoft.EntityFrameworkCore;
@@ -8,35 +9,35 @@ public abstract class RepositoryBase<TDomain> : IRepository<TDomain>
     where TDomain : ModelBase
 {
     protected readonly DataContext _context;
-    protected readonly IDataSource<TDomain> _source;
+    protected readonly IMapper _mapper;
 
     public RepositoryBase
-        (DataContext context, IDataSource<TDomain> source)
+        (DataContext context, IMapper mapper)
     {
         _context = context;
-        _source = source;
+        _mapper = mapper;
     }
 
     public virtual async Task<TDomain> CreateAsync(TDomain item)
     {
-        var data = _source.MapToEntity(item);
-        await _source.AddEntityAsync(data);
+        var data = MapToEntity(item);
+        await AddEntityAsync(data);
         await _context.SaveChangesAsync();
 
-        return _source.MapToDomain(data);
+        return MapToDomain(data);
     }
 
     public virtual async Task<TDomain?> UpdateAsync(TDomain item)
     {
-        var data = await _source.Source
+        var data = await Source
             .FirstOrDefaultAsync(x => x.Id == item.Id);
 
         if (data == null)
             throw new NotFoundException();
 
-        _source.Transfer(item, data);
+        Transfer(item, data);
 
-        _source.UpdateEntity(data);
+        UpdateEntity(data);
         await _context.SaveChangesAsync();
 
         return await FindAsync(data.Id);
@@ -44,8 +45,7 @@ public abstract class RepositoryBase<TDomain> : IRepository<TDomain>
 
     public virtual async Task<TDomain?> FindAsync(Guid id)
     {
-        return await _source
-            .DomainSource
+        return await DomainSource
             .FirstOrDefaultAsync(x => x.Id == id);
     }
 
@@ -58,19 +58,38 @@ public abstract class RepositoryBase<TDomain> : IRepository<TDomain>
             .Skip((page - 1) * limit)
             .Take(limit)
             .ToListAsync())
-            .Select(x => _source.MapToDomain(x))
+            .Select(x => MapToDomain(x))
             .ToList();
     }
 
     public virtual async Task RemoveAsync(Guid id)
     {
-        var data = await _source.Source
+        var data = await Source
             .FirstOrDefaultAsync(x => x.Id == id);
 
         if (data == null)
             throw new NotFoundException();
 
-        _source.RemoveEntity(data);
+        RemoveEntity(data);
         await _context.SaveChangesAsync();
     }
+
+    protected abstract IQueryable<IEntity<TDomain>> Source { get; }
+
+    protected abstract IEntity<TDomain> MapToEntity(TDomain item);
+
+    protected virtual TDomain MapToDomain(IEntity<TDomain> entity)
+        => _mapper.Map<TDomain>(entity);
+
+    protected virtual void Transfer(TDomain item, IEntity<TDomain> entity)
+        => _mapper.Map(item, entity);
+
+    protected abstract Task AddEntityAsync(IEntity<TDomain> entity);
+
+    protected abstract void UpdateEntity(IEntity<TDomain> entity);
+
+    protected abstract void RemoveEntity(IEntity<TDomain> entity);
+
+    protected virtual IQueryable<TDomain> DomainSource
+        => _mapper.ProjectTo<TDomain>(Source);
 }
