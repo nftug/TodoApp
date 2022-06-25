@@ -27,31 +27,36 @@ public abstract class ListBase<TDomain, TResultDTO>
     {
         protected readonly IRepository<TDomain> _repository;
         protected readonly IQueryService<TDomain> _querySearch;
+        protected readonly IDomainService<TDomain> _domain;
 
         public HandlerBase(
             IRepository<TDomain> repository,
-            IQueryService<TDomain> querySearch
+            IQueryService<TDomain> querySearch,
+            IDomainService<TDomain> domain
         )
         {
             _repository = repository;
             _querySearch = querySearch;
+            _domain = domain;
         }
 
         public virtual async Task<Pagination<TResultDTO>> Handle
             (Query request, CancellationToken cancellationToken)
         {
+            var queryParameter = _domain.GetQueryParameter(request.Param, request.UserId);
+
             var filteredQuery = _querySearch
-                .GetFilteredQuery(request.Param)
+                .GetFilteredQuery(queryParameter)
                 .OrderByDescending(x => x.CreatedOn);
 
             var results = (await _repository
-                .GetPaginatedListAsync(filteredQuery, request.Param))
+                .GetPaginatedListAsync(filteredQuery, queryParameter))
                 .Select(x => CreateDTO(x));
 
             var count = await filteredQuery.CountAsync(cancellationToken);
 
             return new Pagination<TResultDTO>
-                (results, count, request.Param.Page, request.Param.Limit);
+                (results, count, queryParameter.Page, queryParameter.Limit);
         }
 
         protected abstract TResultDTO CreateDTO(TDomain item);

@@ -9,8 +9,10 @@ public class Create
 {
     public class Handler : HandlerBase
     {
-        public Handler(IRepository<TodoModel> repository)
-            : base(repository)
+        public Handler(
+            IRepository<TodoModel> repository,
+            IDomainService<TodoModel> domain
+        ) : base(repository, domain)
         {
         }
 

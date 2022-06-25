@@ -10,9 +10,9 @@ public class List : ListBase<TodoModel, TodoResultDTO>
     {
         public Handler(
             IRepository<TodoModel> repository,
-            IQueryService<TodoModel> querySearch
-        )
-            : base(repository, querySearch)
+            IQueryService<TodoModel> querySearch,
+            IDomainService<TodoModel> domain
+        ) : base(repository, querySearch, domain)
         {
         }
 

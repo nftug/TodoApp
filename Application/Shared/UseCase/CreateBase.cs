@@ -25,16 +25,23 @@ public abstract class CreateBase<TDomain, TResultDTO, TCommandDTO>
     public abstract class HandlerBase : IRequestHandler<Command, TResultDTO>
     {
         protected readonly IRepository<TDomain> _repository;
+        protected readonly IDomainService<TDomain> _domain;
 
-        public HandlerBase(IRepository<TDomain> repository)
+        public HandlerBase(
+            IRepository<TDomain> repository,
+            IDomainService<TDomain> domain
+        )
         {
             _repository = repository;
+            _domain = domain;
         }
 
         public virtual async Task<TResultDTO> Handle
             (Command request, CancellationToken cancellationToken)
         {
             var item = CreateDomain(request);
+            if (!await _domain.CanCreate(item, request.UserId))
+                throw new BadRequestException();
 
             var result = await _repository.CreateAsync(item);
             return CreateDTO(result);

@@ -9,8 +9,10 @@ public class Edit
 {
     public class Handler : HandlerBase
     {
-        public Handler(IRepository<CommentModel> repository)
-            : base(repository)
+        public Handler(
+            IRepository<CommentModel> repository,
+            IDomainService<CommentModel> domain
+        ) : base(repository, domain)
         {
         }
 

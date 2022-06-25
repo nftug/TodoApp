@@ -24,10 +24,15 @@ public abstract class DetailsBase<TDomain, TResultDTO>
     public abstract class HandlerBase : IRequestHandler<Query, TResultDTO>
     {
         protected readonly IRepository<TDomain> _repository;
+        protected readonly IDomainService<TDomain> _domain;
 
-        public HandlerBase(IRepository<TDomain> repository)
+        public HandlerBase(
+            IRepository<TDomain> repository,
+            IDomainService<TDomain> domain
+        )
         {
             _repository = repository;
+            _domain = domain;
         }
 
         public virtual async Task<TResultDTO> Handle
@@ -37,6 +42,9 @@ public abstract class DetailsBase<TDomain, TResultDTO>
 
             if (item == null)
                 throw new NotFoundException();
+
+            if (!await _domain.CanShow(item, request.UserId))
+                throw new BadRequestException();
 
             return CreateDTO(item);
         }

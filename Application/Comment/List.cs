@@ -10,9 +10,9 @@ public class List : ListBase<CommentModel, CommentResultDTO>
     {
         public Handler(
             IRepository<CommentModel> repository,
-            IQueryService<CommentModel> querySearch
-        )
-            : base(repository, querySearch)
+            IQueryService<CommentModel> querySearch,
+            IDomainService<CommentModel> domain
+        ) : base(repository, querySearch, domain)
         {
         }
 

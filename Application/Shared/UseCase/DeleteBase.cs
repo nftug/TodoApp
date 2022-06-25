@@ -22,10 +22,15 @@ public abstract class DeleteBase<TDomain>
     public abstract class HandlerBase : IRequestHandler<Command, Unit>
     {
         protected readonly IRepository<TDomain> _repository;
+        protected readonly IDomainService<TDomain> _domain;
 
-        public HandlerBase(IRepository<TDomain> repository)
+        public HandlerBase(
+            IRepository<TDomain> repository,
+            IDomainService<TDomain> domain
+        )
         {
             _repository = repository;
+            _domain = domain;
         }
 
         public virtual async Task<Unit> Handle
@@ -35,7 +40,7 @@ public abstract class DeleteBase<TDomain>
 
             if (item == null)
                 throw new NotFoundException();
-            if (item.OwnerUserId != request.UserId)
+            if (!await _domain.CanCreate(item, request.UserId))
                 throw new BadRequestException();
 
             await _repository.RemoveAsync(request.Id);

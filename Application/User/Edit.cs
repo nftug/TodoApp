@@ -8,7 +8,10 @@ public class Edit : EditBase<UserModel, UserResultDTO.Me, UserCommandDTO>
 {
     public class Handler : HandlerBase
     {
-        public Handler(IRepository<UserModel> repository) : base(repository)
+        public Handler(
+            IRepository<UserModel> repository,
+            IDomainService<UserModel> domain
+        ) : base(repository, domain)
         {
         }
 
@@ -18,9 +21,9 @@ public class Edit : EditBase<UserModel, UserResultDTO.Me, UserCommandDTO>
         protected override void Put(UserModel item, Command request)
         {
             item.Edit(
-                    new(request.Item.Username!),
-                    new(request.Item.Email!)
-                );
+                new(request.Item.Username!),
+                new(request.Item.Email!)
+            );
         }
     }
 }

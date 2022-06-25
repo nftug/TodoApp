@@ -56,6 +56,10 @@ internal static class ApplicationServiceExtension
         services.AddTransient<IDataSource<CommentModel>, CommentDataSource>();
         services.AddTransient<IDataSource<UserModel>, UserDataSource>();
 
+        services.AddScoped<IDomainService<TodoModel>, TodoService>();
+        services.AddScoped<IDomainService<CommentModel>, CommentService>();
+        services.AddScoped<IDomainService<UserModel>, UserService>();
+
         return services;
     }
 }

@@ -27,10 +27,15 @@ public abstract class EditBase<TDomain, TResultDTO, TCommandDTO>
     public abstract class HandlerBase : IRequestHandler<Command, TResultDTO>
     {
         protected readonly IRepository<TDomain> _repository;
+        protected readonly IDomainService<TDomain> _domain;
 
-        public HandlerBase(IRepository<TDomain> repository)
+        public HandlerBase(
+            IRepository<TDomain> repository,
+            IDomainService<TDomain> domain
+        )
         {
             _repository = repository;
+            _domain = domain;
         }
 
         public virtual async Task<TResultDTO> Handle
@@ -39,10 +44,11 @@ public abstract class EditBase<TDomain, TResultDTO, TCommandDTO>
             var item = await _repository.FindAsync(request.Id);
             if (item == null)
                 throw new NotFoundException();
-            if (item.OwnerUserId != request.UserId)
-                throw new BadRequestException();
 
             Put(item, request);
+
+            if (!await _domain.CanEdit(item, request.UserId))
+                throw new BadRequestException();
 
             var result = await _repository.UpdateAsync(item);
 

@@ -1,6 +1,8 @@
 using Domain.Comment;
 using Domain.Interfaces;
 using Application.Shared.UseCase;
+using Domain.Todo;
+using Domain.Shared;
 
 namespace Application.Comment;
 
@@ -9,17 +11,19 @@ public class Create
 {
     public class Handler : HandlerBase
     {
-        public Handler(IRepository<CommentModel> repository)
-            : base(repository)
+        public Handler(
+            IRepository<CommentModel> repository,
+            IDomainService<CommentModel> domain
+        ) : base(repository, domain)
         {
         }
 
         protected override CommentModel CreateDomain(Command request)
             => CommentModel.CreateNew(
-                    content: new(request.Item.Content!),
-                    todoId: request.Item.TodoId,
-                    ownerUserId: request.UserId
-                );
+                content: new(request.Item.Content!),
+                todoId: request.Item.TodoId,
+                ownerUserId: request.UserId
+            );
 
         protected override CommentResultDTO CreateDTO(CommentModel item)
             => new(item);

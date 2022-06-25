@@ -8,7 +8,10 @@ public class DetailsMe : DetailsBase<UserModel, UserResultDTO.Me>
 {
     public class Handler : HandlerBase
     {
-        public Handler(IRepository<UserModel> repository) : base(repository)
+        public Handler(
+            IRepository<UserModel> repository,
+            IDomainService<UserModel> domain
+        ) : base(repository, domain)
         {
         }
 
