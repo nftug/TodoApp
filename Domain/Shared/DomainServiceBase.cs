@@ -2,7 +2,7 @@ using Domain.Interfaces;
 
 namespace Domain.Shared;
 
-public class DomainServiceBase<TDomain> : IDomainService<TDomain>
+public abstract class DomainServiceBase<TDomain> : IDomainService<TDomain>
     where TDomain : ModelBase
 {
     public virtual Task<bool> CanDelete(TDomain item, Guid? userId)
