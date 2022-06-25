@@ -11,4 +11,5 @@ public interface IRepository<TDomain>
     Task RemoveAsync(Guid id);
     Task<List<TDomain>> GetPaginatedListAsync
         (IQueryable<IEntity<TDomain>> query, IQueryParameter<TDomain> param);
+    Task<List<TDomain>> GetListAsync(IQueryable<IEntity<TDomain>> query);
 }

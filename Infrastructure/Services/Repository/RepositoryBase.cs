@@ -74,6 +74,14 @@ public abstract class RepositoryBase<TDomain> : IRepository<TDomain>
         await _context.SaveChangesAsync();
     }
 
+    public virtual async Task<List<TDomain>> GetListAsync
+        (IQueryable<IEntity<TDomain>> query)
+    {
+        return (await query.ToListAsync())
+            .Select(x => MapToDomain(x))
+            .ToList();
+    }
+
     protected abstract IQueryable<IEntity<TDomain>> Source { get; }
 
     protected abstract IEntity<TDomain> MapToEntity(TDomain item);

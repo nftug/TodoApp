@@ -8,7 +8,7 @@ using Domain.Todo;
 
 namespace Infrastructure.Todo;
 
-public class TodoQueryService : QueryServiceBase<TodoModel>
+public class TodoQueryService : QueryServiceBase<TodoModel>, ITodoQueryService
 {
     public TodoQueryService(DataContext context)
         : base(context)
@@ -108,5 +108,11 @@ public class TodoQueryService : QueryServiceBase<TodoModel>
         query = query.ApplyExpressionGroup(expressionGroup);
 
         return query;
+    }
+
+    public IQueryable<IEntity<TodoModel>> QueryWithState(TodoState state, Guid? userId)
+    {
+        return _context.Todo
+            .Where(x => x.OwnerUserId == userId && x.State == state.Value);
     }
 }
