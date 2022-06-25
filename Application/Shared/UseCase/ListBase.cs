@@ -48,7 +48,7 @@ public abstract class ListBase<TDomain, TResultDTO>
                 .GetPaginatedListAsync(filteredQuery, request.Param))
                 .Select(x => CreateDTO(x));
 
-            var count = await filteredQuery.CountAsync();
+            var count = await filteredQuery.CountAsync(cancellationToken);
 
             return new Pagination<TResultDTO>
                 (results, count, request.Param.Page, request.Param.Limit);

@@ -13,7 +13,7 @@ public class CommentDataSource : DataSourceBase<CommentModel>
     {
     }
 
-    public override IQueryable<IEntity<CommentModel>> Source => _context.Comment;
+    public override IQueryable<CommentDataModel> Source => _context.Comment;
 
     public override IEntity<CommentModel> MapToEntity(CommentModel item)
         => _mapper.Map<CommentDataModel>(item);

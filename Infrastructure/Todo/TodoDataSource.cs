@@ -13,7 +13,7 @@ public class TodoDataSource : DataSourceBase<TodoModel>
     {
     }
 
-    public override IQueryable<IEntity<TodoModel>> Source => _context.Todo;
+    public override IQueryable<TodoDataModel> Source => _context.Todo;
 
     public override IEntity<TodoModel> MapToEntity(TodoModel item)
         => _mapper.Map<TodoDataModel>(item);
