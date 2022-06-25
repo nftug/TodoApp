@@ -15,14 +15,8 @@ public class CommentDataSource : DataSourceBase<CommentModel>
 
     public override IQueryable<IEntity<CommentModel>> Source => _context.Comment;
 
-    public override CommentModel MapToDomain(IEntity<CommentModel> entity)
-        => _mapper.Map<CommentModel>(entity);
-
     public override IEntity<CommentModel> MapToEntity(CommentModel item)
         => _mapper.Map<CommentDataModel>(item);
-
-    public override void Transfer(CommentModel item, IEntity<CommentModel> entity)
-        => _mapper.Map(item, entity);
 
     public override async Task AddEntityAsync(IEntity<CommentModel> entity)
         => await _context.Comment.AddAsync((CommentDataModel)entity);

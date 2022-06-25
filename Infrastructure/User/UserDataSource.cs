@@ -15,14 +15,8 @@ public class UserDataSource : DataSourceBase<UserModel>
 
     public override IQueryable<IEntity<UserModel>> Source => _context.Users;
 
-    public override UserModel MapToDomain(IEntity<UserModel> entity)
-        => _mapper.Map<UserModel>(entity);
-
     public override IEntity<UserModel> MapToEntity(UserModel item)
         => _mapper.Map<UserDataModel<Guid>>(item);
-
-    public override void Transfer(UserModel item, IEntity<UserModel> entity)
-        => _mapper.Map(item, entity);
 
     public override async Task AddEntityAsync(IEntity<UserModel> entity)
         => await _context.Users.AddAsync((UserDataModel<Guid>)entity);

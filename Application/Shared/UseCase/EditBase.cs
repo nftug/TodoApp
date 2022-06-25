@@ -26,7 +26,7 @@ public abstract class EditBase<TDomain, TResultDTO, TCommandDTO>
 
     public abstract class HandlerBase : IRequestHandler<Command, TResultDTO>
     {
-        private readonly IRepository<TDomain> _repository;
+        protected readonly IRepository<TDomain> _repository;
 
         public HandlerBase(IRepository<TDomain> repository)
         {

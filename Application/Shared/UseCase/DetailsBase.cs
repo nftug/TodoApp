@@ -23,7 +23,7 @@ public abstract class DetailsBase<TDomain, TResultDTO>
 
     public abstract class HandlerBase : IRequestHandler<Query, TResultDTO>
     {
-        private readonly IRepository<TDomain> _repository;
+        protected readonly IRepository<TDomain> _repository;
 
         public HandlerBase(IRepository<TDomain> repository)
         {

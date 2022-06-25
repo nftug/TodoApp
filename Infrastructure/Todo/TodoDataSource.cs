@@ -15,14 +15,8 @@ public class TodoDataSource : DataSourceBase<TodoModel>
 
     public override IQueryable<IEntity<TodoModel>> Source => _context.Todo;
 
-    public override TodoModel MapToDomain(IEntity<TodoModel> entity)
-        => _mapper.Map<TodoModel>(entity);
-
     public override IEntity<TodoModel> MapToEntity(TodoModel item)
         => _mapper.Map<TodoDataModel>(item);
-
-    public override void Transfer(TodoModel item, IEntity<TodoModel> entity)
-        => _mapper.Map(item, entity);
 
     public override async Task AddEntityAsync(IEntity<TodoModel> entity)
         => await _context.Todo.AddAsync((TodoDataModel)entity);

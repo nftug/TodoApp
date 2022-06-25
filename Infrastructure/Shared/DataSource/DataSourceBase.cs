@@ -20,9 +20,11 @@ public abstract class DataSourceBase<TDomain> : IDataSource<TDomain>
 
     public abstract IEntity<TDomain> MapToEntity(TDomain item);
 
-    public abstract TDomain MapToDomain(IEntity<TDomain> entity);
+    public virtual TDomain MapToDomain(IEntity<TDomain> entity)
+        => _mapper.Map<TDomain>(entity);
 
-    public abstract void Transfer(TDomain item, IEntity<TDomain> entity);
+    public virtual void Transfer(TDomain item, IEntity<TDomain> entity)
+        => _mapper.Map(item, entity);
 
     public abstract Task AddEntityAsync(IEntity<TDomain> entity);
 

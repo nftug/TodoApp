@@ -25,8 +25,8 @@ public abstract class ListBase<TDomain, TResultDTO>
 
     public abstract class HandlerBase : IRequestHandler<Query, Pagination<TResultDTO>>
     {
-        private readonly IRepository<TDomain> _repository;
-        private readonly IQuerySearch<TDomain> _querySearch;
+        protected readonly IRepository<TDomain> _repository;
+        protected readonly IQuerySearch<TDomain> _querySearch;
 
         public HandlerBase(
             IRepository<TDomain> repository,

@@ -21,7 +21,7 @@ public abstract class DeleteBase<TDomain>
 
     public abstract class HandlerBase : IRequestHandler<Command, Unit>
     {
-        private readonly IRepository<TDomain> _repository;
+        protected readonly IRepository<TDomain> _repository;
 
         public HandlerBase(IRepository<TDomain> repository)
         {
