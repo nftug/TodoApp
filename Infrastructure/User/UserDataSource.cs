@@ -2,7 +2,7 @@ using AutoMapper;
 using Domain.Interfaces;
 using Domain.User;
 using Infrastructure.DataModels;
-using Infrastructure.Shared.DataSource;
+using Infrastructure.Services.DataSource;
 
 namespace Infrastructure.User;
 

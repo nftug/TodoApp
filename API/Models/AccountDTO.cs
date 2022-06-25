@@ -9,17 +9,14 @@ public class TokenModel
 
 public class LoginModel
 {
-    public string? Email { get; set; }
-    public string? Password { get; set; }
+    public string Email { get; set; } = string.Empty;
+    public string Password { get; set; } = string.Empty;
 }
 
 public class RegisterModel
 {
-    [Required]
     [EmailAddress]
-    public string? Email { get; set; }
-    [Required]
-    public string? Password { get; set; }
-    [Required]
-    public string? Username { get; set; }
+    public string Email { get; set; } = string.Empty;
+    public string Password { get; set; } = string.Empty;
+    public string Username { get; set; } = string.Empty;
 }

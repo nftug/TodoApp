@@ -2,7 +2,7 @@ using AutoMapper;
 using Domain.Interfaces;
 using Domain.Shared;
 
-namespace Infrastructure.Shared.DataSource;
+namespace Infrastructure.Services.DataSource;
 
 public abstract class DataSourceBase<TDomain> : IDataSource<TDomain>
     where TDomain : ModelBase

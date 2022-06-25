@@ -1,7 +1,7 @@
 using System.Linq.Expressions;
-using Infrastructure.Shared.QuerySearch.Models;
+using Infrastructure.Services.QuerySearch.Models;
 
-namespace Infrastructure.Shared.QuerySearch.Extensions;
+namespace Infrastructure.Services.QuerySearch.Extensions;
 
 internal static class QuerySearchExtension
 {

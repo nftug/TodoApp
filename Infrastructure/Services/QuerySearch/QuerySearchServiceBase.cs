@@ -1,8 +1,8 @@
 using Domain.Interfaces;
 using Domain.Shared;
-using Infrastructure.Shared.QuerySearch.Models;
+using Infrastructure.Services.QuerySearch.Models;
 
-namespace Infrastructure.Shared.QuerySearch;
+namespace Infrastructure.Services.QuerySearch;
 
 public abstract class QuerySearchServiceBase<TDomain> : IQuerySearch<TDomain>
     where TDomain : ModelBase

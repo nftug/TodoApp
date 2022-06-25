@@ -1,6 +1,6 @@
 using System.Text.RegularExpressions;
 
-namespace Infrastructure.Shared.QuerySearch.Models;
+namespace Infrastructure.Services.QuerySearch.Models;
 
 public class SearchField<T>
 {

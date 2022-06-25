@@ -1,5 +1,5 @@
 using Domain.User;
-using Infrastructure.Shared.Repository;
+using Infrastructure.Services.Repository;
 using Domain.Interfaces;
 
 namespace Infrastructure.User;

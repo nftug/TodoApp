@@ -1,7 +1,7 @@
 using Microsoft.EntityFrameworkCore;
-using Infrastructure.Shared.QuerySearch;
-using Infrastructure.Shared.QuerySearch.Models;
-using Infrastructure.Shared.QuerySearch.Extensions;
+using Infrastructure.Services.QuerySearch;
+using Infrastructure.Services.QuerySearch.Models;
+using Infrastructure.Services.QuerySearch.Extensions;
 using Domain.Interfaces;
 using Domain.Comment;
 using Infrastructure.DataModels;

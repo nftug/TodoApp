@@ -1,7 +1,7 @@
 using Domain.Comment;
 using Domain.Interfaces;
 using Domain.Shared;
-using Infrastructure.Shared.Repository;
+using Infrastructure.Services.Repository;
 using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.Comment;

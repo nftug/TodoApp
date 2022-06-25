@@ -2,7 +2,7 @@ using Domain.Interfaces;
 using Domain.Shared;
 using Microsoft.EntityFrameworkCore;
 
-namespace Infrastructure.Shared.Repository;
+namespace Infrastructure.Services.Repository;
 
 public abstract class RepositoryBase<TDomain> : IRepository<TDomain>
     where TDomain : ModelBase

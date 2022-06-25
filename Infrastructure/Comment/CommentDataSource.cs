@@ -2,7 +2,7 @@ using AutoMapper;
 using Domain.Comment;
 using Domain.Interfaces;
 using Infrastructure.DataModels;
-using Infrastructure.Shared.DataSource;
+using Infrastructure.Services.DataSource;
 
 namespace Infrastructure.Comment;
 
