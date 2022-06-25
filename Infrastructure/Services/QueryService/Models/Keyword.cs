@@ -1,6 +1,6 @@
 using System.Text.RegularExpressions;
 
-namespace Infrastructure.Services.QuerySearch.Models;
+namespace Infrastructure.Services.QueryService.Models;
 
 public class Keyword
 {

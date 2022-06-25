@@ -1,17 +1,16 @@
 using Microsoft.EntityFrameworkCore;
 using Infrastructure.DataModels;
-using Infrastructure.Services.QuerySearch;
-using Infrastructure.Services.QuerySearch.Models;
-using Infrastructure.Services.QuerySearch.Extensions;
+using Infrastructure.Services.QueryService;
+using Infrastructure.Services.QueryService.Models;
+using Infrastructure.Services.QueryService.Extensions;
 using Domain.Interfaces;
 using Domain.Todo;
 
 namespace Infrastructure.Todo;
 
-public class TodoQuerySearchService
-    : QuerySearchServiceBase<TodoModel>
+public class TodoQueryService : QueryServiceBase<TodoModel>
 {
-    public TodoQuerySearchService(DataContext context)
+    public TodoQueryService(DataContext context)
         : base(context)
     {
     }

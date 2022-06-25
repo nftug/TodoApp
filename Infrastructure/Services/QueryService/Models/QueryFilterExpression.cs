@@ -1,8 +1,8 @@
 using System.Linq.Expressions;
 
-namespace Infrastructure.Services.QuerySearch.Models;
+namespace Infrastructure.Services.QueryService.Models;
 
-public class QuerySearchExpression<T>
+public class QueryFilterExpression<T>
 {
     public Expression<Func<T, bool>> Expression { get; init; } = null!;
     public CombineMode CombineMode { get; init; }

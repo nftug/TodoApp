@@ -1,11 +1,11 @@
 using System.Text.RegularExpressions;
 
-namespace Infrastructure.Services.QuerySearch.Models;
+namespace Infrastructure.Services.QueryService.Models;
 
 public class SearchField<T>
 {
     public string? Param { get; set; }
-    public List<QuerySearchExpression<T>> Node { get; set; }
+    public List<QueryFilterExpression<T>> Node { get; set; }
     public CombineMode CombineMode { get; set; }
 
     public SearchField(string? param) : this()
@@ -16,7 +16,7 @@ public class SearchField<T>
 
     public SearchField()
     {
-        Node = new List<QuerySearchExpression<T>>();
+        Node = new List<QueryFilterExpression<T>>();
     }
 
     private static CombineMode GetCombineMode(string? param)

@@ -7,7 +7,7 @@ public class UserResultDTO
 {
     public class Me : IResultDTO<UserModel>
     {
-        public Guid Id { get; set; }
+        public Guid Id { get; }
         public string Username { get; }
         public string Email { get; }
         public DateTime CreatedOn { get; }
@@ -27,7 +27,7 @@ public class UserResultDTO
 
     public class Public : IResultDTO<UserModel>
     {
-        public Guid Id { get; set; }
+        public Guid Id { get; }
         public string Username { get; }
         public DateTime CreatedOn { get; }
         public DateTime UpdatedOn { get; }

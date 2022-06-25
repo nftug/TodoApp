@@ -1,18 +1,18 @@
 using System.Linq.Expressions;
-using Infrastructure.Services.QuerySearch.Models;
+using Infrastructure.Services.QueryService.Models;
 
-namespace Infrastructure.Services.QuerySearch.Extensions;
+namespace Infrastructure.Services.QueryService.Extensions;
 
-internal static class QuerySearchExtension
+internal static class QueryFilterExtension
 {
     public static void AddExpression<T>(
-        this ICollection<QuerySearchExpression<T>> expressionsNode,
+        this ICollection<QueryFilterExpression<T>> expressionsNode,
         Expression<Func<T, bool>> expression,
         Keyword keyword
     )
     {
         expressionsNode.Add(
-            new QuerySearchExpression<T>()
+            new QueryFilterExpression<T>()
             {
                 Expression = expression,
                 CombineMode = keyword.CombineMode,

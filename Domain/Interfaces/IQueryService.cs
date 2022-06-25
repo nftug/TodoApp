@@ -2,7 +2,7 @@ using Domain.Shared;
 
 namespace Domain.Interfaces;
 
-public interface IQuerySearch<TDomain>
+public interface IQueryService<TDomain>
     where TDomain : ModelBase
 {
     IQueryable<IEntity<TDomain>> GetFilteredQuery(IQueryParameter<TDomain> param);

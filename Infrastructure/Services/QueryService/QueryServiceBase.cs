@@ -1,15 +1,15 @@
 using Domain.Interfaces;
 using Domain.Shared;
-using Infrastructure.Services.QuerySearch.Models;
+using Infrastructure.Services.QueryService.Models;
 
-namespace Infrastructure.Services.QuerySearch;
+namespace Infrastructure.Services.QueryService;
 
-public abstract class QuerySearchServiceBase<TDomain> : IQuerySearch<TDomain>
+public abstract class QueryServiceBase<TDomain> : IQueryService<TDomain>
     where TDomain : ModelBase
 {
     protected readonly DataContext _context;
 
-    public QuerySearchServiceBase(DataContext context)
+    public QueryServiceBase(DataContext context)
     {
         _context = context;
     }
@@ -18,5 +18,4 @@ public abstract class QuerySearchServiceBase<TDomain> : IQuerySearch<TDomain>
 
     protected static IEnumerable<Keyword> GetKeyword(string? param)
         => Keyword.CreateFromRawString(param);
-
 }

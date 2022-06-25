@@ -10,7 +10,7 @@ public class List : ListBase<CommentModel, CommentResultDTO>
     {
         public Handler(
             IRepository<CommentModel> repository,
-            IQuerySearch<CommentModel> querySearch
+            IQueryService<CommentModel> querySearch
         )
             : base(repository, querySearch)
         {

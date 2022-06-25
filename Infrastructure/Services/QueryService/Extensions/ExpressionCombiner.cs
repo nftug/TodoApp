@@ -1,7 +1,7 @@
 using System.Linq.Expressions;
-using Infrastructure.Services.QuerySearch.Models;
+using Infrastructure.Services.QueryService.Models;
 
-namespace Infrastructure.Services.QuerySearch.Extensions;
+namespace Infrastructure.Services.QueryService.Extensions;
 
 internal static class ExpressionCombiner
 {

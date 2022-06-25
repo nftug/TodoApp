@@ -44,8 +44,8 @@ internal static class ApplicationServiceExtension
         services.AddTransient<IRepository<UserModel>, UserRepository>();
 
         // query services
-        services.AddTransient<IQuerySearch<TodoModel>, TodoQuerySearchService>();
-        services.AddTransient<IQuerySearch<CommentModel>, CommentQuerySearchService>();
+        services.AddTransient<IQueryService<TodoModel>, TodoQueryService>();
+        services.AddTransient<IQueryService<CommentModel>, CommentQueryService>();
 
         // AutoMapper
         services.AddAutoMapper(typeof(TodoRepositoryMapping).Assembly);

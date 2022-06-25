@@ -1,6 +1,6 @@
 using System.Linq.Expressions;
 
-namespace Infrastructure.Services.QuerySearch.Models;
+namespace Infrastructure.Services.QueryService.Models;
 
 internal class ParameterReplaceVisitor : ExpressionVisitor
 {

@@ -1,17 +1,16 @@
 using Microsoft.EntityFrameworkCore;
-using Infrastructure.Services.QuerySearch;
-using Infrastructure.Services.QuerySearch.Models;
-using Infrastructure.Services.QuerySearch.Extensions;
+using Infrastructure.Services.QueryService;
+using Infrastructure.Services.QueryService.Models;
+using Infrastructure.Services.QueryService.Extensions;
 using Domain.Interfaces;
 using Domain.Comment;
 using Infrastructure.DataModels;
 
 namespace Infrastructure.Comment;
 
-public class CommentQuerySearchService
-    : QuerySearchServiceBase<CommentModel>
+public class CommentQueryService : QueryServiceBase<CommentModel>
 {
-    public CommentQuerySearchService(DataContext context)
+    public CommentQueryService(DataContext context)
         : base(context)
     {
     }
