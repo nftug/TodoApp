@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.Todo;
 
-public class TodoRepository : RepositoryBase<TodoModel>
+public class TodoRepository : RepositoryBase<TodoModel>, ITodoRepository
 {
     public TodoRepository(DataContext context, IMapper mapper)
         : base(context, mapper)
@@ -34,4 +34,11 @@ public class TodoRepository : RepositoryBase<TodoModel>
 
     protected override void RemoveEntity(IEntity<TodoModel> entity)
         => _context.Todo.Remove((TodoDataModel)entity);
+
+    public async Task<List<TodoModel>> FetchWithState(TodoState state, Guid? userId)
+    {
+        var query = _context.Todo
+            .Where(x => x.OwnerUser!.Id == userId && x.State == state.Value);
+        return await GetListAsync(query);
+    }
 }

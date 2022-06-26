@@ -5,20 +5,17 @@ namespace Domain.Todo;
 
 public class TodoService : DomainServiceBase<TodoModel>
 {
-    private readonly IRepository<TodoModel> _todoRepository;
-    private readonly ITodoQueryService _queryService;
+    private readonly ITodoRepository _todoRepository;
 
     public TodoService(
-        IRepository<TodoModel> todoRepository,
-        IQueryService<TodoModel> queryService
+        IRepository<TodoModel> todoRepository
     )
     {
-        _todoRepository = todoRepository;
-        _queryService = (ITodoQueryService)queryService;
+        _todoRepository = (ITodoRepository)todoRepository;
     }
 
-    public IQueryable<IEntity<TodoModel>> QueryWithState(TodoState state, Guid? userId)
+    public async Task<List<TodoModel>> QueryWithState(TodoState state, Guid? userId)
     {
-        return _queryService.QueryWithState(state, userId);
+        return await _todoRepository.FetchWithState(state, userId);
     }
 }
