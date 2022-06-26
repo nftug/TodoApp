@@ -45,9 +45,7 @@ public abstract class ListBase<TDomain, TResultDTO>
         {
             var queryParameter = _domain.GetQueryParameter(request.Param, request.UserId);
 
-            var filteredQuery = _querySearch
-                .GetFilteredQuery(queryParameter)
-                .OrderByDescending(x => x.CreatedOn);
+            var filteredQuery = _querySearch.GetFilteredQuery(queryParameter);
 
             var results = (await _repository
                 .GetPaginatedListAsync(filteredQuery, queryParameter))

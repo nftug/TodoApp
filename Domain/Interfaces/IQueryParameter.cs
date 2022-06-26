@@ -7,4 +7,5 @@ public interface IQueryParameter<TDomain>
 {
     int Page { get; init; }
     int Limit { get; init; }
+    string Sort { get; init; }
 }

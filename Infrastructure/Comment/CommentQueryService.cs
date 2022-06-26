@@ -15,7 +15,7 @@ public class CommentQueryService : QueryServiceBase<CommentModel>
     {
     }
 
-    public override IQueryable<CommentDataModel> GetFilteredQuery
+    protected override IQueryable<CommentDataModel> GetQueryByParameter
         (IQueryParameter<CommentModel> param)
     {
         var _param = (CommentQueryParameter)param;
@@ -84,8 +84,6 @@ public class CommentQueryService : QueryServiceBase<CommentModel>
             );
         expressionGroup.AddExpressionNode(userNameField);
 
-        query = query.ApplyExpressionGroup(expressionGroup);
-
-        return query;
+        return query.ApplyExpressionGroup(expressionGroup);
     }
 }

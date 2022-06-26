@@ -5,6 +5,7 @@ using Infrastructure.Services.QueryService.Extensions;
 using Domain.Interfaces;
 using Domain.Todo;
 using Microsoft.EntityFrameworkCore;
+using System.Text.RegularExpressions;
 
 namespace Infrastructure.Todo;
 
@@ -15,11 +16,13 @@ public class TodoQueryService : QueryServiceBase<TodoModel>
     {
     }
 
-    public override IQueryable<TodoDataModel> GetFilteredQuery
+    protected override IQueryable<TodoDataModel> GetQueryByParameter
         (IQueryParameter<TodoModel> param)
     {
         var _param = (TodoQueryParameter)param;
 
+        // OwnerUserの不要なカラムを取得させない
+        // コメントの並び順も整える
         var query = _context.Todo
             .Include(x => x.Comments)
             .Include(x => x.OwnerUser)
@@ -38,6 +41,8 @@ public class TodoQueryService : QueryServiceBase<TodoModel>
                 EndDate = x.EndDate,
                 State = x.State,
                 Comments = x.Comments
+                    .OrderByDescending(x => x.CreatedOn)
+                    .ToList()
             });
 
         var expressionGroup = new List<ExpressionGroup<TodoDataModel>>();
@@ -120,8 +125,24 @@ public class TodoQueryService : QueryServiceBase<TodoModel>
         expressionGroup.AddExpressionNode(userNameField);
 
         // クエリ式を作成する
-        query = query.ApplyExpressionGroup(expressionGroup);
+        return query.ApplyExpressionGroup(expressionGroup);
+    }
 
-        return query;
+    protected override IQueryable<TodoDataModel> OrderQuery(
+        IQueryable<IEntity<TodoModel>> query,
+        IQueryParameter<TodoModel> param
+    )
+    {
+        var _query = query.Cast<TodoDataModel>();
+        bool isDescending = Regex.IsMatch(param.Sort, "^-");
+        string orderBy = Regex.Replace(param.Sort, "^-", "");
+
+        return orderBy switch
+        {
+            "createdOn" => _query.OrderByAscDesc(x => x.CreatedOn, isDescending),
+            "updatedOn" => _query.OrderByAscDesc(x => x.UpdatedOn, isDescending),
+            "title" => _query.OrderByAscDesc(x => x.Title, isDescending),
+            _ => query.Cast<TodoDataModel>()
+        };
     }
 }
