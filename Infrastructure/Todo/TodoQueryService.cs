@@ -1,10 +1,10 @@
-using Microsoft.EntityFrameworkCore;
 using Infrastructure.DataModels;
 using Infrastructure.Services.QueryService;
 using Infrastructure.Services.QueryService.Models;
 using Infrastructure.Services.QueryService.Extensions;
 using Domain.Interfaces;
 using Domain.Todo;
+using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.Todo;
 
@@ -23,7 +23,22 @@ public class TodoQueryService : QueryServiceBase<TodoModel>
         var query = _context.Todo
             .Include(x => x.Comments)
             .Include(x => x.OwnerUser)
-            .AsQueryable();
+            .Select(x => new TodoDataModel
+            {
+                Id = x.Id,
+                CreatedOn = x.CreatedOn,
+                UpdatedOn = x.UpdatedOn,
+                OwnerUserId = x.OwnerUserId,
+                OwnerUser = x.OwnerUser != null
+                    ? new UserDataModel<Guid> { UserName = x.OwnerUser.UserName }
+                    : null,
+                Title = x.Title,
+                Description = x.Description,
+                StartDate = x.StartDate,
+                EndDate = x.EndDate,
+                State = x.State,
+                Comments = x.Comments
+            });
 
         var expressionGroup = new List<ExpressionGroup<TodoDataModel>>();
 

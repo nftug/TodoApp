@@ -9,5 +9,5 @@ public class TodoDataModel : DataModelBase<TodoModel>
     public DateTime? StartDate { get; set; }
     public DateTime? EndDate { get; set; }
     public int State { get; set; }
-    public ICollection<CommentDataModel> Comments { get; set; } = null!;
+    public IList<CommentDataModel> Comments { get; set; } = null!;
 }

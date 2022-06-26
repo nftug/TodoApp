@@ -1,10 +1,10 @@
-using Microsoft.EntityFrameworkCore;
 using Infrastructure.Services.QueryService;
 using Infrastructure.Services.QueryService.Models;
 using Infrastructure.Services.QueryService.Extensions;
 using Domain.Interfaces;
 using Domain.Comment;
 using Infrastructure.DataModels;
+using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.Comment;
 
@@ -19,7 +19,26 @@ public class CommentQueryService : QueryServiceBase<CommentModel>
         (IQueryParameter<CommentModel> param)
     {
         var _param = (CommentQueryParameter)param;
-        var query = _context.Comment.Include(x => x.OwnerUser).AsQueryable();
+        var query = _context.Comment
+            .Include(x => x.OwnerUser)
+            .Include(x => x.Todo)
+            .Select(x => new CommentDataModel
+            {
+                Id = x.Id,
+                CreatedOn = x.CreatedOn,
+                UpdatedOn = x.UpdatedOn,
+                OwnerUserId = x.OwnerUserId,
+                OwnerUser = x.OwnerUser != null
+                    ? new UserDataModel<Guid> { UserName = x.OwnerUser.UserName }
+                    : null,
+                Content = x.Content,
+                TodoId = x.TodoId,
+                Todo = new TodoDataModel
+                {
+                    Title = x.Todo.Title,
+                    Description = x.Todo.Description
+                }
+            });
 
         var expressionGroup = new List<ExpressionGroup<CommentDataModel>>();
 
