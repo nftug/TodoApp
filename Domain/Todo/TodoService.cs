@@ -7,9 +7,7 @@ public class TodoService : DomainServiceBase<TodoModel>
 {
     private readonly ITodoRepository _todoRepository;
 
-    public TodoService(
-        IRepository<TodoModel> todoRepository
-    )
+    public TodoService(IRepository<TodoModel> todoRepository)
     {
         _todoRepository = (ITodoRepository)todoRepository;
     }

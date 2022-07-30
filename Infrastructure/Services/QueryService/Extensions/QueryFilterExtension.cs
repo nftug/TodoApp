@@ -7,8 +7,8 @@ internal static class QueryFilterExtension
 {
     public static void AddExpression<T>(
         this ICollection<QueryFilterExpression<T>> expressionsNode,
-        Expression<Func<T, bool>> expression,
-        Keyword keyword
+        Keyword keyword,
+        Expression<Func<T, bool>> expression
     )
     {
         expressionsNode.Add(
