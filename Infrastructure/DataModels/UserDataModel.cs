@@ -1,10 +1,9 @@
-using Domain.Interfaces;
-using Domain.User;
+using Domain.Users.Entities;
 using Microsoft.AspNetCore.Identity;
 
 namespace Infrastructure.DataModels;
 
-public class UserDataModel<T> : IdentityUser<Guid>, IEntity<UserModel>
+public class UserDataModel<T> : IdentityUser<Guid>, IDataModel<User>
     where T : struct
 {
     public DateTime CreatedOn { get; set; }

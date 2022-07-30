@@ -1,6 +1,7 @@
-using AutoMapper;
 using Domain.Interfaces;
-using Domain.Shared;
+using Domain.Shared.Entities;
+using Domain.Shared.Exceptions;
+using Infrastructure.DataModels;
 using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.Services.Repository;
@@ -9,22 +10,28 @@ public abstract class RepositoryBase<TDomain> : IRepository<TDomain>
     where TDomain : ModelBase
 {
     protected readonly DataContext _context;
-    protected readonly IMapper _mapper;
+    protected readonly IQueryService<TDomain> _queryService;
 
     public RepositoryBase
-        (DataContext context, IMapper mapper)
+        (DataContext context, IQueryService<TDomain> queryService)
     {
         _context = context;
-        _mapper = mapper;
+        _queryService = queryService;
+    }
+
+    internal RepositoryBase()
+    {
+        _context = null!;
+        _queryService = null!;
     }
 
     public virtual async Task<TDomain> CreateAsync(TDomain item)
     {
-        var data = MapToEntity(item);
+        var data = ToDataModel(item);
         await AddEntityAsync(data);
         await _context.SaveChangesAsync();
 
-        return MapToDomain(data);
+        return ToDomain(data);
     }
 
     public virtual async Task<TDomain?> UpdateAsync(TDomain item)
@@ -45,22 +52,29 @@ public abstract class RepositoryBase<TDomain> : IRepository<TDomain>
 
     public virtual async Task<TDomain?> FindAsync(Guid id)
     {
-        return await DomainSource
-            .FirstOrDefaultAsync(x => x.Id == id);
+        var result = await Source.FirstOrDefaultAsync(x => x.Id == id);
+        return result != null ? ToDomain(result) : null; ;
     }
 
-    public virtual async Task<List<TDomain>> GetPaginatedListAsync
-        (IQueryable<IEntity<TDomain>> query, IQueryParameter<TDomain> param)
+    public virtual async Task<List<TDomain>> GetPaginatedListAsync(IQueryParameter<TDomain> param)
     {
         var (page, limit) = (param.Page, param.Limit);
 
-        return (await query
-            .Skip((page - 1) * limit)
-            .Take(limit)
-            .ToListAsync())
-            .Select(x => MapToDomain(x))
+        var query = _queryService.GetFilteredQuery(Source, param);
+        var result = page != null && limit != null
+            ? await query
+                .Skip(((int)page - 1) * (int)limit)
+                .Take((int)limit)
+                .ToListAsync()
+            : await query.ToListAsync();
+
+        return result
+            .Select(x => ToDomain(x))
             .ToList();
     }
+
+    public virtual async Task<int> GetCountAsync(IQueryParameter<TDomain> param)
+        => await _queryService.GetFilteredQuery(Source, param).CountAsync();
 
     public virtual async Task RemoveAsync(Guid id)
     {
@@ -74,30 +88,17 @@ public abstract class RepositoryBase<TDomain> : IRepository<TDomain>
         await _context.SaveChangesAsync();
     }
 
-    public virtual async Task<List<TDomain>> GetListAsync
-        (IQueryable<IEntity<TDomain>> query)
-    {
-        return (await query.ToListAsync())
-            .Select(x => MapToDomain(x))
-            .ToList();
-    }
+    protected abstract IQueryable<IDataModel<TDomain>> Source { get; }
 
-    protected abstract IQueryable<IEntity<TDomain>> Source { get; }
+    protected abstract IDataModel<TDomain> ToDataModel(TDomain origin);
 
-    protected abstract IEntity<TDomain> MapToEntity(TDomain item);
+    internal abstract TDomain ToDomain(IDataModel<TDomain> origin, bool recursive = false);
 
-    protected virtual TDomain MapToDomain(IEntity<TDomain> entity)
-        => _mapper.Map<TDomain>(entity);
+    protected abstract void Transfer(TDomain origin, IDataModel<TDomain> dataModel);
 
-    protected virtual void Transfer(TDomain item, IEntity<TDomain> entity)
-        => _mapper.Map(item, entity);
+    protected abstract Task AddEntityAsync(IDataModel<TDomain> entity);
 
-    protected abstract Task AddEntityAsync(IEntity<TDomain> entity);
+    protected abstract void UpdateEntity(IDataModel<TDomain> entity);
 
-    protected abstract void UpdateEntity(IEntity<TDomain> entity);
-
-    protected abstract void RemoveEntity(IEntity<TDomain> entity);
-
-    protected virtual IQueryable<TDomain> DomainSource
-        => _mapper.ProjectTo<TDomain>(Source);
+    protected abstract void RemoveEntity(IDataModel<TDomain> entity);
 }

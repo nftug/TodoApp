@@ -1,9 +1,8 @@
-using Domain.Interfaces;
-using Domain.Shared;
+using Domain.Shared.Entities;
 
 namespace Infrastructure.DataModels;
 
-public class DataModelBase<TDomain> : IEntity<TDomain>
+public class DataModelBase<TDomain> : IDataModel<TDomain>
     where TDomain : ModelBase
 {
     public Guid Id { get; set; }
@@ -11,4 +10,12 @@ public class DataModelBase<TDomain> : IEntity<TDomain>
     public DateTime UpdatedOn { get; set; }
     public Guid? OwnerUserId { get; set; }
     public UserDataModel<Guid>? OwnerUser { get; set; }
+
+    public virtual void Transfer(ModelBase origin)
+    {
+        Id = origin.Id;
+        CreatedOn = origin.CreatedOn;
+        UpdatedOn = origin.UpdatedOn;
+        OwnerUserId = origin.OwnerUserId;
+    }
 }

@@ -1,7 +1,7 @@
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
-using Domain.Shared;
+using Domain.Shared.Exceptions;
 
 namespace API.Controllers;
 

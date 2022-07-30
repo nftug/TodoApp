@@ -1,4 +1,4 @@
-using Domain.Shared;
+using Domain.Shared.Entities;
 
 namespace Application.Shared.Interfaces;
 

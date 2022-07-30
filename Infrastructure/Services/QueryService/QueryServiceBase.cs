@@ -1,6 +1,7 @@
 using System.Text.RegularExpressions;
 using Domain.Interfaces;
-using Domain.Shared;
+using Domain.Shared.Entities;
+using Infrastructure.DataModels;
 using Infrastructure.Services.QueryService.Extensions;
 using Infrastructure.Services.QueryService.Models;
 
@@ -16,21 +17,21 @@ public abstract class QueryServiceBase<TDomain> : IQueryService<TDomain>
         _context = context;
     }
 
-    public virtual IQueryable<IEntity<TDomain>> GetFilteredQuery
-        (IQueryParameter<TDomain> param)
+    public virtual IQueryable<IDataModel<TDomain>> GetFilteredQuery
+        (IQueryable<IDataModel<TDomain>> source, IQueryParameter<TDomain> param)
     {
-        var query = GetQueryByParameter(param);
+        var query = GetQueryByParameter(source, param);
         return OrderQuery(query, param);
     }
 
-    protected abstract IQueryable<IEntity<TDomain>> GetQueryByParameter
-        (IQueryParameter<TDomain> param);
+    protected abstract IQueryable<IDataModel<TDomain>> GetQueryByParameter
+        (IQueryable<IDataModel<TDomain>> source, IQueryParameter<TDomain> param);
 
     protected static IEnumerable<Keyword> GetKeyword(string? param)
         => Keyword.CreateFromRawString(param);
 
-    protected virtual IQueryable<IEntity<TDomain>> OrderQuery(
-        IQueryable<IEntity<TDomain>> query,
+    protected virtual IQueryable<IDataModel<TDomain>> OrderQuery(
+        IQueryable<IDataModel<TDomain>> query,
         IQueryParameter<TDomain> param
     )
     {

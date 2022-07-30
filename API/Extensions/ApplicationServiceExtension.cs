@@ -2,13 +2,16 @@ using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 using Infrastructure;
-using Domain.Todo;
-using Domain.Comment;
-using Infrastructure.Todo;
-using Infrastructure.Comment;
-using Infrastructure.User;
 using Domain.Interfaces;
-using Domain.User;
+using Domain.Comments.Entities;
+using Infrastructure.Comments;
+using Domain.Comments.Services;
+using Domain.Todos.Entities;
+using Infrastructure.Todos;
+using Domain.Users.Entities;
+using Infrastructure.Users;
+using Domain.Todos.Services;
+using Domain.Users.Services;
 
 namespace API.Extensions;
 
@@ -36,26 +39,22 @@ internal static class ApplicationServiceExtension
             });
         });
 
-        services.AddMediatR(typeof(Application.Todo.List.Query).Assembly);
+        services.AddMediatR(typeof(Application.Todos.UseCases.List.Query).Assembly);
 
         // repositories
-        services.AddTransient<IRepository<TodoModel>, TodoRepository>();
-        services.AddTransient<IRepository<CommentModel>, CommentRepository>();
-        services.AddTransient<IRepository<UserModel>, UserRepository>();
+        services.AddTransient<IRepository<Todo>, TodoRepository>();
+        services.AddTransient<IRepository<Comment>, CommentRepository>();
+        services.AddTransient<IRepository<User>, UserRepository>();
 
         // query services
-        services.AddTransient<IQueryService<TodoModel>, TodoQueryService>();
-        services.AddTransient<IQueryService<CommentModel>, CommentQueryService>();
+        services.AddTransient<IQueryService<Todo>, TodoQueryService>();
+        services.AddTransient<IQueryService<Comment>, CommentQueryService>();
+        services.AddTransient<IQueryService<User>, UserQueryService>();
 
         // domain services
-        services.AddScoped<IDomainService<TodoModel>, TodoService>();
-        services.AddScoped<IDomainService<CommentModel>, CommentService>();
-        services.AddScoped<IDomainService<UserModel>, UserService>();
-
-        // AutoMapper
-        services.AddAutoMapper(typeof(TodoRepositoryMapping).Assembly);
-        services.AddAutoMapper(typeof(CommentRepositoryMapping).Assembly);
-        services.AddAutoMapper(typeof(UserRepositoryMapping).Assembly);
+        services.AddScoped<IDomainService<Todo>, TodoService>();
+        services.AddScoped<IDomainService<Comment>, CommentService>();
+        services.AddScoped<IDomainService<User>, UserService>();
 
         return services;
     }

@@ -1,11 +1,11 @@
-using Domain.Shared;
+using Domain.Shared.Entities;
 
 namespace Domain.Interfaces;
 
 public interface IQueryParameter<TDomain>
     where TDomain : ModelBase
 {
-    int Page { get; init; }
-    int Limit { get; init; }
+    int? Page { get; init; }
+    int? Limit { get; init; }
     string Sort { get; init; }
 }

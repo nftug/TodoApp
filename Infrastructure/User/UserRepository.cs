@@ -1,29 +1,39 @@
-using Domain.User;
 using Infrastructure.Services.Repository;
-using AutoMapper;
 using Domain.Interfaces;
 using Infrastructure.DataModels;
+using Domain.Users.Entities;
 
-namespace Infrastructure.User;
+namespace Infrastructure.Users;
 
-public class UserRepository : RepositoryBase<UserModel>
+public class UserRepository : RepositoryBase<User>
 {
-    public UserRepository(DataContext context, IMapper mapper)
-        : base(context, mapper)
+    protected override IQueryable<IDataModel<User>> Source => throw new NotImplementedException();
+
+    public UserRepository(DataContext context, IQueryService<User> queryService) : base(context, queryService)
     {
     }
 
-    protected override IQueryable<IEntity<UserModel>> Source => _context.Users;
-
-    protected override IEntity<UserModel> MapToEntity(UserModel item)
-        => _mapper.Map<UserDataModel<Guid>>(item);
-
-    protected override async Task AddEntityAsync(IEntity<UserModel> entity)
+    protected override async Task AddEntityAsync(IDataModel<User> entity)
         => await _context.Users.AddAsync((UserDataModel<Guid>)entity);
 
-    protected override void UpdateEntity(IEntity<UserModel> entity)
+    protected override void UpdateEntity(IDataModel<User> entity)
         => _context.Users.Update((UserDataModel<Guid>)entity);
 
-    protected override void RemoveEntity(IEntity<UserModel> entity)
+    protected override void RemoveEntity(IDataModel<User> entity)
         => _context.Users.Remove((UserDataModel<Guid>)entity);
+
+    protected override IDataModel<User> ToDataModel(User origin)
+    {
+        throw new NotImplementedException();
+    }
+
+    internal override User ToDomain(IDataModel<User> origin, bool recursive = true)
+    {
+        throw new NotImplementedException();
+    }
+
+    protected override void Transfer(User origin, IDataModel<User> dataModel)
+    {
+        throw new NotImplementedException();
+    }
 }
