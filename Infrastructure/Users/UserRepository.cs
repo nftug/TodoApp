@@ -1,5 +1,5 @@
 using Infrastructure.Services.Repository;
-using Domain.Interfaces;
+using Domain.Shared.Interfaces;
 using Infrastructure.DataModels;
 using Domain.Users.Entities;
 

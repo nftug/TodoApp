@@ -1,4 +1,4 @@
-using Domain.Interfaces;
+using Domain.Shared.Interfaces;
 using Domain.Shared.Services;
 using Domain.Users.Entities;
 

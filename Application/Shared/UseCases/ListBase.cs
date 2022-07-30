@@ -1,8 +1,10 @@
 using MediatR;
-using Domain.Interfaces;
 using Pagination.EntityFrameworkCore.Extensions;
 using Application.Shared.Interfaces;
 using Domain.Shared.Entities;
+using Domain.Shared.Interfaces;
+using Domain.Services;
+using Domain.Shared.Queries;
 
 namespace Application.Shared.UseCases;
 

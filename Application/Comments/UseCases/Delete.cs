@@ -1,6 +1,7 @@
 using Domain.Comments.Entities;
-using Domain.Interfaces;
 using Application.Shared.UseCases;
+using Domain.Shared.Interfaces;
+using Domain.Services;
 
 namespace Application.Comments.UseCases;
 

@@ -1,6 +1,7 @@
 using Domain.Shared.Entities;
+using Domain.Shared.Queries;
 
-namespace Domain.Interfaces;
+namespace Domain.Services;
 
 public interface IDomainService<TDomain>
     where TDomain : ModelBase

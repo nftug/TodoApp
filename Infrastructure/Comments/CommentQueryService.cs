@@ -1,10 +1,10 @@
 using Infrastructure.Services.QueryService;
 using Infrastructure.Services.QueryService.Models;
 using Infrastructure.Services.QueryService.Extensions;
-using Domain.Interfaces;
 using Domain.Comments.Entities;
 using Infrastructure.DataModels;
 using Domain.Comments.Queries;
+using Domain.Shared.Queries;
 
 namespace Infrastructure.Comments;
 

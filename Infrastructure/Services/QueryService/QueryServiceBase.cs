@@ -1,6 +1,7 @@
 using System.Text.RegularExpressions;
-using Domain.Interfaces;
+using Domain.Shared.Interfaces;
 using Domain.Shared.Entities;
+using Domain.Shared.Queries;
 using Infrastructure.DataModels;
 using Infrastructure.Services.QueryService.Extensions;
 using Infrastructure.Services.QueryService.Models;

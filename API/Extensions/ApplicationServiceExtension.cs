@@ -2,7 +2,6 @@ using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 using Infrastructure;
-using Domain.Interfaces;
 using Domain.Comments.Entities;
 using Infrastructure.Comments;
 using Domain.Comments.Services;
@@ -12,6 +11,8 @@ using Domain.Users.Entities;
 using Infrastructure.Users;
 using Domain.Todos.Services;
 using Domain.Users.Services;
+using Domain.Shared.Interfaces;
+using Domain.Services;
 
 namespace API.Extensions;
 

@@ -1,6 +1,6 @@
 using Domain.Shared.Entities;
 
-namespace Domain.Interfaces;
+namespace Domain.Shared.Queries;
 
 public interface IQueryParameter<TDomain>
     where TDomain : ModelBase

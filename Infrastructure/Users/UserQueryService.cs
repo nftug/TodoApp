@@ -1,4 +1,5 @@
-using Domain.Interfaces;
+using Domain.Shared.Interfaces;
+using Domain.Shared.Queries;
 using Domain.Users.Entities;
 using Infrastructure.DataModels;
 

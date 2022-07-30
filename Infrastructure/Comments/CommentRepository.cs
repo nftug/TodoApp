@@ -1,5 +1,5 @@
 using Domain.Comments.Entities;
-using Domain.Interfaces;
+using Domain.Shared.Interfaces;
 using Infrastructure.DataModels;
 using Infrastructure.Services.Repository;
 using Infrastructure.Todos;

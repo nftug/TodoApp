@@ -1,6 +1,7 @@
 using Domain.Shared.Entities;
+using Domain.Shared.Queries;
 
-namespace Domain.Interfaces;
+namespace Domain.Shared.Interfaces;
 
 public interface IRepository<TDomain>
     where TDomain : ModelBase

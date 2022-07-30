@@ -1,5 +1,7 @@
-using Domain.Interfaces;
+using Domain.Services;
 using Domain.Shared.Entities;
+using Domain.Shared.Interfaces;
+using Domain.Shared.Queries;
 
 namespace Domain.Shared.Services;
 

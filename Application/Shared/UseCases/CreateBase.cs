@@ -1,8 +1,9 @@
 using MediatR;
-using Domain.Interfaces;
 using Application.Shared.Interfaces;
 using Domain.Shared.Exceptions;
 using Domain.Shared.Entities;
+using Domain.Shared.Interfaces;
+using Domain.Services;
 
 namespace Application.Shared.UseCases;
 

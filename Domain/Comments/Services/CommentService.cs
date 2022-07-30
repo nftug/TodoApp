@@ -1,6 +1,6 @@
 using Domain.Comments.Entities;
-using Domain.Interfaces;
 using Domain.Shared.Exceptions;
+using Domain.Shared.Interfaces;
 using Domain.Shared.Services;
 using Domain.Todos.Entities;
 

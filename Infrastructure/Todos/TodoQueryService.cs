@@ -2,10 +2,10 @@ using Infrastructure.DataModels;
 using Infrastructure.Services.QueryService;
 using Infrastructure.Services.QueryService.Models;
 using Infrastructure.Services.QueryService.Extensions;
-using Domain.Interfaces;
 using System.Text.RegularExpressions;
 using Domain.Todos.Entities;
 using Domain.Todos.Queries;
+using Domain.Shared.Queries;
 
 namespace Infrastructure.Todos;
 

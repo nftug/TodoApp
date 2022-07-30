@@ -1,5 +1,5 @@
-using Domain.Interfaces;
 using Domain.Comments.Entities;
+using Domain.Shared.Queries;
 
 namespace Domain.Comments.Queries;
 

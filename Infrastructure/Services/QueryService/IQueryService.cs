@@ -1,7 +1,8 @@
 using Domain.Shared.Entities;
+using Domain.Shared.Queries;
 using Infrastructure.DataModels;
 
-namespace Domain.Interfaces;
+namespace Domain.Shared.Interfaces;
 
 public interface IQueryService<TDomain>
     where TDomain : ModelBase

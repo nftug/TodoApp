@@ -1,4 +1,4 @@
-using Domain.Interfaces;
+using Domain.Shared.Interfaces;
 using Domain.Todos.Entities;
 using Domain.Todos.ValueObjects;
 
