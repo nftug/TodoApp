@@ -26,15 +26,15 @@ public abstract class ListBase<TDomain, TResultDTO>
 
     public abstract class HandlerBase : IRequestHandler<Query, Pagination<TResultDTO>>
     {
-        protected readonly IRepository<TDomain> _repository;
+        protected readonly IFilterQueryService<TDomain> _filterQueryService;
         protected readonly IDomainService<TDomain> _domain;
 
         public HandlerBase(
-            IRepository<TDomain> repository,
+            IFilterQueryService<TDomain> filterQueryService,
             IDomainService<TDomain> domain
         )
         {
-            _repository = repository;
+            _filterQueryService = filterQueryService;
             _domain = domain;
         }
 
@@ -43,11 +43,11 @@ public abstract class ListBase<TDomain, TResultDTO>
         {
             var queryParameter = _domain.GetQueryParameter(request.Param, request.UserId);
 
-            var results = (await _repository
+            var results = (await _filterQueryService
                 .GetPaginatedListAsync(queryParameter))
                 .Select(x => CreateDTO(x));
 
-            var count = await _repository.GetCountAsync(queryParameter);
+            var count = await _filterQueryService.GetCountAsync(queryParameter);
 
             return new Pagination<TResultDTO>
                 (results, count, (int)queryParameter.Page!, (int)queryParameter.Limit!);

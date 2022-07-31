@@ -1,17 +1,17 @@
 using Infrastructure.DataModels;
-using Infrastructure.Services.QueryService;
-using Infrastructure.Services.QueryService.Models;
-using Infrastructure.Services.QueryService.Extensions;
 using System.Text.RegularExpressions;
 using Domain.Todos.Entities;
 using Domain.Todos.Queries;
 using Domain.Shared.Queries;
+using Infrastructure.Shared.Specifications.Filter.Extensions;
+using Infrastructure.Shared.Specifications.Filter.Models;
+using Infrastructure.Shared.Specifications.Filter;
 
 namespace Infrastructure.Todos;
 
-public class TodoQueryService : QueryServiceBase<Todo>
+internal class TodoFilterSpecification : FilterSpecificationBase<Todo>
 {
-    public TodoQueryService(DataContext context)
+    public TodoFilterSpecification(DataContext context)
         : base(context)
     {
     }

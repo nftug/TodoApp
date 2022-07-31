@@ -1,19 +1,18 @@
 using System.Text.RegularExpressions;
-using Domain.Shared.Interfaces;
 using Domain.Shared.Entities;
 using Domain.Shared.Queries;
 using Infrastructure.DataModels;
-using Infrastructure.Services.QueryService.Extensions;
-using Infrastructure.Services.QueryService.Models;
+using Infrastructure.Shared.Specifications.Filter.Extensions;
+using Infrastructure.Shared.Specifications.Filter.Models;
 
-namespace Infrastructure.Services.QueryService;
+namespace Infrastructure.Shared.Specifications.Filter;
 
-public abstract class QueryServiceBase<TDomain> : IQueryService<TDomain>
+internal abstract class FilterSpecificationBase<TDomain> : IFilterSpecification<TDomain>
     where TDomain : ModelBase
 {
     protected readonly DataContext _context;
 
-    public QueryServiceBase(DataContext context)
+    public FilterSpecificationBase(DataContext context)
     {
         _context = context;
     }

@@ -11,7 +11,7 @@ public class List : ListBase<Todo, TodoResultDTO>
     public class Handler : HandlerBase
     {
         public Handler(
-            IRepository<Todo> repository,
+            IFilterQueryService<Todo> repository,
             IDomainService<Todo> domain
         ) : base(repository, domain)
         {

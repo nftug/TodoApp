@@ -1,13 +1,13 @@
 using System.Linq.Expressions;
-using Infrastructure.Services.QueryService.Models;
+using Infrastructure.Shared.Specifications.Filter.Models;
 
-namespace Infrastructure.Services.QueryService.Extensions;
+namespace Infrastructure.Shared.Specifications.Filter.Extensions;
 
 internal static class ExpressionCombiner
 {
     public static Expression<Func<T, bool>> OrElse<T>
         (params Expression<Func<T, bool>>[] expressions)
-        => OrElse(expressions.AsEnumerable());
+        => expressions.AsEnumerable().OrElse();
 
     public static Expression<Func<T, bool>> OrElse<T>
         (this IEnumerable<Expression<Func<T, bool>>> expressions)
@@ -15,7 +15,7 @@ internal static class ExpressionCombiner
 
     public static Expression<Func<T, bool>> And<T>
         (params Expression<Func<T, bool>>[] expressions)
-        => And(expressions.AsEnumerable());
+        => expressions.AsEnumerable().And();
 
     public static Expression<Func<T, bool>> And<T>
         (this IEnumerable<Expression<Func<T, bool>>> expressions)

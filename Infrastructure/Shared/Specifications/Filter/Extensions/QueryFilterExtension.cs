@@ -1,7 +1,7 @@
 using System.Linq.Expressions;
-using Infrastructure.Services.QueryService.Models;
+using Infrastructure.Shared.Specifications.Filter.Models;
 
-namespace Infrastructure.Services.QueryService.Extensions;
+namespace Infrastructure.Shared.Specifications.Filter.Extensions;
 
 internal static class QueryFilterExtension
 {

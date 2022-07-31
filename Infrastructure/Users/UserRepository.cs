@@ -1,17 +1,18 @@
-using Infrastructure.Services.Repository;
-using Domain.Shared.Interfaces;
 using Infrastructure.DataModels;
 using Domain.Users.Entities;
+using Infrastructure.Shared.Services.Repository;
+using Infrastructure.Shared.Specifications.DataSource;
 
 namespace Infrastructure.Users;
 
 public class UserRepository : RepositoryBase<User>
 {
-    protected override IQueryable<IDataModel<User>> Source => throw new NotImplementedException();
-
-    public UserRepository(DataContext context, IQueryService<User> queryService) : base(context, queryService)
+    public UserRepository(DataContext context) : base(context)
     {
     }
+
+    protected override IDataSourceSpecification<User> DataSource
+        => new UserDataSourceSpecification(_context);
 
     protected override async Task AddEntityAsync(IDataModel<User> entity)
         => await _context.Users.AddAsync((UserDataModel<Guid>)entity);
@@ -23,17 +24,8 @@ public class UserRepository : RepositoryBase<User>
         => _context.Users.Remove((UserDataModel<Guid>)entity);
 
     protected override IDataModel<User> ToDataModel(User origin)
-    {
-        throw new NotImplementedException();
-    }
-
-    internal override User ToDomain(IDataModel<User> origin, bool recursive = true)
-    {
-        throw new NotImplementedException();
-    }
+        => new UserDataModel<Guid>(origin);
 
     protected override void Transfer(User origin, IDataModel<User> dataModel)
-    {
-        throw new NotImplementedException();
-    }
+        => ((UserDataModel<Guid>)dataModel).Transfer(origin);
 }

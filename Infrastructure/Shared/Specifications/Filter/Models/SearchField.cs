@@ -1,8 +1,8 @@
 using System.Text.RegularExpressions;
 
-namespace Infrastructure.Services.QueryService.Models;
+namespace Infrastructure.Shared.Specifications.Filter.Models;
 
-public class SearchField<T>
+internal class SearchField<T>
 {
     public string? Param { get; set; }
     public List<QueryFilterExpression<T>> Node { get; set; }

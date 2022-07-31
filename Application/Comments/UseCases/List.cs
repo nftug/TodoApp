@@ -11,7 +11,7 @@ public class List : ListBase<Comment, CommentResultDTO>
     public class Handler : HandlerBase
     {
         public Handler(
-            IRepository<Comment> repository,
+            IFilterQueryService<Comment> repository,
             IDomainService<Comment> domain
         ) : base(repository, domain)
         {

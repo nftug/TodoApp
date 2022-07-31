@@ -1,8 +1,8 @@
 using System.Linq.Expressions;
 
-namespace Infrastructure.Services.QueryService.Extensions;
+namespace Infrastructure.Shared.Specifications.Filter.Extensions;
 
-public static class OrderByExtension
+internal static class OrderByExtension
 {
     public static IOrderedQueryable<TSource> OrderByAscDesc<TSource, TKey>(
         this IQueryable<TSource> query,

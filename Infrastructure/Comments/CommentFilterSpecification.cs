@@ -1,16 +1,16 @@
-using Infrastructure.Services.QueryService;
-using Infrastructure.Services.QueryService.Models;
-using Infrastructure.Services.QueryService.Extensions;
 using Domain.Comments.Entities;
 using Infrastructure.DataModels;
 using Domain.Comments.Queries;
 using Domain.Shared.Queries;
+using Infrastructure.Shared.Specifications.Filter.Extensions;
+using Infrastructure.Shared.Specifications.Filter.Models;
+using Infrastructure.Shared.Specifications.Filter;
 
 namespace Infrastructure.Comments;
 
-public class CommentQueryService : QueryServiceBase<Comment>
+internal class CommentFilterSpecification : FilterSpecificationBase<Comment>
 {
-    public CommentQueryService(DataContext context)
+    public CommentFilterSpecification(DataContext context)
         : base(context)
     {
     }

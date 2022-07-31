@@ -1,8 +1,8 @@
 using System.Text.RegularExpressions;
 
-namespace Infrastructure.Services.QueryService.Models;
+namespace Infrastructure.Shared.Specifications.Filter.Models;
 
-public class Keyword
+internal class Keyword
 {
     public Guid Id { get; init; } = Guid.NewGuid();
     public string Value { get; init; } = string.Empty;

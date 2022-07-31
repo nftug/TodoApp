@@ -47,10 +47,9 @@ internal static class ApplicationServiceExtension
         services.AddTransient<IRepository<Comment>, CommentRepository>();
         services.AddTransient<IRepository<User>, UserRepository>();
 
-        // query services
-        services.AddTransient<IQueryService<Todo>, TodoQueryService>();
-        services.AddTransient<IQueryService<Comment>, CommentQueryService>();
-        services.AddTransient<IQueryService<User>, UserQueryService>();
+        // Query services
+        services.AddTransient<IFilterQueryService<Todo>, TodoFilterQueryService>();
+        services.AddTransient<IFilterQueryService<Comment>, CommentFilterQueryService>();
 
         // domain services
         services.AddScoped<IDomainService<Todo>, TodoService>();
