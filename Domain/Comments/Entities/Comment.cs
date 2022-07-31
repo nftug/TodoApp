@@ -8,7 +8,7 @@ public class Comment : ModelBase
 {
     public CommentContent Content { get; private set; } = null!;
     public Guid TodoId { get; private init; }
-    public Todo Todo { get; } = null!;
+    internal Todo Todo { get; } = null!;
 
     public Comment(
         Guid id,
@@ -26,25 +26,14 @@ public class Comment : ModelBase
         Todo = todo;
     }
 
-    private Comment(DateTime createdOn, Guid? ownerUserId)
-        : base(createdOn, ownerUserId)
-    {
-    }
+    private Comment(Guid ownerUserId) : base(ownerUserId) { }
 
-    public static Comment CreateNew(
-        CommentContent content,
-        Guid todoId,
-        Guid ownerUserId
-    )
-    {
-        var operationDateTime = DateTime.Now;
-
-        return new(operationDateTime, ownerUserId)
+    public static Comment CreateNew(CommentContent content, Guid todoId, Guid ownerUserId)
+        => new(ownerUserId)
         {
             Content = content,
             TodoId = todoId
         };
-    }
 
     public void Edit(CommentContent content)
     {

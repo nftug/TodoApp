@@ -22,6 +22,15 @@ public class User : ModelBase
         Email = email;
     }
 
+    private User() : base() { }
+
+    public static User CreateNew(UserName userName, UserEmail email)
+        => new()
+        {
+            UserName = userName,
+            Email = email
+        };
+
     public void Edit(
         UserName userName,
         UserEmail email

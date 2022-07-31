@@ -7,6 +7,7 @@ public abstract class ModelBase
     public DateTime UpdatedOn { get; private set; }
     public Guid? OwnerUserId { get; }
 
+    // データモデルからの変換用
     protected ModelBase(
         Guid id,
         DateTime createdOn,
@@ -20,11 +21,17 @@ public abstract class ModelBase
         OwnerUserId = ownerUserId;
     }
 
-    protected ModelBase(DateTime createdOn, Guid? ownerUserId)
+    // 新規作成用
+    protected ModelBase(Guid ownerUserId) : this()
     {
-        CreatedOn = createdOn;
-        UpdatedOn = createdOn;
         OwnerUserId = ownerUserId;
+    }
+
+    protected ModelBase()
+    {
+        var operationDateTime = DateTime.Now;
+        CreatedOn = operationDateTime;
+        UpdatedOn = operationDateTime;
     }
 
     protected void SetUpdatedOn()

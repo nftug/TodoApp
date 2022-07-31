@@ -32,10 +32,7 @@ public class Todo : ModelBase
         Comments = comments;
     }
 
-    private Todo(DateTime createdOn, Guid? ownerUserId)
-        : base(createdOn, ownerUserId)
-    {
-    }
+    private Todo(Guid ownerUserId) : base(ownerUserId) { }
 
     public static Todo CreateNew(
         TodoTitle title,
@@ -44,17 +41,13 @@ public class Todo : ModelBase
         TodoState state,
         Guid ownerUserId
     )
-    {
-        var operationDateTime = DateTime.Now;
-
-        return new(operationDateTime, ownerUserId)
+        => new(ownerUserId)
         {
             Title = title,
             Description = description,
             Period = period,
-            State = state,
+            State = state
         };
-    }
 
     public void Edit(
         TodoTitle title,
