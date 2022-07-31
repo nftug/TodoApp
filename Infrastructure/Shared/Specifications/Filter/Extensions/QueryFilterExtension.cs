@@ -12,14 +12,21 @@ internal static class QueryFilterExtension
     )
     {
         expressionsNode.Add(
-            new QueryFilterExpression<T>()
+            new QueryFilterExpression<T>
             {
                 Expression = expression,
                 CombineMode = keyword.CombineMode,
                 BlockId = keyword.Id,
             }
         );
-        return;
+    }
+
+    public static void AddExpression<T>(
+        this ICollection<QueryFilterExpression<T>> expressionsNode,
+        Expression<Func<T, bool>> expression
+    )
+    {
+        expressionsNode.Add(new QueryFilterExpression<T> { Expression = expression });
     }
 
     public static void AddExpressionNode<T>(
@@ -43,12 +50,40 @@ internal static class QueryFilterExtension
             .And();
 
         nodes.Add(
-            new ExpressionGroup<T>()
+            new ExpressionGroup<T>
             {
                 CombineMode = field.CombineMode,
                 Expression = expression
             }
         );
+    }
+
+    public static void AddSearch<T>(
+        this ICollection<ExpressionGroup<T>> expressionGroups,
+        string? fieldValue,
+        Action<List<QueryFilterExpression<T>>, Keyword> addExpressionFunc
+    )
+    {
+        var searchField = new SearchField<T>(fieldValue);
+
+        foreach (var keyword in Keyword.CreateFromRawString(fieldValue))
+            addExpressionFunc(searchField.Node, keyword);
+
+        expressionGroups.AddExpressionNode(searchField);
+    }
+
+    public static void AddSimpleSearch<T>(
+        this ICollection<ExpressionGroup<T>> expressionGroups,
+        object? fieldValue,
+        Expression<Func<T, bool>> expression
+    )
+    {
+        var searchField = new SearchField<T>();
+
+        if (fieldValue != null)
+            searchField.Node.AddExpression(expression);
+
+        expressionGroups.AddExpressionNode(searchField);
     }
 
     public static IQueryable<T> ApplyExpressionGroup<T>(

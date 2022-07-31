@@ -9,9 +9,6 @@ internal class Keyword
     public CombineMode CombineMode { get; init; }
     public bool InQuotes { get; init; } = false;
 
-    public static Keyword CreateDummy()
-        => new() { CombineMode = CombineMode.And };
-
     public static IEnumerable<Keyword> CreateFromRawString(string? param)
     {
         if (string.IsNullOrWhiteSpace(param))

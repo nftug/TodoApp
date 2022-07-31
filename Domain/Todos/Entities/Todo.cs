@@ -10,7 +10,7 @@ public class Todo : ModelBase
     public TodoDescription Description { get; private set; } = null!;
     public TodoPeriod Period { get; private set; } = null!;
     public TodoState State { get; private set; } = null!;
-    public ICollection<Comment> Comments { get; private set; } = new List<Comment>();
+    public ICollection<Comment> Comments { get; } = new List<Comment>();
 
     public Todo(
         Guid id,
@@ -32,7 +32,10 @@ public class Todo : ModelBase
         Comments = comments;
     }
 
-    private Todo() { }
+    private Todo(DateTime createdOn, Guid? ownerUserId)
+        : base(createdOn, ownerUserId)
+    {
+    }
 
     public static Todo CreateNew(
         TodoTitle title,
@@ -44,15 +47,12 @@ public class Todo : ModelBase
     {
         var operationDateTime = DateTime.Now;
 
-        return new()
+        return new(operationDateTime, ownerUserId)
         {
             Title = title,
             Description = description,
             Period = period,
             State = state,
-            CreatedOn = operationDateTime,
-            UpdatedOn = operationDateTime,
-            OwnerUserId = ownerUserId
         };
     }
 
@@ -67,6 +67,6 @@ public class Todo : ModelBase
         Description = description;
         Period = period;
         State = state;
-        UpdatedOn = DateTime.Now;
+        SetUpdatedOn();
     }
 }

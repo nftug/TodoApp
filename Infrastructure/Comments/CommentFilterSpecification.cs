@@ -25,39 +25,28 @@ internal class CommentFilterSpecification : FilterSpecificationBase<Comment>
         var expressionGroup = new List<ExpressionGroup<CommentDataModel>>();
 
         // ユーザーIDで絞り込み
-        var userIdField = new SearchField<CommentDataModel>();
-        if (_param.UserId != null)
-            userIdField.Node.AddExpression(
-                Keyword.CreateDummy(),
-                x => x.OwnerUserId == _param.UserId
-            );
-        expressionGroup.AddExpressionNode(userIdField);
+        expressionGroup.AddSimpleSearch(_param.UserId, x => x.OwnerUserId == _param.UserId);
 
         // qで絞り込み
-        var qField = new SearchField<CommentDataModel>(_param.Q);
-        foreach (var k in GetKeyword(_param.Q))
-            qField.Node.AddExpression(k, x =>
-                (k.InQuotes ? x.Content : x.Content.ToLower()).Contains(k.Value)
+        expressionGroup.AddSearch(
+            _param.Q,
+            (n, k) => n.AddExpression(k, x =>
+                (k.InQuotes ? x.Content : x.Content.ToLower()).Contains(k.Value))
             );
-        expressionGroup.AddExpressionNode(qField);
 
         // 内容で絞り込み
-        var contentField = new SearchField<CommentDataModel>(_param.Content);
-        foreach (var k in GetKeyword(_param.Content))
-            contentField.Node.AddExpression(k, x =>
-                (k.InQuotes ? x.Content : x.Content.ToLower()).Contains(k.Value)
+        expressionGroup.AddSearch(
+            _param.Content,
+            (n, k) => n.AddExpression(k, x =>
+                (k.InQuotes ? x.Content : x.Content.ToLower()).Contains(k.Value))
             );
-        expressionGroup.AddExpressionNode(contentField);
 
         // ユーザー名で絞り込み
-        var userNameField = new SearchField<CommentDataModel>(_param.UserName);
-        foreach (var k in GetKeyword(_param.UserName))
-            userNameField.Node.AddExpression(k, x =>
-                (k.InQuotes
-                    ? x.OwnerUser!.UserName : x.OwnerUser!.UserName.ToLower())
-                .Contains(k.Value)
+        expressionGroup.AddSearch(
+            _param.UserName,
+            (n, k) => n.AddExpression(k, x =>
+                (k.InQuotes ? x.OwnerUser!.UserName : x.OwnerUser!.UserName.ToLower()).Contains(k.Value))
             );
-        expressionGroup.AddExpressionNode(userNameField);
 
         return source.OfType<CommentDataModel>().ApplyExpressionGroup(expressionGroup);
     }

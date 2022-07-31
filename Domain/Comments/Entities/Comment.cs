@@ -7,8 +7,8 @@ namespace Domain.Comments.Entities;
 public class Comment : ModelBase
 {
     public CommentContent Content { get; private set; } = null!;
-    public Guid TodoId { get; private set; }
-    public Todo Todo { get; set; } = null!;
+    public Guid TodoId { get; private init; }
+    public Todo Todo { get; } = null!;
 
     public Comment(
         Guid id,
@@ -26,7 +26,10 @@ public class Comment : ModelBase
         Todo = todo;
     }
 
-    private Comment() { }
+    private Comment(DateTime createdOn, Guid? ownerUserId)
+        : base(createdOn, ownerUserId)
+    {
+    }
 
     public static Comment CreateNew(
         CommentContent content,
@@ -36,19 +39,16 @@ public class Comment : ModelBase
     {
         var operationDateTime = DateTime.Now;
 
-        return new()
+        return new(operationDateTime, ownerUserId)
         {
             Content = content,
-            TodoId = todoId,
-            CreatedOn = operationDateTime,
-            UpdatedOn = operationDateTime,
-            OwnerUserId = ownerUserId
+            TodoId = todoId
         };
     }
 
     public void Edit(CommentContent content)
     {
         Content = content;
-        UpdatedOn = DateTime.Now;
+        SetUpdatedOn();
     }
 }

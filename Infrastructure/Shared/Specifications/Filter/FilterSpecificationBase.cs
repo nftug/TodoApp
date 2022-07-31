@@ -27,9 +27,6 @@ internal abstract class FilterSpecificationBase<TDomain> : IFilterSpecification<
     protected abstract IQueryable<IDataModel<TDomain>> GetQueryByParameter
         (IQueryable<IDataModel<TDomain>> source, IQueryParameter<TDomain> param);
 
-    protected static IEnumerable<Keyword> GetKeyword(string? param)
-        => Keyword.CreateFromRawString(param);
-
     protected virtual IQueryable<IDataModel<TDomain>> OrderQuery(
         IQueryable<IDataModel<TDomain>> query,
         IQueryParameter<TDomain> param

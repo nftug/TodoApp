@@ -2,10 +2,10 @@ namespace Domain.Shared.Entities;
 
 public abstract class ModelBase
 {
-    public Guid Id { get; set; }
-    public DateTime CreatedOn { get; protected set; }
-    public DateTime UpdatedOn { get; protected set; }
-    public Guid? OwnerUserId { get; protected set; }
+    public Guid Id { get; }
+    public DateTime CreatedOn { get; }
+    public DateTime UpdatedOn { get; private set; }
+    public Guid? OwnerUserId { get; }
 
     protected ModelBase(
         Guid id,
@@ -20,5 +20,15 @@ public abstract class ModelBase
         OwnerUserId = ownerUserId;
     }
 
-    protected ModelBase() { }
+    protected ModelBase(DateTime createdOn, Guid? ownerUserId)
+    {
+        CreatedOn = createdOn;
+        UpdatedOn = createdOn;
+        OwnerUserId = ownerUserId;
+    }
+
+    protected void SetUpdatedOn()
+    {
+        UpdatedOn = DateTime.Now;
+    }
 }

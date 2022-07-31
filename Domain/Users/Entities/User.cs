@@ -22,8 +22,6 @@ public class User : ModelBase
         Email = email;
     }
 
-    private User() { }
-
     public void Edit(
         UserName userName,
         UserEmail email
@@ -31,5 +29,6 @@ public class User : ModelBase
     {
         UserName = userName;
         Email = email;
+        SetUpdatedOn();
     }
 }

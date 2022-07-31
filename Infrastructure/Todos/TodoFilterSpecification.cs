@@ -26,68 +26,47 @@ internal class TodoFilterSpecification : FilterSpecificationBase<Todo>
         var expressionGroup = new List<ExpressionGroup<TodoDataModel>>();
 
         // ユーザーIDで絞り込み
-        var userIdField = new SearchField<TodoDataModel>();
-        if (_param.UserId != null)
-            userIdField.Node.AddExpression(
-                Keyword.CreateDummy(),
-                x => x.OwnerUserId == _param.UserId
-            );
-        expressionGroup.AddExpressionNode(userIdField);
+        expressionGroup.AddSimpleSearch(_param.UserId, x => x.OwnerUserId == _param.UserId);
 
         // 状態で絞り込み
-        var stateField = new SearchField<TodoDataModel>();
-        if (_param.State != null)
-            stateField.Node.AddExpression(
-                Keyword.CreateDummy(),
-                x => x.State == _param.State
-            );
-        expressionGroup.AddExpressionNode(stateField);
+        expressionGroup.AddSimpleSearch(_param.State, x => x.State == _param.State);
 
         // qで絞り込み
-        var qField = new SearchField<TodoDataModel>(_param.Q);
-        foreach (var k in GetKeyword(_param.Q))
-            qField.Node.AddExpression(k, x =>
+        expressionGroup.AddSearch(
+            _param.Q,
+            (n, k) => n.AddExpression(k, x =>
                 (k.InQuotes ? x.Title : x.Title.ToLower()).Contains(k.Value) ||
                 (k.InQuotes ? x.Description! : x.Description!.ToLower()).Contains(k.Value) ||
-                x.Comments.Any(x =>
-                    (k.InQuotes ? x.Content : x.Content!.ToLower()).Contains(k.Value))
+                x.Comments.Any(x => (k.InQuotes ? x.Content : x.Content!.ToLower()).Contains(k.Value)))
             );
-        expressionGroup.AddExpressionNode(qField);
 
         // タイトルで絞り込み
-        var titleField = new SearchField<TodoDataModel>(_param.Title);
-        foreach (var k in GetKeyword(_param.Title))
-            titleField.Node.AddExpression(k, x =>
-                (k.InQuotes ? x.Title : x.Title.ToLower()).Contains(k.Value)
+        expressionGroup.AddSearch(
+            _param.Title,
+            (n, k) => n.AddExpression(k, x =>
+                (k.InQuotes ? x.Title : x.Title.ToLower()).Contains(k.Value))
             );
-        expressionGroup.AddExpressionNode(titleField);
 
         // 説明文で絞り込み
-        var descriptionField = new SearchField<TodoDataModel>(_param.Description);
-        foreach (var k in GetKeyword(_param.Description))
-            descriptionField.Node.AddExpression(k, x =>
-                (k.InQuotes ? x.Description! : x.Description!.ToLower()).Contains(k.Value)
+        expressionGroup.AddSearch(
+            _param.Description,
+            (n, k) => n.AddExpression(k, x =>
+                (k.InQuotes ? x.Description! : x.Description!.ToLower()).Contains(k.Value))
             );
-        expressionGroup.AddExpressionNode(descriptionField);
 
         // コメントで絞り込み
-        var commentField = new SearchField<TodoDataModel>(_param.Comment);
-        foreach (var k in GetKeyword(_param.Comment))
-            commentField.Node.AddExpression(k, x =>
-                x.Comments.Any(x =>
-                    (k.InQuotes ? x.Content : x.Content!.ToLower()).Contains(k.Value))
-            );
-        expressionGroup.AddExpressionNode(commentField);
+        expressionGroup.AddSearch(
+            _param.Comment,
+            (n, k) => n.AddExpression(k, x =>
+                x.Comments.Any(x => (k.InQuotes ? x.Content : x.Content!.ToLower()).Contains(k.Value)))
+        );
 
         // ユーザー名で絞り込み
-        var userNameField = new SearchField<TodoDataModel>(_param.UserName);
-        foreach (var k in GetKeyword(_param.UserName))
-            userNameField.Node.AddExpression(k, x =>
-                (k.InQuotes
-                    ? x.OwnerUser!.UserName : x.OwnerUser!.UserName.ToLower())
-                .Contains(k.Value)
+        expressionGroup.AddSearch(
+            _param.UserName,
+            (n, k) => n.AddExpression(k, x =>
+                (k.InQuotes ? x.OwnerUser!.UserName : x.OwnerUser!.UserName.ToLower()).Contains(k.Value))
             );
-        expressionGroup.AddExpressionNode(userNameField);
 
         // クエリ式を作成する
         return source.OfType<TodoDataModel>().ApplyExpressionGroup(expressionGroup);
