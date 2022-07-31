@@ -31,13 +31,12 @@ internal class Keyword
             if (string.IsNullOrWhiteSpace(current) || current == "OR")
                 continue;
 
-            bool inQuotes = false;
             var matchQuote = Regex.Match(current, "^#([0-9]+)#$");
-            if (matchQuote.Success)
+            bool inQuotes = matchQuote.Success;
+            if (inQuotes)
             {
                 int index = int.Parse(matchQuote.Groups[1].Value);
                 current = quotesList[index].Groups[1].Value;
-                inQuotes = true;
             }
 
             var combineModeOld = combineMode;

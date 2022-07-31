@@ -28,25 +28,16 @@ internal class CommentFilterSpecification : FilterSpecificationBase<Comment>
         expressionGroup.AddSimpleSearch(_param.UserId, x => x.OwnerUserId == _param.UserId);
 
         // qで絞り込み
-        expressionGroup.AddSearch(
-            _param.Q,
-            (n, k) => n.AddExpression(k, x =>
-                (k.InQuotes ? x.Content : x.Content.ToLower()).Contains(k.Value))
-            );
+        expressionGroup.AddSearch(_param.Q, k => x =>
+            (k.InQuotes ? x.Content : x.Content.ToLower()).Contains(k.Value));
 
         // 内容で絞り込み
-        expressionGroup.AddSearch(
-            _param.Content,
-            (n, k) => n.AddExpression(k, x =>
-                (k.InQuotes ? x.Content : x.Content.ToLower()).Contains(k.Value))
-            );
+        expressionGroup.AddSearch(_param.Content, k => x =>
+            (k.InQuotes ? x.Content : x.Content.ToLower()).Contains(k.Value));
 
         // ユーザー名で絞り込み
-        expressionGroup.AddSearch(
-            _param.UserName,
-            (n, k) => n.AddExpression(k, x =>
-                (k.InQuotes ? x.OwnerUser!.UserName : x.OwnerUser!.UserName.ToLower()).Contains(k.Value))
-            );
+        expressionGroup.AddSearch(_param.UserName, k => x =>
+            (k.InQuotes ? x.OwnerUser!.UserName : x.OwnerUser!.UserName.ToLower()).Contains(k.Value));
 
         return source.OfType<CommentDataModel>().ApplyExpressionGroup(expressionGroup);
     }

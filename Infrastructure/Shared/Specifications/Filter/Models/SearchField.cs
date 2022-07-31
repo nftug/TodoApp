@@ -5,7 +5,7 @@ namespace Infrastructure.Shared.Specifications.Filter.Models;
 internal class SearchField<T>
 {
     public string? Param { get; set; }
-    public List<QueryFilterExpression<T>> Node { get; set; }
+    public IEnumerable<QueryFilterExpression<T>> Node { get; set; }
     public CombineMode CombineMode { get; set; }
 
     public SearchField(string? param) : this()

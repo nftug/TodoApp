@@ -32,41 +32,26 @@ internal class TodoFilterSpecification : FilterSpecificationBase<Todo>
         expressionGroup.AddSimpleSearch(_param.State, x => x.State == _param.State);
 
         // qで絞り込み
-        expressionGroup.AddSearch(
-            _param.Q,
-            (n, k) => n.AddExpression(k, x =>
-                (k.InQuotes ? x.Title : x.Title.ToLower()).Contains(k.Value) ||
-                (k.InQuotes ? x.Description! : x.Description!.ToLower()).Contains(k.Value) ||
-                x.Comments.Any(x => (k.InQuotes ? x.Content : x.Content!.ToLower()).Contains(k.Value)))
-            );
+        expressionGroup.AddSearch(_param.Q, k => x =>
+            (k.InQuotes ? x.Title : x.Title.ToLower()).Contains(k.Value) ||
+            (k.InQuotes ? x.Description! : x.Description!.ToLower()).Contains(k.Value) ||
+            x.Comments.Any(x => (k.InQuotes ? x.Content : x.Content!.ToLower()).Contains(k.Value)));
 
         // タイトルで絞り込み
-        expressionGroup.AddSearch(
-            _param.Title,
-            (n, k) => n.AddExpression(k, x =>
-                (k.InQuotes ? x.Title : x.Title.ToLower()).Contains(k.Value))
-            );
+        expressionGroup.AddSearch(_param.Title, k => x =>
+            (k.InQuotes ? x.Title : x.Title.ToLower()).Contains(k.Value));
 
         // 説明文で絞り込み
-        expressionGroup.AddSearch(
-            _param.Description,
-            (n, k) => n.AddExpression(k, x =>
-                (k.InQuotes ? x.Description! : x.Description!.ToLower()).Contains(k.Value))
-            );
+        expressionGroup.AddSearch(_param.Description, k => x =>
+            (k.InQuotes ? x.Description! : x.Description!.ToLower()).Contains(k.Value));
 
         // コメントで絞り込み
-        expressionGroup.AddSearch(
-            _param.Comment,
-            (n, k) => n.AddExpression(k, x =>
-                x.Comments.Any(x => (k.InQuotes ? x.Content : x.Content!.ToLower()).Contains(k.Value)))
-        );
+        expressionGroup.AddSearch(_param.Comment, k => x =>
+            x.Comments.Any(x => (k.InQuotes ? x.Content : x.Content!.ToLower()).Contains(k.Value)));
 
         // ユーザー名で絞り込み
-        expressionGroup.AddSearch(
-            _param.UserName,
-            (n, k) => n.AddExpression(k, x =>
-                (k.InQuotes ? x.OwnerUser!.UserName : x.OwnerUser!.UserName.ToLower()).Contains(k.Value))
-            );
+        expressionGroup.AddSearch(_param.UserName, k => x =>
+            (k.InQuotes ? x.OwnerUser!.UserName : x.OwnerUser!.UserName.ToLower()).Contains(k.Value));
 
         // クエリ式を作成する
         return source.OfType<TodoDataModel>().ApplyExpressionGroup(expressionGroup);

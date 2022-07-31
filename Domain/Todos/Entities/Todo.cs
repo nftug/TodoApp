@@ -62,4 +62,9 @@ public class Todo : ModelBase
         State = state;
         SetUpdatedOn();
     }
+
+    public void SetState(TodoState state)
+    {
+        State = state;
+    }
 }

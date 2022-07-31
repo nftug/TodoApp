@@ -3,7 +3,6 @@ using Domain.Shared.Entities;
 using Domain.Shared.Queries;
 using Infrastructure.DataModels;
 using Infrastructure.Shared.Specifications.Filter.Extensions;
-using Infrastructure.Shared.Specifications.Filter.Models;
 
 namespace Infrastructure.Shared.Specifications.Filter;
 
