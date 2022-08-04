@@ -3,12 +3,11 @@ using Infrastructure.DataModels;
 using Domain.Comments.Queries;
 using Domain.Shared.Queries;
 using Infrastructure.Shared.Specifications.Filter.Extensions;
-using Infrastructure.Shared.Specifications.Filter.Models;
 using Infrastructure.Shared.Specifications.Filter;
 
 namespace Infrastructure.Comments;
 
-internal class CommentFilterSpecification : FilterSpecificationBase<Comment>
+internal class CommentFilterSpecification : FilterSpecificationBase<Comment, CommentDataModel>
 {
     public CommentFilterSpecification(DataContext context)
         : base(context)
@@ -22,23 +21,14 @@ internal class CommentFilterSpecification : FilterSpecificationBase<Comment>
     {
         var _param = (CommentQueryParameter)param;
 
-        var expressionGroup = new List<ExpressionGroup<CommentDataModel>>();
+        ExpressionGroups.AddSimpleSearch(_param.UserId, x => x.OwnerUserId == _param.UserId);
 
-        // ユーザーIDで絞り込み
-        expressionGroup.AddSimpleSearch(_param.UserId, x => x.OwnerUserId == _param.UserId);
+        ExpressionGroups.AddSearch(_param.Q, k => k.Contains("Content"));
 
-        // qで絞り込み
-        expressionGroup.AddSearch(_param.Q, k => x =>
-            (k.InQuotes ? x.Content : x.Content.ToLower()).Contains(k.Value));
+        ExpressionGroups.AddSearch(_param.Content, k => k.Contains("Content"));
 
-        // 内容で絞り込み
-        expressionGroup.AddSearch(_param.Content, k => x =>
-            (k.InQuotes ? x.Content : x.Content.ToLower()).Contains(k.Value));
+        ExpressionGroups.AddSearch(_param.UserName, k => k.ContainsInChild("OwnerUser", "UserName"));
 
-        // ユーザー名で絞り込み
-        expressionGroup.AddSearch(_param.UserName, k => x =>
-            (k.InQuotes ? x.OwnerUser!.UserName : x.OwnerUser!.UserName.ToLower()).Contains(k.Value));
-
-        return source.OfType<CommentDataModel>().ApplyExpressionGroup(expressionGroup);
+        return source.OfType<CommentDataModel>().ApplyExpressionGroup(ExpressionGroups);
     }
 }

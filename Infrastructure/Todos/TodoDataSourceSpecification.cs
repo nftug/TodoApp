@@ -39,7 +39,7 @@ internal class TodoDataSourceSpecification : DataSourceSpecificationBase<Todo>
                     .ToList()
             });
 
-    public override Todo ToDomain(IDataModel<Todo> origin, bool recursive = false)
+    public override Todo ToDomain(IDataModel<Todo> origin, bool recursive = true)
     {
         var _origin = (TodoDataModel)origin;
 

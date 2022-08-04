@@ -4,8 +4,9 @@ using Infrastructure.DataModels;
 
 namespace Infrastructure.Shared.Specifications.Filter;
 
-public interface IFilterSpecification<TDomain>
+public interface IFilterSpecification<TDomain, TDataModel>
     where TDomain : ModelBase
+    where TDataModel : IDataModel<TDomain>
 {
     IQueryable<IDataModel<TDomain>> GetFilteredQuery(
         IQueryable<IDataModel<TDomain>> source,

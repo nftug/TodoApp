@@ -1,13 +1,17 @@
+using System.Linq.Expressions;
 using System.Text.RegularExpressions;
 using Domain.Shared.Entities;
 using Domain.Shared.Queries;
 using Infrastructure.DataModels;
 using Infrastructure.Shared.Specifications.Filter.Extensions;
+using Infrastructure.Shared.Specifications.Filter.Managers;
+using Infrastructure.Shared.Specifications.Filter.Models;
 
 namespace Infrastructure.Shared.Specifications.Filter;
 
-internal abstract class FilterSpecificationBase<TDomain> : IFilterSpecification<TDomain>
+internal abstract class FilterSpecificationBase<TDomain, TDataModel> : IFilterSpecification<TDomain, TDataModel>
     where TDomain : ModelBase
+    where TDataModel : IDataModel<TDomain>
 {
     protected readonly DataContext _context;
 
@@ -15,6 +19,8 @@ internal abstract class FilterSpecificationBase<TDomain> : IFilterSpecification<
     {
         _context = context;
     }
+
+    protected List<ExpressionGroup<TDataModel>> ExpressionGroups { get; } = new();
 
     public virtual IQueryable<IDataModel<TDomain>> GetFilteredQuery
         (IQueryable<IDataModel<TDomain>> source, IQueryParameter<TDomain> param)
@@ -41,4 +47,24 @@ internal abstract class FilterSpecificationBase<TDomain> : IFilterSpecification<
             _ => query
         };
     }
+
+    protected static Expression<Func<TDataModel, bool>> Contains(
+        Keyword keyword,
+        string propertyName
+    )
+        => KeywordConvertManager.Contains<TDataModel>(keyword, propertyName);
+
+    protected static Expression<Func<TDataModel, bool>> ContainsInChild(
+        Keyword keyword,
+        string propertyName,
+        string childPropertyName
+    )
+        => KeywordConvertManager.ContainsInChild<TDataModel>(keyword, propertyName, childPropertyName);
+
+    protected static Expression<Func<TDataModel, bool>> ContainsInChildren<T>(
+        Keyword keyword,
+        string propertyName,
+        string childPropertyName
+    )
+        => KeywordConvertManager.ContainsInChildren<TDataModel, T>(keyword, propertyName, childPropertyName);
 }

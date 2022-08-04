@@ -15,5 +15,5 @@ internal abstract class DataSourceSpecificationBase<TDomain> : IDataSourceSpecif
 
     public abstract IQueryable<IDataModel<TDomain>> Source { get; }
 
-    public abstract TDomain ToDomain(IDataModel<TDomain> origin, bool recursive = false);
+    public abstract TDomain ToDomain(IDataModel<TDomain> origin, bool recursive = true);
 }

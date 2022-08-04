@@ -4,12 +4,11 @@ using Domain.Todos.Entities;
 using Domain.Todos.Queries;
 using Domain.Shared.Queries;
 using Infrastructure.Shared.Specifications.Filter.Extensions;
-using Infrastructure.Shared.Specifications.Filter.Models;
 using Infrastructure.Shared.Specifications.Filter;
 
 namespace Infrastructure.Todos;
 
-internal class TodoFilterSpecification : FilterSpecificationBase<Todo>
+internal class TodoFilterSpecification : FilterSpecificationBase<Todo, TodoDataModel>
 {
     public TodoFilterSpecification(DataContext context)
         : base(context)
@@ -23,38 +22,26 @@ internal class TodoFilterSpecification : FilterSpecificationBase<Todo>
     {
         var _param = (TodoQueryParameter)param;
 
-        var expressionGroup = new List<ExpressionGroup<TodoDataModel>>();
+        ExpressionGroups.AddSimpleSearch(_param.UserId, x => x.OwnerUserId == _param.UserId);
 
-        // ユーザーIDで絞り込み
-        expressionGroup.AddSimpleSearch(_param.UserId, x => x.OwnerUserId == _param.UserId);
+        ExpressionGroups.AddSimpleSearch(_param.State, x => x.State == _param.State);
 
-        // 状態で絞り込み
-        expressionGroup.AddSimpleSearch(_param.State, x => x.State == _param.State);
+        ExpressionGroups.AddSearch(_param.Q, k =>
+            ExpressionCombiner.OrElse(
+                k.Contains("Title"),
+                k.Contains("Description"),
+                k.ContainsInChildren<CommentDataModel>("Comments", "Content")));
 
-        // qで絞り込み
-        expressionGroup.AddSearch(_param.Q, k => x =>
-            (k.InQuotes ? x.Title : x.Title.ToLower()).Contains(k.Value) ||
-            (k.InQuotes ? x.Description! : x.Description!.ToLower()).Contains(k.Value) ||
-            x.Comments.Any(x => (k.InQuotes ? x.Content : x.Content!.ToLower()).Contains(k.Value)));
+        ExpressionGroups.AddSearch(_param.Title, k => k.Contains("Title"));
 
-        // タイトルで絞り込み
-        expressionGroup.AddSearch(_param.Title, k => x =>
-            (k.InQuotes ? x.Title : x.Title.ToLower()).Contains(k.Value));
+        ExpressionGroups.AddSearch(_param.Description, k => k.Contains("Description"));
 
-        // 説明文で絞り込み
-        expressionGroup.AddSearch(_param.Description, k => x =>
-            (k.InQuotes ? x.Description! : x.Description!.ToLower()).Contains(k.Value));
+        ExpressionGroups.AddSearch(_param.Comment, k =>
+            ContainsInChildren<CommentDataModel>(k, "Comments", "Content"));
 
-        // コメントで絞り込み
-        expressionGroup.AddSearch(_param.Comment, k => x =>
-            x.Comments.Any(x => (k.InQuotes ? x.Content : x.Content!.ToLower()).Contains(k.Value)));
+        ExpressionGroups.AddSearch(_param.UserName, k => k.ContainsInChild("OwnerUser", "UserName"));
 
-        // ユーザー名で絞り込み
-        expressionGroup.AddSearch(_param.UserName, k => x =>
-            (k.InQuotes ? x.OwnerUser!.UserName : x.OwnerUser!.UserName.ToLower()).Contains(k.Value));
-
-        // クエリ式を作成する
-        return source.OfType<TodoDataModel>().ApplyExpressionGroup(expressionGroup);
+        return source.OfType<TodoDataModel>().ApplyExpressionGroup(ExpressionGroups);
     }
 
     protected override IQueryable<TodoDataModel> OrderQuery(

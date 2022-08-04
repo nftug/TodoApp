@@ -8,5 +8,5 @@ public interface IDataSourceSpecification<TDomain>
 {
     IQueryable<IDataModel<TDomain>> Source { get; }
 
-    TDomain ToDomain(IDataModel<TDomain> origin, bool recursive = false);
+    TDomain ToDomain(IDataModel<TDomain> origin, bool recursive = true);
 }
