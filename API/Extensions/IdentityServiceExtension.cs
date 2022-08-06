@@ -4,6 +4,8 @@ using API.Services;
 using Infrastructure;
 using Infrastructure.DataModels;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 
@@ -14,9 +16,12 @@ internal static class IdentityServiceExtension
     internal static IServiceCollection AddIdentityServices
         (this IServiceCollection services, IConfiguration config)
     {
-        services.AddDefaultIdentity<UserDataModel<Guid>>(opt =>
-            opt.SignIn.RequireConfirmedAccount = false
-        ).AddEntityFrameworkStores<DataContext>();
+        services
+            .AddDefaultIdentity<UserDataModel<Guid>>(opt =>
+                opt.SignIn.RequireConfirmedAccount = false
+            )
+            .AddRoles<IdentityRole<Guid>>()
+            .AddEntityFrameworkStores<DataContext>();
 
         services.AddJwtService(config);
 

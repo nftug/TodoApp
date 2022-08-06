@@ -25,7 +25,7 @@ public abstract class RepositoryBase<TDomain> : IRepository<TDomain>
         await AddEntityAsync(data);
         await _context.SaveChangesAsync();
 
-        return DataSource.ToDomain(data);
+        return DataSource.ToDomain(data, recursive: false);
     }
 
     public virtual async Task<TDomain?> UpdateAsync(TDomain item)
@@ -35,9 +35,8 @@ public abstract class RepositoryBase<TDomain> : IRepository<TDomain>
         if (data == null)
             throw new NotFoundException();
 
-        Transfer(item, data);
-
         UpdateEntity(data);
+        Transfer(item, data);
         await _context.SaveChangesAsync();
 
         return await FindAsync(data.Id);
