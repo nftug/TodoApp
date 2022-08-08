@@ -1,3 +1,4 @@
+using System.Text.Json.Serialization;
 using Application.Shared.Interfaces;
 using Domain.Comments.Entities;
 
@@ -5,12 +6,15 @@ namespace Application.Comments.Models;
 
 public class CommentResultDTO : IResultDTO<Comment>
 {
-    public Guid Id { get; }
-    public string Content { get; } = string.Empty;
-    public Guid TodoId { get; }
-    public DateTime CreatedOn { get; }
-    public DateTime UpdatedOn { get; }
-    public Guid? OwnerUserId { get; }
+    public Guid Id { get; init; }
+    public string Content { get; init; } = string.Empty;
+    public Guid TodoId { get; init; }
+    public DateTime CreatedOn { get; init; }
+    public DateTime UpdatedOn { get; init; }
+    public Guid? OwnerUserId { get; init; }
+
+    [JsonConstructor]
+    public CommentResultDTO() { }
 
     public CommentResultDTO(Comment comment)
     {

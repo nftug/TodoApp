@@ -1,10 +1,12 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace API.Models;
+namespace Application.Users.Models;
 
 public class TokenModel
 {
-    public string? Token { get; set; }
+    public string Token { get; set; } = string.Empty;
+    public string UserName { get; set; } = string.Empty;
+    public Guid UserId { get; set; }
 }
 
 public class LoginModel

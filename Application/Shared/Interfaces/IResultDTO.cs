@@ -9,4 +9,5 @@ public interface IResultDTO<TDomain>
     DateTime CreatedOn { get; }
     DateTime UpdatedOn { get; }
     Guid? OwnerUserId { get; }
+    // string? OwnerUserName { get; }
 }

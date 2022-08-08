@@ -1,22 +1,27 @@
+using System.Text.Json.Serialization;
 using Application.Comments.Models;
 using Application.Shared.Interfaces;
 using Domain.Todos.Entities;
-using Domain.Todos.ValueObjects;
 
 namespace Application.Todos.Models;
 
 public class TodoResultDTO : IResultDTO<Todo>
 {
-    public Guid Id { get; }
-    public string Title { get; } = string.Empty;
-    public string? Description { get; }
-    public DateTime? StartDate { get; }
-    public DateTime? EndDate { get; }
-    public TodoState State { get; }
-    public List<CommentResultDTO> Comments { get; } = null!;
-    public DateTime CreatedOn { get; }
-    public DateTime UpdatedOn { get; }
-    public Guid? OwnerUserId { get; }
+    public Guid Id { get; init; }
+    public string Title { get; init; } = string.Empty;
+    public string? Description { get; init; }
+    public DateTime? StartDate { get; init; }
+    public DateTime? EndDate { get; init; }
+    public TodoStateDTO State { get; init; } = null!;
+    public List<CommentResultDTO> Comments { get; init; } = null!;
+    public DateTime CreatedOn { get; init; }
+    public DateTime UpdatedOn { get; init; }
+    public Guid? OwnerUserId { get; init; }
+
+    [JsonConstructor]
+    public TodoResultDTO()
+    {
+    }
 
     public TodoResultDTO(Todo todo)
     {
@@ -25,7 +30,7 @@ public class TodoResultDTO : IResultDTO<Todo>
         Description = todo.Description?.Value;
         StartDate = todo.Period?.StartDateValue;
         EndDate = todo.Period?.EndDateValue;
-        State = todo.State;
+        State = new(todo.State.Value);
         Comments = todo.Comments
             .Select(x => new CommentResultDTO(x))
             .ToList();

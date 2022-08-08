@@ -41,4 +41,9 @@ public class TodoController : ApiControllerBase
     [HttpDelete("{id}")]
     public async Task<IActionResult> DeleteTodo(Guid id)
         => await HandleRequest(new Delete.Command(id, _userId));
+
+    // PUT: api/Todo/5
+    [HttpPut("{id}/state")]
+    public async Task<IActionResult> PutTodoState(Guid id, TodoStateCommand command)
+        => await HandleRequest(new EditState.Command(id, command, _userId, EditMode.Put));
 }

@@ -7,7 +7,7 @@ public class TodoState : ValueObject<TodoState>
 {
     public const int MaxStateValue = 2;
 
-    public int Value { get; }
+    public int Value { get; init; }
 
     public static readonly TodoState Todo = new(0);
     public static readonly TodoState Doing = new(1);

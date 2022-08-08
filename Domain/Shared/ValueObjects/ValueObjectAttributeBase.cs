@@ -18,7 +18,6 @@ public abstract class ValueObjectAttributeBase<T, TValue> : ValidationAttribute
         }
         catch (DomainException e)
         {
-            Console.Error.WriteLine("Validation error");
             return new ValidationResult(e.Message, memberNames);
         }
     }

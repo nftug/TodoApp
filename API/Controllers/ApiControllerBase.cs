@@ -10,7 +10,14 @@ public abstract class ApiControllerBase : ControllerBase
     private ISender? _mediator;
     protected ISender Mediator => _mediator ??= HttpContext.RequestServices.GetService<ISender>()!;
 
-    protected Guid _userId => Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
+    protected Guid _userId
+    {
+        get
+        {
+            var idString = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            return idString != null ? Guid.Parse(idString) : new Guid();
+        }
+    }
 
     protected async Task<IActionResult> HandleResult<T>(Func<Task<T>> cb)
     {

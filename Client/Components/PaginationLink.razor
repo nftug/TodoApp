@@ -1,0 +1,39 @@
+@inject NavigationManager NavigationManager
+@typeparam T
+
+@using Client.Models
+
+<ul class="pagination justify-content-center">
+    <li class=@(GetPageNavigatorClass(Items.PreviousPage))>
+        <a class="page-link" href=@(GetUriWithPage(Items.PreviousPage)) aria-label="Previous">
+            <span aria-hidden="true">&laquo;</span>
+        </a>
+    </li>
+
+    @foreach (int i in Enumerable.Range(1, Items.TotalPages))
+    {
+        <li class=@(GetPageItemClass(i))>
+            <a class="page-link" href=@(GetUriWithPage(i))>@i</a>
+        </li>
+    }
+
+    <li class=@(GetPageNavigatorClass(Items.NextPage))>
+        <a class="page-link" href=@(GetUriWithPage(Items.NextPage)) aria-label="Next">
+            <span aria-hidden="true">&raquo;</span>
+        </a>
+    </li>
+</ul>
+
+@code {
+    [Parameter]
+    public Pagination<T> Items { get; set; } = null!;
+
+    private string GetUriWithPage(int? page)
+        => NavigationManager.GetUriWithQueryParameter("page", page);
+
+    private string? GetPageNavigatorClass(int? pageNextOrPrev)
+        => $"page-item{(pageNextOrPrev == null ? " disabled" : null)}";
+
+    private string? GetPageItemClass(int page)
+        => $"page-item{(Items.CurrentPage == page ? " active" : null)}";
+}

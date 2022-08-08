@@ -3,8 +3,8 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Infrastructure.DataModels;
-using API.Models;
 using API.Services;
+using Application.Users.Models;
 
 namespace API.Controllers;
 
@@ -79,6 +79,8 @@ public class AuthController : ControllerBase
     private TokenModel CreateUserObject(UserDataModel<Guid> user)
         => new()
         {
-            Token = _tokenService.CreateToken(user)
+            Token = _tokenService.CreateToken(user),
+            UserName = user.UserName,
+            UserId = user.Id
         };
 }

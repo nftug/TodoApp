@@ -1,0 +1,83 @@
+@using Application.Todos.Models
+@using Domain.Todos
+@using Domain.Todos.ValueObjects
+@using Client.Models
+
+@inherits MyAuthComponentBase
+
+<table class="table">
+    <thead>
+        <tr>
+            <th width="60%">タイトル</th>
+            <th class="d-none d-lg-table-cell">開始</th>
+            <th class="d-none d-lg-table-cell">終了</th>
+            <th>状態</th>
+            <th>操作</th>
+        </tr>
+    </thead>
+
+    <tbody>
+        @foreach (var item in Items)
+        {
+            <tr class="align-middle">
+                <td>@item.Title</td>
+                <td class="d-none d-lg-table-cell">
+                    @item.StartDate?.ToShortDateString()
+                </td>
+                <td class="d-none d-lg-table-cell">
+                    @item.EndDate?.ToShortDateString()
+                </td>
+                <td>
+                    <span class="dropdown-toggle badge @(TodoBgClass(item))" role="button"
+                        id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">
+                        @item.State.DisplayValue
+                    </span>
+
+                    <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                        <li class="@(GetDropdownClass(item, TodoState.Todo))" role="button"
+                            @onclick=@(async () => await OnClickChangeState.InvokeAsync((item.Id, TodoState.Todo)))>
+                            Todoに切り替え
+                        </li>
+                        <li class="@(GetDropdownClass(item, TodoState.Doing))" role="button"
+                            @onclick=@(async () => await OnClickChangeState.InvokeAsync((item.Id, TodoState.Doing)))>
+                            Doingに切り替え
+                        </li>
+                        <li class="@(GetDropdownClass(item, TodoState.Done))" role="button"
+                            @onclick=@(async () => await OnClickChangeState.InvokeAsync((item.Id, TodoState.Done)))>
+                            Doneに切り替え
+                        </li>
+                    </ul>
+                </td>
+                <td>
+                    <button type="button" class="btn btn-primary btn-sm" disabled=@(!IsOwnedByUser(item))
+                        @onclick=@(async () => await OnClickEdit.InvokeAsync(item))>
+                        <span class="oi oi-pencil" aria-hidden="true"></span>
+                    </button>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+@code {
+    [Parameter]
+    public IEnumerable<TodoResultDTO> Items { get; set; } = null!;
+    [Parameter]
+    public EventCallback<TodoResultDTO> OnClickEdit { get; set; }
+    [Parameter]
+    public EventCallback<(Guid, TodoState)> OnClickChangeState { get; set; }
+
+    private string TodoBgClass(TodoResultDTO item)
+        => item.State == TodoState.Doing
+            ? "bg-secondary"
+            : item.State == TodoState.Done
+            ? "bg-success"
+            : "bg-primary";
+
+    private string GetDropdownClass(TodoResultDTO item, TodoState state)
+        => !IsOwnedByUser(item) || item.State.Value == state.Value
+            ? "dropdown-item disabled"
+            : "dropdown-item";
+
+    private bool IsOwnedByUser(TodoResultDTO item) => item.OwnerUserId == UserId;
+}
