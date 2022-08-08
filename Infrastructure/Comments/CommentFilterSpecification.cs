@@ -23,11 +23,11 @@ internal class CommentFilterSpecification : FilterSpecificationBase<Comment, Com
 
         ExpressionGroups.AddSimpleSearch(_param.UserId, x => x.OwnerUserId == _param.UserId);
 
-        ExpressionGroups.AddSearch(_param.Q, k => k.Contains("Content"));
+        ExpressionGroups.AddSearch(_param.Q, k => Contains(k, "Content"));
 
-        ExpressionGroups.AddSearch(_param.Content, k => k.Contains("Content"));
+        ExpressionGroups.AddSearch(_param.Content, k => Contains(k, "Content"));
 
-        ExpressionGroups.AddSearch(_param.UserName, k => k.ContainsInChild("OwnerUser", "UserName"));
+        ExpressionGroups.AddSearch(_param.UserName, k => ContainsInChild(k, "OwnerUser", "UserName"));
 
         return source.OfType<CommentDataModel>().ApplyExpressionGroup(ExpressionGroups);
     }

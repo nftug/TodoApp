@@ -32,14 +32,14 @@ internal class TodoFilterSpecification : FilterSpecificationBase<Todo, TodoDataM
                 k.Contains("Description"),
                 k.ContainsInChildren<CommentDataModel>("Comments", "Content")));
 
-        ExpressionGroups.AddSearch(_param.Title, k => k.Contains("Title"));
+        ExpressionGroups.AddSearch(_param.Title, k => Contains(k, "Title"));
 
-        ExpressionGroups.AddSearch(_param.Description, k => k.Contains("Description"));
+        ExpressionGroups.AddSearch(_param.Description, k => Contains(k, "Description"));
 
         ExpressionGroups.AddSearch(_param.Comment, k =>
             ContainsInChildren<CommentDataModel>(k, "Comments", "Content"));
 
-        ExpressionGroups.AddSearch(_param.UserName, k => k.ContainsInChild("OwnerUser", "UserName"));
+        ExpressionGroups.AddSearch(_param.UserName, k => ContainsInChild(k, "OwnerUser", "UserName"));
 
         return source.OfType<TodoDataModel>().ApplyExpressionGroup(ExpressionGroups);
     }
