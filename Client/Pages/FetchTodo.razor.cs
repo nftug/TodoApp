@@ -82,8 +82,12 @@ public partial class FetchTodo : MyComponentBase
 
     protected async Task ChangeState(Guid id, TodoState state)
     {
-        await TodoService.ChangeState(id, state);
-        FetchData();
+        var newItem = await TodoService.ChangeState(id, state);
+        if (newItem == null) return;
+
+        var results = TodoItems!.Results.ToList();
+        results[results.FindIndex(x => x.Id == id)] = newItem;
+        TodoItems.SetResults(results);
     }
 
     protected async Task Delete(Guid id)
