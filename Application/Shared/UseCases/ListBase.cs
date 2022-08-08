@@ -29,10 +29,7 @@ public abstract class ListBase<TDomain, TResultDTO>
         protected readonly IFilterQueryService<TDomain> _filterQueryService;
         protected readonly IDomainService<TDomain> _domain;
 
-        public HandlerBase(
-            IFilterQueryService<TDomain> filterQueryService,
-            IDomainService<TDomain> domain
-        )
+        public HandlerBase(IFilterQueryService<TDomain> filterQueryService, IDomainService<TDomain> domain)
         {
             _filterQueryService = filterQueryService;
             _domain = domain;

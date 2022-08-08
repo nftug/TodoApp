@@ -6,7 +6,7 @@ namespace Application.Users.Models;
 
 public class UserCommandDTO : ICommandDTO<User>
 {
-    public Guid? Id { get; init; }
+    public Guid? Id { get; set; }
     [UserName]
     public string? Username { get; set; } = string.Empty;
     [UserEmail]

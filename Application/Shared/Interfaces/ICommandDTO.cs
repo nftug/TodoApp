@@ -5,5 +5,5 @@ namespace Application.Shared.Interfaces;
 public interface ICommandDTO<TDomain>
     where TDomain : ModelBase
 {
-    Guid? Id { get; init; }
+    Guid? Id { get; set; }
 }

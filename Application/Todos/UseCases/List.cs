@@ -10,10 +10,8 @@ public class List : ListBase<Todo, TodoResultDTO>
 {
     public class Handler : HandlerBase
     {
-        public Handler(
-            IFilterQueryService<Todo> repository,
-            IDomainService<Todo> domain
-        ) : base(repository, domain)
+        public Handler(IFilterQueryService<Todo> repository, IDomainService<Todo> domain)
+            : base(repository, domain)
         {
         }
 

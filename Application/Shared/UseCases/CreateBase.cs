@@ -29,10 +29,7 @@ public abstract class CreateBase<TDomain, TResultDTO, TCommandDTO>
         protected readonly IRepository<TDomain> _repository;
         protected readonly IDomainService<TDomain> _domain;
 
-        public HandlerBase(
-            IRepository<TDomain> repository,
-            IDomainService<TDomain> domain
-        )
+        public HandlerBase(IRepository<TDomain> repository, IDomainService<TDomain> domain)
         {
             _repository = repository;
             _domain = domain;

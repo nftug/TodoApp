@@ -12,10 +12,8 @@ public class Edit
 {
     public class Handler : HandlerBase
     {
-        public Handler(
-            IRepository<Todo> repository,
-            IDomainService<Todo> domain
-        ) : base(repository, domain)
+        public Handler(IRepository<Todo> repository, IDomainService<Todo> domain)
+            : base(repository, domain)
         {
         }
 

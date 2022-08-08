@@ -6,15 +6,15 @@ namespace Application.Todos.Models;
 
 public class TodoCommandDTO : ICommandDTO<Todo>
 {
-    public Guid? Id { get; init; }
+    public Guid? Id { get; set; }
     [TodoTitle]
-    public string? Title { get; init; }
+    public string? Title { get; set; }
     [TodoDescription]
-    public string? Description { get; init; }
+    public string? Description { get; set; }
     [TodoPeriod(ArgumentType.Start, "EndDate")]
-    public DateTime? StartDate { get; init; }
+    public DateTime? StartDate { get; set; }
     [TodoPeriod(ArgumentType.End, "StartDate")]
-    public DateTime? EndDate { get; init; }
+    public DateTime? EndDate { get; set; }
     [TodoState]
-    public int? State { get; init; }
+    public int? State { get; set; }
 }

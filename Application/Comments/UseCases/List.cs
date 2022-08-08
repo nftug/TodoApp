@@ -10,10 +10,8 @@ public class List : ListBase<Comment, CommentResultDTO>
 {
     public class Handler : HandlerBase
     {
-        public Handler(
-            IFilterQueryService<Comment> repository,
-            IDomainService<Comment> domain
-        ) : base(repository, domain)
+        public Handler(IFilterQueryService<Comment> repository, IDomainService<Comment> domain)
+            : base(repository, domain)
         {
         }
 

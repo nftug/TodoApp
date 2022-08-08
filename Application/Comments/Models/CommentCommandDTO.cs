@@ -6,8 +6,8 @@ namespace Application.Comments.Models;
 
 public class CommentCommandDTO : ICommandDTO<Comment>
 {
-    public Guid? Id { get; init; }
+    public Guid? Id { get; set; }
     [CommentContent]
-    public string? Content { get; init; } = null!;
-    public Guid TodoId { get; init; }
+    public string? Content { get; set; } = null!;
+    public Guid TodoId { get; set; }
 }

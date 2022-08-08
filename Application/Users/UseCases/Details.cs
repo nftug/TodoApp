@@ -12,10 +12,8 @@ public class Details
     {
         public class Handler : HandlerBase
         {
-            public Handler(
-                IRepository<User> repository,
-                IDomainService<User> domain
-            ) : base(repository, domain)
+            public Handler(IRepository<User> repository, IDomainService<User> domain)
+                : base(repository, domain)
             {
             }
 
