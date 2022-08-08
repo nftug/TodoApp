@@ -17,4 +17,16 @@ public class TodoCommandDTO : ICommandDTO<Todo>
     public DateTime? EndDate { get; set; }
     [TodoState]
     public int? State { get; set; }
+
+    public TodoCommandDTO() { }
+
+    public TodoCommandDTO(TodoResultDTO origin)
+    {
+        Id = origin.Id;
+        Title = origin.Title;
+        Description = origin.Description;
+        StartDate = origin.StartDate;
+        EndDate = origin.EndDate;
+        State = origin.State.Value;
+    }
 }

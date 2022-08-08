@@ -8,7 +8,16 @@ public class UserCommandDTO : ICommandDTO<User>
 {
     public Guid? Id { get; set; }
     [UserName]
-    public string? Username { get; set; } = string.Empty;
+    public string? UserName { get; set; } = string.Empty;
     [UserEmail]
     public string? Email { get; set; } = string.Empty;
+
+    public UserCommandDTO() { }
+
+    public UserCommandDTO(UserResultDTO.Me origin)
+    {
+        Id = origin.Id;
+        UserName = origin.UserName;
+        Email = origin.Email;
+    }
 }

@@ -33,7 +33,7 @@ public class AuthService : IAuthService
                 Result = result
             };
 
-            await ((SpaAuthenticateProvider)_authenticationStateProvider).MarkUserAsAuthenticated(loginResult.Result);
+            await ((SpaAuthenticateProvider)_authenticationStateProvider).MarkUserAsAuthenticated(result);
             return loginResult;
         }
         catch (HttpRequestException e)

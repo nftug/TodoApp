@@ -56,7 +56,7 @@ public partial class FetchTodo : MyComponentBase
 
     protected void ResultToCommand(TodoResultDTO item)
     {
-        TodoCommand = TodoApiService.ResultToCommand(item);
+        TodoCommand = new(item);
     }
 
     protected async Task OnValidSubmit()

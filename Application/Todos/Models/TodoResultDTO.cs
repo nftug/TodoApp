@@ -19,9 +19,7 @@ public class TodoResultDTO : IResultDTO<Todo>
     public Guid? OwnerUserId { get; init; }
 
     [JsonConstructor]
-    public TodoResultDTO()
-    {
-    }
+    public TodoResultDTO() { }
 
     public TodoResultDTO(Todo todo)
     {

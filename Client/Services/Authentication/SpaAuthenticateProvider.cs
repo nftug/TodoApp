@@ -25,9 +25,7 @@ public class SpaAuthenticateProvider : AuthenticationStateProvider
 
         // トークンが見つからなければ未ログイン扱いにする
         if (string.IsNullOrWhiteSpace(savedToken))
-        {
             return new AuthenticationState(new ClaimsPrincipal(new ClaimsIdentity()));
-        }
 
         // HttpClientのヘッダーにトークンを加える
         _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("bearer", savedToken);
@@ -56,10 +54,7 @@ public class SpaAuthenticateProvider : AuthenticationStateProvider
         await _localStorage.RemoveItemAsync("userName");
         await _localStorage.RemoveItemAsync("authToken");
         await _localStorage.RemoveItemAsync("userId");
-        if (_httpClient.DefaultRequestHeaders.Authorization != null)
-        {
-            _httpClient.DefaultRequestHeaders.Authorization = null;
-        }
+        _httpClient.DefaultRequestHeaders.Authorization = null;
         NotifyAuthenticationStateChanged(GetAuthenticationStateAsync());
     }
 }

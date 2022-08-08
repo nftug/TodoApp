@@ -21,7 +21,7 @@ public class Edit : EditBase<User, UserResultDTO.Me, UserCommandDTO>
         protected override void Put(User origin, UserCommandDTO command)
         {
             origin.Edit(
-                userName: new(command.Username),
+                userName: new(command.UserName),
                 email: new(command.Email)
             );
         }
@@ -29,7 +29,7 @@ public class Edit : EditBase<User, UserResultDTO.Me, UserCommandDTO>
         protected override void Patch(User origin, UserCommandDTO command)
         {
             origin.Edit(
-                userName: command.Username != null ? new(command.Username) : origin.UserName,
+                userName: command.UserName != null ? new(command.UserName) : origin.UserName,
                 email: command.Email != null ? new(command.Email) : origin.Email
             );
         }

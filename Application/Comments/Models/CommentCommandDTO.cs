@@ -10,4 +10,13 @@ public class CommentCommandDTO : ICommandDTO<Comment>
     [CommentContent]
     public string? Content { get; set; } = null!;
     public Guid TodoId { get; set; }
+
+    public CommentCommandDTO() { }
+
+    public CommentCommandDTO(CommentResultDTO origin)
+    {
+        Id = origin.Id;
+        Content = origin.Content;
+        TodoId = origin.TodoId;
+    }
 }

@@ -28,9 +28,9 @@ internal class TodoFilterSpecification : FilterSpecificationBase<Todo, TodoDataM
 
         ExpressionGroups.AddSearch(_param.Q, k =>
             ExpressionCombiner.OrElse(
-                k.Contains("Title"),
-                k.Contains("Description"),
-                k.ContainsInChildren<CommentDataModel>("Comments", "Content")));
+                Contains(k, "Title"),
+                Contains(k, "Description"),
+                ContainsInChildren<CommentDataModel>(k, "Comments", "Content")));
 
         ExpressionGroups.AddSearch(_param.Title, k => Contains(k, "Title"));
 

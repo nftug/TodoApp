@@ -5,12 +5,8 @@ namespace Application.Todos.Models;
 
 public class TodoStateDTO : TodoState
 {
-    public TodoStateDTO(int? value) : base(value)
-    {
-    }
+    public TodoStateDTO(int? value) : base(value) { }
 
     [JsonConstructor]
-    public TodoStateDTO() : base(null)
-    {
-    }
+    public TodoStateDTO() : base(null) { }
 }
