@@ -1,0 +1,50 @@
+@using Client.Models
+@using Client.Services.Authentication
+@using Client.Components
+@using Microsoft.AspNetCore.Components.Authorization
+@using MudBlazor
+
+@inject NavigationManager Navigation
+@inject IAuthService AuthService
+@inject IDialogService DialogService
+@inject ISnackbar Snackbar
+@inject AuthStoreService AuthStoreService
+
+<MudMenu AnchorOrigin="Origin.BottomRight" FullWidth>
+    <ActivatorContent>
+        <div class="d-flex justify-end" style="width: 150px">
+            <MudButton Variant="Variant.Text" EndIcon="@Icons.Filled.AccountCircle" Color="Color.Inherit">
+                <AuthorizeView>
+                    <Authorized>@AuthStoreService.UserName</Authorized>
+                    <NotAuthorized>@AuthStoreService.UserName</NotAuthorized>
+                </AuthorizeView>
+            </MudButton>
+        </div>
+    </ActivatorContent>
+    <ChildContent>
+        <AuthorizeView>
+            <Authorized>
+                <MudMenuItem OnClick="@LogoutAsync">ログアウト</MudMenuItem>
+            </Authorized>
+            <NotAuthorized>
+                <MudMenuItem Href="login">ログイン</MudMenuItem>
+            </NotAuthorized>
+        </AuthorizeView>
+    </ChildContent>
+</MudMenu>
+
+@code {
+    public async Task LogoutAsync()
+    {
+        bool? result = await DialogService.ShowMessageBox(
+            "ログアウト",
+            "ログアウトしますか？",
+            yesText: "OK", cancelText: "キャンセル");
+
+        if (result == null) return;
+
+        await AuthService.LogoutAsync();
+        Snackbar.Add("ログアウトしました。", Severity.Info);
+        Navigation.NavigateTo("", false);
+    }
+}

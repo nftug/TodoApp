@@ -1,0 +1,34 @@
+﻿@page "/fetchtodo"
+@attribute [Authorize]
+@inherits MyComponentBase
+
+@using Client.Models
+@using Client.Components
+@using Application.Todos.Models
+
+<PageTitle>Todo List</PageTitle>
+
+<MudText Typo="Typo.h3" GutterBottom="true">Todo List</MudText>
+
+@if (IsLoading || TodoItems == null)
+{
+    <div class="d-flex justify-center mt-16 pt-16">
+        <MudProgressCircular Color="Color.Default" Indeterminate="true" />
+    </div>
+}
+else
+{
+    <MudText Class="mb-6">@(TodoItems.TotalItems) 個の項目が見つかりました。</MudText>
+
+    <TodoItemList
+        Items="@TodoItems.Results"
+        OnEditItem="@OnEditItem"
+        OnDeleteItem="@(() => FetchData(showIndicator: false))"
+        OnChangeState="@(() => FetchData(showIndicator: false))" />
+
+    <div class="d-flex justify-center">
+        <PaginationLink Items="@TodoItems" class="mt-6" />
+    </div>
+}
+
+<TodoCreateFab OnCreateItem="@(() => FetchData(showIndicator: false))" />

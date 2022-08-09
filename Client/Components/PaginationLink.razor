@@ -1,39 +1,31 @@
-@inject NavigationManager NavigationManager
+@inject NavigationManager Navigation
 @typeparam T
 
 @using Client.Models
 
-<ul class="pagination justify-content-center">
-    <li class=@(GetPageNavigatorClass(Items.PreviousPage))>
-        <a class="page-link" href=@(GetUriWithPage(Items.PreviousPage)) aria-label="Previous">
-            <span aria-hidden="true">&laquo;</span>
-        </a>
-    </li>
+@if (Items == null) return;
 
-    @foreach (int i in Enumerable.Range(1, Items.TotalPages))
-    {
-        <li class=@(GetPageItemClass(i))>
-            <a class="page-link" href=@(GetUriWithPage(i))>@i</a>
-        </li>
-    }
-
-    <li class=@(GetPageNavigatorClass(Items.NextPage))>
-        <a class="page-link" href=@(GetUriWithPage(Items.NextPage)) aria-label="Next">
-            <span aria-hidden="true">&raquo;</span>
-        </a>
-    </li>
-</ul>
+<MudPagination Count="Items.TotalPages" Selected="Page"
+    SelectedChanged="OnChangePage" @attributes="@Attributes" />
 
 @code {
     [Parameter]
-    public Pagination<T> Items { get; set; } = null!;
+    public Pagination<T>? Items { get; set; } = null!;
 
-    private string GetUriWithPage(int? page)
-        => NavigationManager.GetUriWithQueryParameter("page", page);
+    [Parameter(CaptureUnmatchedValues = true)]
+    public Dictionary<string, object>? Attributes { get; set; }
 
-    private string? GetPageNavigatorClass(int? pageNextOrPrev)
-        => $"page-item{(pageNextOrPrev == null ? " disabled" : null)}";
+    private int Page { get; set; }
 
-    private string? GetPageItemClass(int page)
-        => $"page-item{(Items.CurrentPage == page ? " active" : null)}";
+    protected override void OnParametersSet()
+    {
+        Page = Items?.CurrentPage ?? 1;
+    }
+
+    private void OnChangePage(int value)
+    {
+        Page = value;
+        var uri = Navigation.GetUriWithQueryParameter("page", value);
+        Navigation.NavigateTo(uri);
+    }
 }

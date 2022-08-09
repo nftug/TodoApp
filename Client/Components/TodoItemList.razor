@@ -3,81 +3,67 @@
 @using Domain.Todos.ValueObjects
 @using Client.Models
 
-@inherits MyAuthComponentBase
+<MudTable Items="Items" Hover Dense Elevation="0" AnchorOrigin="Origin.BottomLeft">
+    <ColGroup>
+        <col />
+        <col style="width: 150px;" />
+        <col style="width: 150px;" />
+        <col style="width: 150px;"/>
+        <col style="width: 50px;"/>
+    </ColGroup>
 
-<table class="table">
-    <thead>
-        <tr>
-            <th width="60%">タイトル</th>
-            <th class="d-none d-lg-table-cell">開始</th>
-            <th class="d-none d-lg-table-cell">終了</th>
-            <th>状態</th>
-            <th>操作</th>
-        </tr>
-    </thead>
+    <HeaderContent>
+        <MudTh>タイトル</MudTh>
+        <MudTh>開始日</MudTh>
+        <MudTh>終了日</MudTh>
+        <MudTh style="text-align: center">状態</MudTh>
+        <MudTh style="text-align: center"></MudTh>
+    </HeaderContent>
 
-    <tbody>
-        @foreach (var item in Items)
-        {
-            <tr class="align-middle">
-                <td>@item.Title</td>
-                <td class="d-none d-lg-table-cell">
-                    @item.StartDate?.ToShortDateString()
-                </td>
-                <td class="d-none d-lg-table-cell">
-                    @item.EndDate?.ToShortDateString()
-                </td>
-                <td>
-                    <span class="dropdown-toggle badge @(TodoBgClass(item))" role="button"
-                        id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">
-                        @item.State.DisplayValue
-                    </span>
+    <RowTemplate>
+        <MudTd DataLabel="タイトル" Style="@((IsOwnedByUser(context) ? "cursor: pointer" : null))"
+            @onclick="@(() => EditItem(context))">
+            <MudLink Typo="Typo.body2" Disabled="@(!IsOwnedByUser(context))">
+                @context.Title
+            </MudLink>
+        </MudTd>
+        <MudTd DataLabel="開始日">@(context.StartDate?.ToShortDateString() ?? "-")</MudTd>
+        <MudTd DataLabel="終了日">@(context.EndDate?.ToShortDateString() ?? "-")</MudTd>
+        <MudTd DataLabel="状態" style="text-align: center">
+            <MudMenu Dense>
+                <ActivatorContent>
+                    <MudChip Icon="@(GetTodoIcon(context))" Color="@(GetTodoChipColor(context))">
+                        @context.State.DisplayValue
+                    </MudChip>
+                </ActivatorContent>
+                <ChildContent>
+                    @foreach (var state in TodoState.Status)
+                    {
+                        <MudMenuItem
+                            OnClick="@(() => ChangeState(context, state))"
+                            Disabled="@(IsDisabledChangeState(context, state))">
+                            @(state.DisplayValue)に切り替え
+                        </MudMenuItem>
+                    }
+                </ChildContent>
+            </MudMenu>
+        </MudTd>
+        <MudTd DataLabel="操作" style="text-align: center">
+            <MudMenu Dense Icon="@Icons.Material.Filled.MoreVert" Disabled="@(!IsOwnedByUser(context))">
+                <MudMenuItem OnClick="@(() => EditItem(context))">編集</MudMenuItem>
+                <MudMenuItem OnClick="@(() => DeleteItem(context))">削除</MudMenuItem>
+            </MudMenu>
+        </MudTd>
+    </RowTemplate>
+</MudTable>
 
-                    <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
-                        <li class="@(GetDropdownClass(item, TodoState.Todo))" role="button"
-                            @onclick=@(async () => await OnClickChangeState.InvokeAsync((item.Id, TodoState.Todo)))>
-                            Todoに切り替え
-                        </li>
-                        <li class="@(GetDropdownClass(item, TodoState.Doing))" role="button"
-                            @onclick=@(async () => await OnClickChangeState.InvokeAsync((item.Id, TodoState.Doing)))>
-                            Doingに切り替え
-                        </li>
-                        <li class="@(GetDropdownClass(item, TodoState.Done))" role="button"
-                            @onclick=@(async () => await OnClickChangeState.InvokeAsync((item.Id, TodoState.Done)))>
-                            Doneに切り替え
-                        </li>
-                    </ul>
-                </td>
-                <td>
-                    <button type="button" class="btn btn-primary btn-sm" disabled=@(!IsOwnedByUser(item))
-                        @onclick=@(async () => await OnClickEdit.InvokeAsync(item))>
-                        <span class="oi oi-pencil" aria-hidden="true"></span>
-                    </button>
-                </td>
-            </tr>
-        }
-    </tbody>
-</table>
-
-@code {
-    [Parameter]
-    public IEnumerable<TodoResultDTO> Items { get; set; } = null!;
-    [Parameter]
-    public EventCallback<TodoResultDTO> OnClickEdit { get; set; }
-    [Parameter]
-    public EventCallback<(Guid, TodoState)> OnClickChangeState { get; set; }
-
-    private string TodoBgClass(TodoResultDTO item)
-        => item.State == TodoState.Doing
-            ? "bg-secondary"
-            : item.State == TodoState.Done
-            ? "bg-success"
-            : "bg-primary";
-
-    private string GetDropdownClass(TodoResultDTO item, TodoState state)
-        => !IsOwnedByUser(item) || item.State.Value == state.Value
-            ? "dropdown-item disabled"
-            : "dropdown-item";
-
-    private bool IsOwnedByUser(TodoResultDTO item) => item.OwnerUserId == UserId;
-}
+<MudMessageBox @ref="DeleteConfirm" Title="Todoの削除" CancelText="キャンセル">
+    <MessageContent>
+        本当にこのTodoを削除しますか？
+    </MessageContent>
+    <YesButton>
+        <MudButton Variant="Variant.Filled" Color="Color.Error" StartIcon="@Icons.Material.Filled.DeleteForever">
+            削除
+        </MudButton>
+    </YesButton>
+</MudMessageBox>

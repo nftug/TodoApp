@@ -13,6 +13,8 @@ public class TodoState : ValueObject<TodoState>
     public static readonly TodoState Doing = new(1);
     public static readonly TodoState Done = new(2);
 
+    public static readonly TodoState[] Status = new TodoState[] { Todo, Doing, Done };
+
     public TodoState(int? value)
     {
         if (value < 0 || value > MaxStateValue)

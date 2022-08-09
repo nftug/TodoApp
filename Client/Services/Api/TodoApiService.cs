@@ -2,12 +2,15 @@ using System.Net.Http.Json;
 using Application.Todos.Models;
 using Domain.Todos.Queries;
 using Domain.Todos.ValueObjects;
+using Microsoft.AspNetCore.Components;
+using MudBlazor;
 
 namespace Client.Services.Api;
 
 public class TodoApiService : ApiServiceBase<TodoResultDTO, TodoCommandDTO, TodoQueryParameter>
 {
-    public TodoApiService(HttpClient httpClient) : base(httpClient)
+    public TodoApiService(HttpClient httpClient, ISnackbar snackbar, NavigationManager navigation)
+        : base(httpClient, snackbar, navigation)
     {
     }
 
@@ -17,6 +20,6 @@ public class TodoApiService : ApiServiceBase<TodoResultDTO, TodoCommandDTO, Todo
     {
         var command = new TodoStateCommand { State = state.Value };
         var response = await _httpClient.PutAsJsonAsync($"{Resource}/{id}/state", command);
-        return await response.Content.ReadFromJsonAsync<TodoResultDTO>();
+        return await HandleResponse(response);
     }
 }

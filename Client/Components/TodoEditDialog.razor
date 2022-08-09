@@ -1,0 +1,37 @@
+@using Client.Models
+@using Client.Services.Api
+
+<MudDialog>
+    <TitleContent>
+        <MudText Typo="Typo.h6">
+            <MudIcon Icon="@Icons.Material.Filled.Check" Class="mr-3 mb-n1"/>
+            @MudDialog.Title
+        </MudText>
+    </TitleContent>
+
+    <DialogContent>
+        <EditForm EditContext="@EditContext">
+            <DataAnnotationsValidator />
+            <MudTextField @bind-Value="@Command.Title" Label="タイトル" For="@(() => Command.Title)" Class="mb-3" />
+            <MudTextField @bind-Value="@Command.Description" Label="説明" Lines="5" For="@(() => Command.Description)" Class="mb-3" />
+            <MudGrid>
+                <MudItem xs="12" md="6">
+                    <MudDatePicker @bind-Date="@Command.StartDate" Label="開始日" Clearable
+                        For="@(() => Command.StartDate)" Class="mb-3" />
+                </MudItem>
+                <MudItem xs="12" md="6">
+                    <MudDatePicker @bind-Date="@Command.EndDate" Label="終了日" Clearable
+                       For="@(() => Command.EndDate)" Class="mb-3" />
+                </MudItem>
+            </MudGrid>
+        </EditForm>
+    </DialogContent>
+
+    <DialogActions>
+        <MudButton OnClick="Cancel">キャンセル</MudButton>
+        <MudButton Color="Color.Primary" Variant="Variant.Filled" OnClick="@SubmitTodo"
+            Disabled="@(EditContext.IsModified() && !EditContext.Validate())">
+            保存
+        </MudButton>
+    </DialogActions>
+</MudDialog>

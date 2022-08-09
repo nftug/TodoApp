@@ -1,0 +1,24 @@
+@using Application.Todos.Models
+@using Client.Services.Api
+
+@inject TodoApiService TodoApiService
+@inject IDialogService DialogService
+
+<span class="todo-create-fab">
+    <MudFab Color="Color.Primary" StartIcon="@Icons.Material.Filled.Add" OnClick="@CreateItem" />
+</span>
+
+@code {
+    [Parameter]
+    public EventCallback<TodoResultDTO> OnCreateItem { get; set; }
+
+    private async Task CreateItem()
+    {
+        var parameters = new DialogParameters { ["Command"] = new TodoCommandDTO() };
+        var options = new DialogOptions { MaxWidth = MaxWidth.Small };
+        var dialog = DialogService.Show<TodoEditDialog>("Todoの作成", parameters, options);
+        var result = await dialog.Result;
+
+        if (!result.Cancelled) await OnCreateItem.InvokeAsync();
+    }
+}

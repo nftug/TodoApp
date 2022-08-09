@@ -1,0 +1,32 @@
+@page "/login"
+@inherits MyComponentBase
+
+@using Client.Models
+
+<PageTitle>ログイン</PageTitle>
+
+@if (IsLoading)
+{
+    <div class="d-flex justify-center mt-16 pt-16">
+        <MudProgressCircular Color="Color.Default" Indeterminate="true" />
+    </div>
+    return;
+}
+
+<MudContainer Class="my-8 py-8" MaxWidth="MaxWidth.ExtraSmall">
+    <MudText Typo="Typo.h4" GutterBottom="true" class="mb-5">ログイン</MudText>
+
+    <EditForm Model="@LoginCommand" OnValidSubmit="SubmitAsync">
+        <DataAnnotationsValidator />
+
+        <MudTextField Class="my-2" FullWidth="true" Label="Email" @bind-Value="@LoginCommand.Email"
+            For="@(() => LoginCommand.Email)" />
+        <MudTextField Class="my-2" FullWidth="true" Label="パスワード" @bind-Value="@LoginCommand.Password"
+            For="@(() => LoginCommand.Password)" InputType="InputType.Password" />
+
+        <MudButton Class="mt-7" Variant="Variant.Filled" StartIcon="@Icons.Filled.Login"
+            Color="Color.Primary" FullWidth="true" ButtonType="ButtonType.Submit">
+            ログイン
+        </MudButton>
+    </EditForm>
+</MudContainer>

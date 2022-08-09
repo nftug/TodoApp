@@ -1,0 +1,32 @@
+@using Microsoft.AspNetCore.Components.Authorization
+@using System.Security.Claims
+@using Client.Services.Authentication
+
+@inject AuthStoreService AuthStoreService
+
+<AuthorizeView>
+    <Authorized>
+        @{
+            SetCurrentUser();
+        }
+    </Authorized>
+    <NotAuthorized>
+        @{
+            SetCurrentUser();
+        }
+    </NotAuthorized>
+</AuthorizeView>
+
+@code {
+    [CascadingParameter]
+    public Task<AuthenticationState> AuthenticationStateTask { get; set; } = null!;
+
+    private void SetCurrentUser()
+    {
+        InvokeAsync(async () =>
+        {
+            var user = (await AuthenticationStateTask).User;
+            AuthStoreService.SetUser(user);
+        });
+    }
+}
