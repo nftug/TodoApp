@@ -3,7 +3,16 @@
 @using Domain.Todos.ValueObjects
 @using Client.Models
 
-<MudTable Items="Items" Hover Dense Elevation="0" AnchorOrigin="Origin.BottomLeft">
+<MudTable Items="Items" Hover Dense Elevation="0" AnchorOrigin="Origin.BottomLeft" Loading="@IsLoading">
+    <ToolBarContent>
+        <MudSpacer />
+        <form class="d-flex justify-end" @onsubmit="@DoSearch">
+            <MudTextField @bind-Value="@SearchText" Placeholder="検索" Adornment="Adornment.Start"
+                Margin="Margin.Dense" AdornmentIcon="@Icons.Material.Filled.Search"
+                Class="mt-0 mb-4" Style="width: 300px;" Clearable />
+        </form>
+    </ToolBarContent>
+
     <ColGroup>
         <col />
         <col style="width: 150px;" />
@@ -21,7 +30,8 @@
     </HeaderContent>
 
     <RowTemplate>
-        <MudTd DataLabel="タイトル" Style="@((IsOwnedByUser(context) ? "cursor: pointer" : null))"
+        <MudTd DataLabel="タイトル"
+            Style="@((IsOwnedByUser(context) ? "cursor: pointer" : null))"
             @onclick="@(() => EditItem(context))">
             <MudLink Typo="Typo.body2" Disabled="@(!IsOwnedByUser(context))">
                 @context.Title

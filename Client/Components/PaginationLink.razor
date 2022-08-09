@@ -17,7 +17,7 @@
 
     private int Page { get; set; }
 
-    protected override void OnParametersSet()
+    protected override void OnInitialized()
     {
         Page = Items?.CurrentPage ?? 1;
     }

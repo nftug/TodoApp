@@ -1,6 +1,5 @@
 using Application.Todos.Models;
 using Client.Services.Api;
-using Client.Services.Authentication;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Forms;
 using MudBlazor;

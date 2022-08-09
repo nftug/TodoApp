@@ -1,4 +1,5 @@
 using Application.Todos.Models;
+using Client.Extensions;
 using Client.Services.Api;
 using Client.Services.Authentication;
 using Domain.Todos.ValueObjects;
@@ -17,6 +18,8 @@ public partial class TodoItemList : ComponentBase
     private AuthStoreService AuthStoreService { get; set; } = null!;
     [Inject]
     private IDialogService DialogService { get; set; } = null!;
+    [Inject]
+    private NavigationManager Navigation { get; set; } = null!;
 
     [Parameter]
     public IEnumerable<TodoResultDTO> Items { get; set; } = null!;
@@ -26,8 +29,16 @@ public partial class TodoItemList : ComponentBase
     public EventCallback OnDeleteItem { get; set; }
     [Parameter]
     public EventCallback<TodoResultDTO> OnChangeState { get; set; }
+    [Parameter]
+    public bool IsLoading { get; set; }
 
     private MudMessageBox? DeleteConfirm { get; set; }
+    private string SearchText { get; set; } = string.Empty;
+
+    protected override void OnParametersSet()
+    {
+        SearchText = Navigation.QueryString("q") ?? string.Empty;
+    }
 
     private static Color GetTodoChipColor(TodoResultDTO item)
         => item.State == TodoState.Doing
@@ -78,5 +89,11 @@ public partial class TodoItemList : ComponentBase
         Snackbar.Add("Todoの状態を変更しました。", Severity.Success);
 
         await OnChangeState.InvokeAsync(item);
+    }
+
+    private void DoSearch()
+    {
+        var uri = $"{Navigation.Uri.Split('?')[0]}?q={SearchText}";
+        Navigation.NavigateTo(uri);
     }
 }
