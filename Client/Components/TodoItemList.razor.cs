@@ -85,7 +85,6 @@ public partial class TodoItemList : ComponentBase
     private async Task ChangeState(TodoResultDTO item, TodoState state)
     {
         var newItem = await TodoApiService.ChangeState(item.Id, state);
-        if (newItem == null) return;
         Snackbar.Add("Todoの状態を変更しました。", Severity.Success);
 
         await OnChangeState.InvokeAsync(item);
@@ -93,7 +92,8 @@ public partial class TodoItemList : ComponentBase
 
     private void DoSearch()
     {
-        var uri = $"{Navigation.Uri.Split('?')[0]}?q={SearchText}";
+        var querySuffix = !string.IsNullOrWhiteSpace(SearchText) ? $"?q={SearchText}" : null;
+        var uri = $"{Navigation.Uri.Split('?')[0]}{querySuffix}";
         Navigation.NavigateTo(uri);
     }
 }

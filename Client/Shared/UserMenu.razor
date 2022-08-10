@@ -2,12 +2,10 @@
 @using Client.Services.Authentication
 @using Client.Components
 @using Microsoft.AspNetCore.Components.Authorization
-@using MudBlazor
 
 @inject NavigationManager Navigation
 @inject IAuthService AuthService
 @inject IDialogService DialogService
-@inject ISnackbar Snackbar
 @inject AuthStoreService AuthStoreService
 
 <MudMenu AnchorOrigin="Origin.BottomRight" FullWidth>
@@ -44,7 +42,6 @@
         if (result == null) return;
 
         await AuthService.LogoutAsync();
-        Snackbar.Add("ログアウトしました。", Severity.Info);
         Navigation.NavigateTo("", false);
     }
 }

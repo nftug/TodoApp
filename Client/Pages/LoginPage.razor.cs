@@ -4,7 +4,6 @@ using Client.Models;
 using Client.Services.Authentication;
 using Domain.Users.ValueObjects;
 using Microsoft.AspNetCore.Components;
-using MudBlazor;
 
 namespace Client.Pages;
 
@@ -12,8 +11,6 @@ public partial class LoginPage : MyComponentBase
 {
     [Inject]
     protected IAuthService AuthService { get; set; } = null!;
-    [Inject]
-    private ISnackbar Snackbar { get; set; } = null!;
 
     [SupplyParameterFromQuery]
     [Parameter]
@@ -34,14 +31,7 @@ public partial class LoginPage : MyComponentBase
         var result = await AuthService.LoginAsync(model);
 
         if (result.IsSuccessful)
-        {
-            Snackbar.Add("ログインしました。", Severity.Info);
             Navigation.NavigateTo(Redirect ?? "/");
-        }
-        else
-        {
-            Snackbar.Add("ログインに失敗しました。", Severity.Error);
-        }
 
         IsLoading = false;
     }
@@ -50,7 +40,6 @@ public partial class LoginPage : MyComponentBase
 public class LoginCommand
 {
     [UserEmail]
-    // [Required(ErrorMessage = "メールアドレスを入力してください。")]
     public string Email { get; set; } = string.Empty;
 
     [Required(ErrorMessage = "パスワードを入力してください。")]

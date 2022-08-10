@@ -7,24 +7,16 @@
         <form class="d-flex justify-end" @onsubmit="@DoSearch">
             <MudTextField @bind-Value="@SearchText" Placeholder="検索" Adornment="Adornment.Start"
                 Margin="Margin.Dense" AdornmentIcon="@Icons.Material.Filled.Search"
-                Class="mt-0 mb-4" Style="width: 300px;" Clearable />
+                Class="mt-0 mb-4" Style="width: 300px" Clearable OnClearButtonClick="@DoSearch" />
         </form>
     </ToolBarContent>
 
-    <ColGroup>
-        <col style="width: 100%;" />
-        <col style="width: 150px;" />
-        <col style="width: 150px;" />
-        <col style="width: 150px;"/>
-        <col style="width: 50px;"/>
-    </ColGroup>
-
     <HeaderContent>
-        <MudTh>タイトル</MudTh>
-        <MudTh>開始日</MudTh>
-        <MudTh>終了日</MudTh>
-        <MudTh style="text-align: center">状態</MudTh>
-        <MudTh style="text-align: center"></MudTh>
+        <MudTh Style="width: 100%">タイトル</MudTh>
+        <MudTh Style="min-width: 150px">開始日</MudTh>
+        <MudTh Style="min-width: 150px">終了日</MudTh>
+        <MudTh Style="width: 150px; text-align: center;">状態</MudTh>
+        <MudTh Style="width: 50px; text-align: center;"></MudTh>
     </HeaderContent>
 
     <RowTemplate>
@@ -56,7 +48,7 @@
                 </ChildContent>
             </MudMenu>
         </MudTd>
-        <MudTd DataLabel="操作" style="text-align: center">
+        <MudTd DataLabel="" style="text-align: center">
             <MudMenu Dense Icon="@Icons.Material.Filled.MoreVert" Disabled="@(!IsOwnedByUser(context))">
                 <MenuButton OnClick="@(() => EditItem(context))">
                     編集
