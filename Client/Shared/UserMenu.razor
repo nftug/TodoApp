@@ -41,7 +41,7 @@
 
     public void OnNotifyAuthStoreChange() => InvokeAsync(StateHasChanged);
 
-    public async Task Logout()
+    private async Task Logout()
     {
         bool? result = await DialogService.ShowMessageBox(
             "ログアウト",

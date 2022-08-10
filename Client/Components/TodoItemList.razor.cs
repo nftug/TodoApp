@@ -41,21 +41,27 @@ public partial class TodoItemList : ComponentBase
     }
 
     private static Color GetTodoChipColor(TodoResultDTO item)
-        => item.State == TodoState.Doing
+    {
+        var state = TodoState.CreateFromString(item.State);
+        return state == TodoState.Doing
             ? Color.Tertiary
-            : item.State == TodoState.Done
+            : state == TodoState.Done
             ? Color.Success
             : Color.Primary;
+    }
 
     private static string GetTodoIcon(TodoResultDTO item)
-        => item.State == TodoState.Doing
+    {
+        var state = TodoState.CreateFromString(item.State);
+        return state == TodoState.Doing
             ? Icons.Outlined.IndeterminateCheckBox
-            : item.State == TodoState.Done
+            : state == TodoState.Done
             ? Icons.Outlined.CheckBox
             : Icons.Outlined.CheckBoxOutlineBlank;
+    }
 
     private bool IsDisabledChangeState(TodoResultDTO item, TodoState state)
-        => !IsOwnedByUser(item) || item.State.Value == state.Value;
+        => !IsOwnedByUser(item) || TodoState.CreateFromString(item.State) == state;
 
     private bool IsOwnedByUser(TodoResultDTO item) => item.OwnerUserId == AuthStoreService.UserId;
 

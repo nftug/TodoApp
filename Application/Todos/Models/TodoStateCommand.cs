@@ -8,5 +8,5 @@ public class TodoStateCommand : ICommandDTO<Todo>
 {
     public Guid? Id { get; set; }
     [TodoState]
-    public int? State { get; set; }
+    public string? State { get; set; }
 }

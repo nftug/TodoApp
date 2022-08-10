@@ -1,16 +1,17 @@
 using System.ComponentModel.DataAnnotations;
 using Application.Users.Models;
-using Client.Models;
 using Client.Services.Authentication;
 using Domain.Users.ValueObjects;
 using Microsoft.AspNetCore.Components;
 
 namespace Client.Pages;
 
-public partial class LoginPage : MyComponentBase
+public partial class LoginPage : ComponentBase
 {
     [Inject]
     protected IAuthService AuthService { get; set; } = null!;
+    [Inject]
+    protected NavigationManager Navigation { get; set; } = null!;
 
     [SupplyParameterFromQuery]
     [Parameter]

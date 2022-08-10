@@ -12,7 +12,7 @@ public class TodoResultDTO : IResultDTO<Todo>
     public string? Description { get; init; }
     public DateTime? StartDate { get; init; }
     public DateTime? EndDate { get; init; }
-    public TodoStateDTO State { get; init; } = null!;
+    public string State { get; init; } = null!;
     public List<CommentResultDTO> Comments { get; init; } = null!;
     public DateTime CreatedOn { get; init; }
     public DateTime UpdatedOn { get; init; }
@@ -28,7 +28,7 @@ public class TodoResultDTO : IResultDTO<Todo>
         Description = todo.Description?.Value;
         StartDate = todo.Period?.StartDateValue;
         EndDate = todo.Period?.EndDateValue;
-        State = new(todo.State.Value);
+        State = todo.State.DisplayValue;
         Comments = todo.Comments
             .Select(x => new CommentResultDTO(x))
             .ToList();

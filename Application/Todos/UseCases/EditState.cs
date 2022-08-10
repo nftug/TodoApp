@@ -3,6 +3,7 @@ using Application.Todos.Models;
 using Domain.Services;
 using Domain.Shared.Interfaces;
 using Domain.Todos.Entities;
+using Domain.Todos.ValueObjects;
 
 namespace Application.Todos.UseCases;
 
@@ -24,7 +25,7 @@ public class EditState : EditBase<Todo, TodoResultDTO, TodoStateCommand>
 
         protected override void Patch(Todo origin, TodoStateCommand command)
         {
-            origin.SetState(new(command.State));
+            origin.SetState(TodoState.CreateFromString(command.State)!);
         }
     }
 }

@@ -16,7 +16,7 @@ public class TodoCommandDTO : ICommandDTO<Todo>
     [TodoPeriod(ArgumentType.End, "StartDate")]
     public DateTime? EndDate { get; set; }
     [TodoState]
-    public int? State { get; set; }
+    public string? State { get; set; }
 
     public TodoCommandDTO() { }
 
@@ -27,6 +27,6 @@ public class TodoCommandDTO : ICommandDTO<Todo>
         Description = origin.Description;
         StartDate = origin.StartDate;
         EndDate = origin.EndDate;
-        State = origin.State.Value;
+        State = origin.State;
     }
 }

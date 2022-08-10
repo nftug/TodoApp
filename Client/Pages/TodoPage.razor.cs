@@ -3,23 +3,26 @@ using Application.Todos.Models;
 using Domain.Todos.Queries;
 using Client.Models;
 using Client.Services.Api;
+using Client.Extensions;
 
 namespace Client.Pages;
 
-public partial class TodoPage : MyComponentBase
+public partial class TodoPage : ComponentBase
 {
+    [Inject]
+    protected NavigationManager Navigation { get; set; } = null!;
     [Inject]
     private TodoApiService TodoApiService { get; set; } = null!;
 
     [SupplyParameterFromQuery]
     [Parameter]
-    public string Page { get; set; } = null!;
+    public string? Page { get; set; } = null!;
     [SupplyParameterFromQuery]
     [Parameter]
-    public string Q { get; set; } = null!;
+    public string? Q { get; set; } = null!;
     [SupplyParameterFromQuery]
     [Parameter]
-    public string State { get; set; } = null!;
+    public string? State { get; set; } = null!;
 
     private Pagination<TodoResultDTO>? TodoItems { get; set; } = null;
     private bool IsLoading { get; set; }
@@ -34,9 +37,9 @@ public partial class TodoPage : MyComponentBase
         var param = new TodoQueryParameter
         {
             Limit = 10,
-            Page = ParsePage(Page),
+            Page = Page.ParseAsPage(),
             Q = Q,
-            State = ParseState(State)
+            State = State
         };
 
         InvokeAsync(async () =>
@@ -53,7 +56,7 @@ public partial class TodoPage : MyComponentBase
     private void OnEditItem(TodoResultDTO item)
     {
         bool isParameterChanged =
-            ParsePage(Page) != 1
+            Page.ParseAsPage() != 1
              || !string.IsNullOrEmpty(Q)
              || !string.IsNullOrEmpty(State);
 
@@ -62,8 +65,4 @@ public partial class TodoPage : MyComponentBase
         else
             FetchData(showIndicator: false);
     }
-
-    // TODO: あとで文字列でも検索できるようにする (QueryParameterから書き換える)
-    private static int? ParseState(string? value)
-        => ParseIntParam(value, (x, canParse) => canParse ? x : null);
 }

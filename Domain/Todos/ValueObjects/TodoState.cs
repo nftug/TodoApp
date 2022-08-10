@@ -23,6 +23,9 @@ public class TodoState : ValueObject<TodoState>
         Value = value != null ? (int)value : Todo.Value;
     }
 
+    public static TodoState? CreateFromString(string? value)
+        => Status.FirstOrDefault(x => x.DisplayValue.ToLower() == value?.ToLower()) ?? null;
+
     protected override bool EqualsCore(TodoState other) => Value == other.Value;
 
     public string DisplayValue
@@ -36,7 +39,13 @@ public class TodoState : ValueObject<TodoState>
     }
 }
 
-public class TodoStateAttribute : ValueObjectAttributeBase<TodoState, int?>
+public class TodoStateAttribute : ValueObjectAttributeBase<TodoState, string?>
 {
-    protected override TodoState CreateValueObject(int? value) => new(value);
+    protected override TodoState CreateValueObject(string? value)
+    {
+        var result = TodoState.CreateFromString(value);
+        if (result == null)
+            throw new DomainException(nameof(TodoState), "不正な値です。");
+        return result;
+    }
 }

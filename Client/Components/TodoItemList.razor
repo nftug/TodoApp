@@ -33,7 +33,7 @@
             <MudMenu Dense>
                 <ActivatorContent>
                     <MudChip Icon="@(GetTodoIcon(context))" Color="@(GetTodoChipColor(context))">
-                        @context.State.DisplayValue
+                        @context.State.ToUpper()
                     </MudChip>
                 </ActivatorContent>
                 <ChildContent>

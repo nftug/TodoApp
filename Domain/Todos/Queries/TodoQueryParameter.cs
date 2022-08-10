@@ -10,7 +10,7 @@ public class TodoQueryParameter : IQueryParameter<Todo>
     public string? Description { get; set; }
     public string? Comment { get; set; }
     public string? UserName { get; set; }
-    public int? State { get; set; }
+    public string? State { get; set; }
     public Guid? UserId { get; set; }
     public int? Page { get; init; } = 1;
     public int? Limit { get; init; } = 10;

@@ -5,6 +5,7 @@ using Domain.Todos.Queries;
 using Domain.Shared.Queries;
 using Infrastructure.Shared.Specifications.Filter.Extensions;
 using Infrastructure.Shared.Specifications.Filter;
+using Domain.Todos.ValueObjects;
 
 namespace Infrastructure.Todos;
 
@@ -24,7 +25,8 @@ internal class TodoFilterSpecification : FilterSpecificationBase<Todo, TodoDataM
 
         ExpressionGroups.AddSimpleSearch(_param.UserId, x => x.OwnerUserId == _param.UserId);
 
-        ExpressionGroups.AddSimpleSearch(_param.State, x => x.State == _param.State);
+        var state = TodoState.CreateFromString(_param.State)?.Value;
+        ExpressionGroups.AddSimpleSearch(state, x => x.State == state);
 
         ExpressionGroups.AddSearch(_param.Q, k =>
             ExpressionCombiner.OrElse(
