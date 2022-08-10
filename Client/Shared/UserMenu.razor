@@ -1,38 +1,47 @@
-@using Client.Models
 @using Client.Services.Authentication
 @using Client.Components
-@using Microsoft.AspNetCore.Components.Authorization
 
 @inject NavigationManager Navigation
 @inject IAuthService AuthService
 @inject IDialogService DialogService
 @inject AuthStoreService AuthStoreService
 
+@implements IDisposable
+
 <MudMenu AnchorOrigin="Origin.BottomRight" FullWidth>
     <ActivatorContent>
         <div class="d-flex justify-end" style="width: 150px">
             <MudButton Variant="Variant.Text" EndIcon="@Icons.Filled.AccountCircle" Color="Color.Inherit">
-                <AuthorizeView>
-                    <Authorized>@AuthStoreService.UserName</Authorized>
-                    <NotAuthorized>@AuthStoreService.UserName</NotAuthorized>
-                </AuthorizeView>
+                @AuthStoreService.UserName
             </MudButton>
         </div>
     </ActivatorContent>
     <ChildContent>
-        <AuthorizeView>
-            <Authorized>
-                <MenuButton OnClick="@LogoutAsync">ログアウト</MenuButton>
-            </Authorized>
-            <NotAuthorized>
-                <MenuButton Href="login">ログイン</MenuButton>
-            </NotAuthorized>
-        </AuthorizeView>
+        @if(AuthStoreService.IsLoggedIn)
+        {
+            <MenuButton OnClick="@Logout">ログアウト</MenuButton>
+        }
+        else
+        {
+            <MenuButton Href="login">ログイン</MenuButton>
+        }
     </ChildContent>
 </MudMenu>
 
 @code {
-    public async Task LogoutAsync()
+    protected override void OnInitialized()
+    {
+        AuthStoreService.Notify += OnNotifyAuthStoreChange;
+    }
+
+    public void Dispose()
+    {
+        AuthStoreService.Notify -= OnNotifyAuthStoreChange;
+    }
+
+    public void OnNotifyAuthStoreChange() => InvokeAsync(StateHasChanged);
+
+    public async Task Logout()
     {
         bool? result = await DialogService.ShowMessageBox(
             "ログアウト",

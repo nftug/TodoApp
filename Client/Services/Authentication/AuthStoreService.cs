@@ -4,7 +4,19 @@ namespace Client.Services.Authentication;
 
 public class AuthStoreService
 {
-    public ClaimsPrincipal? User { get; private set; }
+    public event Action? Notify;
+
+    private ClaimsPrincipal? _user;
+    public ClaimsPrincipal? User
+    {
+        get => _user;
+        set
+        {
+            if (value == _user) return;
+            _user = value;
+            Notify?.Invoke();
+        }
+    }
 
     public Guid UserId
     {
@@ -18,9 +30,4 @@ public class AuthStoreService
     public string? UserName => User?.Identity?.Name ?? "ゲスト";
 
     public bool IsLoggedIn => User?.Identity?.Name != null;
-
-    public void SetUser(ClaimsPrincipal? user)
-    {
-        User = user;
-    }
 }

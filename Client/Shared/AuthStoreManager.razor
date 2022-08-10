@@ -26,7 +26,7 @@
         InvokeAsync(async () =>
         {
             var user = (await AuthenticationStateTask).User;
-            AuthStoreService.SetUser(user);
+            AuthStoreService.User = user;
         });
     }
 }
