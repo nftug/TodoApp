@@ -21,6 +21,8 @@ public partial class TodoEditDialog : ComponentBase
 
     private EditContext EditContext = null!;
 
+    private bool IsNewData => Command.Id == null;
+
     protected override void OnInitialized()
     {
         EditContext = new EditContext(Command);
@@ -35,8 +37,7 @@ public partial class TodoEditDialog : ComponentBase
     {
         if (!EditContext.Validate()) return;
 
-        bool isNewData = Command.Id == null;
-        if (isNewData)
+        if (IsNewData)
         {
             var result = await TodoApiService.Create(Command);
             if (result != null) Snackbar.Add("Todoを作成しました。", Severity.Success);
@@ -49,4 +50,7 @@ public partial class TodoEditDialog : ComponentBase
 
         MudDialog.Close(DialogResult.Ok(Command));
     }
+
+    private bool ValidateEditForm
+        => IsNewData ? (EditContext.IsModified() && EditContext.Validate()) : EditContext.Validate();
 }
