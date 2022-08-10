@@ -24,10 +24,10 @@
     <ChildContent>
         <AuthorizeView>
             <Authorized>
-                <MudMenuItem OnClick="@LogoutAsync">ログアウト</MudMenuItem>
+                <MenuButton OnClick="@LogoutAsync">ログアウト</MenuButton>
             </Authorized>
             <NotAuthorized>
-                <MudMenuItem Href="login">ログイン</MudMenuItem>
+                <MenuButton Href="login">ログイン</MenuButton>
             </NotAuthorized>
         </AuthorizeView>
     </ChildContent>

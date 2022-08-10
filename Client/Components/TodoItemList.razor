@@ -1,9 +1,7 @@
-@using Application.Todos.Models
-@using Domain.Todos
 @using Domain.Todos.ValueObjects
-@using Client.Models
+@using Client.Components
 
-<MudTable Items="Items" Hover Dense Elevation="0" AnchorOrigin="Origin.BottomLeft" Loading="@IsLoading">
+<MudTable Items="Items" Hover Elevation="0" AnchorOrigin="Origin.BottomLeft" Loading="@IsLoading">
     <ToolBarContent>
         <MudSpacer />
         <form class="d-flex justify-end" @onsubmit="@DoSearch">
@@ -14,7 +12,7 @@
     </ToolBarContent>
 
     <ColGroup>
-        <col />
+        <col style="width: 100%;" />
         <col style="width: 150px;" />
         <col style="width: 150px;" />
         <col style="width: 150px;"/>
@@ -49,19 +47,23 @@
                 <ChildContent>
                     @foreach (var state in TodoState.Status)
                     {
-                        <MudMenuItem
+                        <MenuButton
                             OnClick="@(() => ChangeState(context, state))"
                             Disabled="@(IsDisabledChangeState(context, state))">
                             @(state.DisplayValue)に切り替え
-                        </MudMenuItem>
+                        </MenuButton>
                     }
                 </ChildContent>
             </MudMenu>
         </MudTd>
         <MudTd DataLabel="操作" style="text-align: center">
             <MudMenu Dense Icon="@Icons.Material.Filled.MoreVert" Disabled="@(!IsOwnedByUser(context))">
-                <MudMenuItem OnClick="@(() => EditItem(context))">編集</MudMenuItem>
-                <MudMenuItem OnClick="@(() => DeleteItem(context))">削除</MudMenuItem>
+                <MenuButton OnClick="@(() => EditItem(context))">
+                    編集
+                </MenuButton>
+                <MenuButton OnClick="@(() => DeleteItem(context))">
+                    削除
+                </MenuButton>
             </MudMenu>
         </MudTd>
     </RowTemplate>
