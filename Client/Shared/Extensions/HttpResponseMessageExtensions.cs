@@ -1,7 +1,7 @@
 using System.Text.Json;
-using Client.Models;
+using Client.Shared.Models;
 
-namespace Client.Extensions;
+namespace Client.Shared.Extensions;
 
 public static class HttpResponseMessageExtensions
 {

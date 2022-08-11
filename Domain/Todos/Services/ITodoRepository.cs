@@ -2,7 +2,7 @@ using Domain.Shared.Interfaces;
 using Domain.Todos.Entities;
 using Domain.Todos.ValueObjects;
 
-namespace Domain.Todos.Interfaces;
+namespace Domain.Todos.Services;
 
 public interface ITodoRepository : IRepository<Todo>
 {

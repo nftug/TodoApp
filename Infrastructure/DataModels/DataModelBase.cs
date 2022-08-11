@@ -9,7 +9,7 @@ public class DataModelBase<TDomain> : IDataModel<TDomain>
     public DateTime CreatedOn { get; set; }
     public DateTime UpdatedOn { get; set; }
     public Guid? OwnerUserId { get; set; }
-    public UserDataModel<Guid>? OwnerUser { get; set; }
+    public UserDataModel? OwnerUser { get; set; }
 
     public virtual void Transfer(ModelBase origin)
     {

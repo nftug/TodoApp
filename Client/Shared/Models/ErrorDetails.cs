@@ -1,6 +1,6 @@
 using System.Text.Json.Serialization;
 
-namespace Client.Models;
+namespace Client.Shared.Models;
 
 public class ErrorDetails
 {

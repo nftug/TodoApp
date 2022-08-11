@@ -3,20 +3,19 @@ using System.Security.Claims;
 using System.Text;
 using Microsoft.IdentityModel.Tokens;
 using Infrastructure.DataModels;
-using API.Models;
 
-namespace API.Services;
+namespace Infrastructure.Shared.Services.AuthToken;
 
-public class TokenService
+public class AuthTokenService
 {
     private readonly JwtSettings _settings;
 
-    public TokenService(JwtSettings settings)
+    public AuthTokenService(JwtSettings settings)
     {
         _settings = settings;
     }
 
-    public string CreateToken(UserDataModel<Guid> user)
+    public string CreateToken(UserDataModel user)
     {
         var claims = new List<Claim> {
                 new Claim(ClaimTypes.Name, user.UserName),
@@ -39,4 +38,11 @@ public class TokenService
 
         return tokenHandler.WriteToken(token);
     }
+}
+
+public class JwtSettings
+{
+    public string Secret { get; set; } = string.Empty;
+    public string SiteUrl { get; set; } = string.Empty;
+    public string JwtExpireDay { get; set; } = string.Empty;
 }

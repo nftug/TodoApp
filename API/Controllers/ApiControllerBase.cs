@@ -7,8 +7,15 @@ namespace API.Controllers;
 
 public abstract class ApiControllerBase : ControllerBase
 {
-    private ISender? _mediator;
-    protected ISender Mediator => _mediator ??= HttpContext.RequestServices.GetService<ISender>()!;
+    // private ISender? _mediator;
+    // protected ISender Mediator => _mediator ??= HttpContext.RequestServices.GetService<ISender>()!;
+
+    protected readonly ISender Mediator;
+
+    protected ApiControllerBase(ISender mediator)
+    {
+        Mediator = mediator;
+    }
 
     protected Guid UserId
     {
@@ -36,9 +43,16 @@ public abstract class ApiControllerBase : ControllerBase
         {
             return Forbid();
         }
+        catch (UnauthorizedAccessException)
+        {
+            return Unauthorized();
+        }
         catch (DomainException exc)
         {
-            ModelState.AddModelError(exc.Field, exc.Message);
+            foreach (var error in exc.Errors)
+                foreach (var message in error.Value)
+                    ModelState.AddModelError(error.Key, message);
+
             return ValidationProblem();
         }
     }

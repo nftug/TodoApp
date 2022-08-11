@@ -1,4 +1,4 @@
-namespace Client.Models;
+namespace Client.Shared.Models;
 
 public class Pagination<T>
 {

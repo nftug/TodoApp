@@ -7,18 +7,18 @@ using Domain.Services;
 
 namespace Application.Shared.UseCases;
 
-public abstract class EditBase<TDomain, TResultDTO, TCommandDTO>
+public abstract class EditBase<TDomain, TResultDTO, TCommand>
     where TDomain : ModelBase
     where TResultDTO : IResultDTO<TDomain>
-    where TCommandDTO : ICommand<TDomain>
+    where TCommand : ICommand<TDomain>
 {
     public class Command : IRequest<TResultDTO>
     {
         public Guid Id { get; init; }
-        public TCommandDTO Item { get; init; }
+        public TCommand Item { get; init; }
         public Guid UserId { get; init; }
 
-        public Command(Guid id, TCommandDTO item, Guid userId)
+        public Command(Guid id, TCommand item, Guid userId)
         {
             Id = id;
             Item = item;
@@ -60,7 +60,7 @@ public abstract class EditBase<TDomain, TResultDTO, TCommandDTO>
             return CreateDTO(result);
         }
 
-        protected abstract void Edit(TDomain origin, TCommandDTO command);
+        protected abstract void Edit(TDomain origin, TCommand command);
 
         protected abstract TResultDTO CreateDTO(TDomain item);
     }

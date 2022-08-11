@@ -1,4 +1,4 @@
-using Client.Extensions;
+using Client.Shared.Extensions;
 
 namespace Client.Shared.Exceptions;
 

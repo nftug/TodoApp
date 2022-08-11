@@ -13,13 +13,13 @@
 <MudContainer Class="my-8 py-8" MaxWidth="MaxWidth.ExtraSmall">
     <MudText Typo="Typo.h4" GutterBottom="true" class="mb-5">ログイン</MudText>
 
-    <EditForm Model="@LoginCommand" OnValidSubmit="SubmitAsync">
+    <EditForm Model="@LoginModel" OnValidSubmit="SubmitAsync">
         <DataAnnotationsValidator />
 
-        <MudTextField Class="my-2" FullWidth="true" Label="Email" @bind-Value="@LoginCommand.Email"
-            For="@(() => LoginCommand.Email)" />
-        <MudTextField Class="my-2" FullWidth="true" Label="パスワード" @bind-Value="@LoginCommand.Password"
-            For="@(() => LoginCommand.Password)" InputType="InputType.Password" />
+        <MudTextField Class="my-2" FullWidth="true" Label="Email" @bind-Value="@LoginModel.Email"
+            For="@(() => LoginModel.Email)" />
+        <MudTextField Class="my-2" FullWidth="true" Label="パスワード" @bind-Value="@LoginModel.Password"
+            For="@(() => LoginModel.Password)" InputType="InputType.Password" />
 
         <MudButton Class="mt-7" Variant="Variant.Filled" StartIcon="@Icons.Filled.Login"
             Color="Color.Primary" FullWidth="true" ButtonType="ButtonType.Submit">

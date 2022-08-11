@@ -8,9 +8,9 @@ public class UserPatchCommand : ICommand<User>
 {
     public Guid? Id { get; set; }
     [UserName(isPatch: true)]
-    public string? UserName { get; set; } = string.Empty;
+    public string? UserName { get; set; }
     [UserEmail(isPatch: true)]
-    public string? Email { get; set; } = string.Empty;
+    public string? Email { get; set; }
 
     public UserPatchCommand() { }
 

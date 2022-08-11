@@ -25,16 +25,21 @@ public class User : ModelBase
     private User() : base() { }
 
     public static User CreateNew(UserName userName, UserEmail email)
-        => new()
-        {
-            UserName = userName,
-            Email = email
-        };
+    {
+        var now = DateTime.Now;
+        var id = Guid.NewGuid();
 
-    public void Edit(
-        UserName userName,
-        UserEmail email
-    )
+        return new(
+            id: id,
+            createdOn: now,
+            updatedOn: now,
+            ownerUserId: id,
+            userName: userName,
+            email: email
+        );
+    }
+
+    public void Edit(UserName userName, UserEmail email)
     {
         UserName = userName;
         Email = email;

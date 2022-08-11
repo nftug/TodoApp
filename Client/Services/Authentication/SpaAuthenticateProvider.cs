@@ -1,7 +1,7 @@
 using System.Net.Http.Headers;
 using System.Security.Claims;
-using Application.Users.Models;
 using Blazored.LocalStorage;
+using Domain.Users.Entities;
 using Microsoft.AspNetCore.Components.Authorization;
 
 namespace Client.Services.Authentication;

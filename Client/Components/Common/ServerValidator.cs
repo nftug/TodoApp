@@ -2,11 +2,11 @@
 
 using System.Net;
 using System.Text.Json;
-using Client.Models;
+using Client.Shared.Models;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Forms;
 
-namespace Client.Components;
+namespace Client.Components.Common;
 
 public class ServerValidator<TErrorDetails> : ComponentBase
 {

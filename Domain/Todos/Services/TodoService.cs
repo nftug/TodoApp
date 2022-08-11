@@ -1,7 +1,6 @@
 using Domain.Shared.Interfaces;
 using Domain.Shared.Services;
 using Domain.Todos.Entities;
-using Domain.Todos.Interfaces;
 using Domain.Todos.ValueObjects;
 
 namespace Domain.Todos.Services;

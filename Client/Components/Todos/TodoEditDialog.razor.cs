@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Forms;
 using MudBlazor;
 
-namespace Client.Components;
+namespace Client.Components.Todos;
 
 public partial class TodoEditDialog : ComponentBase
 {

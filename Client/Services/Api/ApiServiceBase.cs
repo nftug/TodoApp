@@ -1,12 +1,12 @@
 using System.Net.Http.Json;
 using Microsoft.AspNetCore.WebUtilities;
-using Client.Models;
 using MudBlazor;
 using System.Net;
 using Microsoft.AspNetCore.Components;
 using System.Text.Json;
-using Client.Extensions;
 using Client.Shared.Exceptions;
+using Client.Shared.Models;
+using Client.Shared.Extensions;
 
 namespace Client.Services.Api;
 

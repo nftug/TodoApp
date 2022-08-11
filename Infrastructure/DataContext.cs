@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Identity;
 
 namespace Infrastructure;
 
-public class DataContext : IdentityDbContext<UserDataModel<Guid>, IdentityRole<Guid>, Guid>
+public class DataContext : IdentityDbContext<UserDataModel, IdentityRole<Guid>, Guid>
 {
     public DataContext(DbContextOptions<DataContext> options)
         : base(options)

@@ -4,6 +4,7 @@ using Domain.Comments.Queries;
 using Application.Users.UseCases;
 using Application.Users.Models;
 using Domain.Todos.Queries;
+using MediatR;
 
 namespace API.Controllers.Account;
 
@@ -12,6 +13,10 @@ namespace API.Controllers.Account;
 [Route("api/[controller]")]
 public class UserController : ApiControllerBase
 {
+    public UserController(ISender mediator) : base(mediator)
+    {
+    }
+
     [AllowAnonymous]
     [HttpGet("{id}")]
     public async Task<IActionResult> GetUserInfo(Guid id)

@@ -1,10 +1,10 @@
 using Infrastructure.DataModels;
 using Microsoft.EntityFrameworkCore;
 using Domain.Todos.Entities;
-using Domain.Todos.Interfaces;
 using Domain.Todos.ValueObjects;
 using Infrastructure.Shared.Services.Repository;
 using Infrastructure.Shared.Specifications.DataSource;
+using Domain.Todos.Services;
 
 namespace Infrastructure.Todos;
 

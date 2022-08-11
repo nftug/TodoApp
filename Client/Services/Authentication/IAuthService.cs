@@ -1,10 +1,10 @@
-using Application.Users.Models;
+using Domain.Users.Entities;
 
 namespace Client.Services.Authentication;
 
 public interface IAuthService
 {
-    Task<LoginResult> LoginAsync(LoginModel loginModel);
+    Task<LoginResult> LoginAsync(LoginCommand loginModel);
     Task LogoutAsync();
 }
 

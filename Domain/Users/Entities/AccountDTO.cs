@@ -1,6 +1,6 @@
-using System.ComponentModel.DataAnnotations;
+using Domain.Users.ValueObjects;
 
-namespace Application.Users.Models;
+namespace Domain.Users.Entities;
 
 public class TokenModel
 {
@@ -9,16 +9,18 @@ public class TokenModel
     public Guid UserId { get; set; }
 }
 
-public class LoginModel
+public class LoginCommand
 {
+    [UserEmail]
     public string Email { get; set; } = string.Empty;
     public string Password { get; set; } = string.Empty;
 }
 
-public class RegisterModel
+public class RegisterCommand
 {
-    [EmailAddress]
+    [UserEmail]
     public string Email { get; set; } = string.Empty;
     public string Password { get; set; } = string.Empty;
+    [UserName]
     public string UserName { get; set; } = string.Empty;
 }

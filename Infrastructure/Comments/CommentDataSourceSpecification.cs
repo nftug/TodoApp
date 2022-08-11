@@ -27,7 +27,7 @@ internal class CommentDataSourceSpecification : DataSourceSpecificationBase<Comm
                 UpdatedOn = x.UpdatedOn,
                 OwnerUserId = x.OwnerUserId,
                 OwnerUser = x.OwnerUser != null
-                    ? new UserDataModel<Guid> { UserName = x.OwnerUser.UserName }
+                    ? new UserDataModel { UserName = x.OwnerUser.UserName }
                     : null,
                 Content = x.Content,
                 TodoId = x.TodoId,

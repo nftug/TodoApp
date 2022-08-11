@@ -1,12 +1,12 @@
 using Application.Todos.Models;
-using Client.Extensions;
 using Client.Services.Api;
 using Client.Services.Authentication;
+using Client.Shared.Extensions;
 using Domain.Todos.ValueObjects;
 using Microsoft.AspNetCore.Components;
 using MudBlazor;
 
-namespace Client.Components;
+namespace Client.Components.Todos;
 
 public partial class TodoItemList : ComponentBase
 {

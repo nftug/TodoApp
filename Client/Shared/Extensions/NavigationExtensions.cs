@@ -2,7 +2,7 @@ using System.Collections.Specialized;
 using System.Web;
 using Microsoft.AspNetCore.Components;
 
-namespace Client.Extensions;
+namespace Client.Shared.Extensions;
 
 public static class NavigationExtensions
 {

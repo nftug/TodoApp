@@ -7,17 +7,17 @@ using Domain.Services;
 
 namespace Application.Shared.UseCases;
 
-public abstract class CreateBase<TDomain, TResultDTO, TCommandDTO>
+public abstract class CreateBase<TDomain, TResultDTO, TCommand>
     where TDomain : ModelBase
     where TResultDTO : IResultDTO<TDomain>
-    where TCommandDTO : ICommand<TDomain>
+    where TCommand : ICommand<TDomain>
 {
     public class Command : IRequest<TResultDTO>
     {
-        public TCommandDTO Item { get; init; }
+        public TCommand Item { get; init; }
         public Guid UserId { get; init; }
 
-        public Command(TCommandDTO item, Guid usedId)
+        public Command(TCommand item, Guid usedId)
         {
             Item = item;
             UserId = usedId;

@@ -1,9 +1,9 @@
 using Microsoft.AspNetCore.Components;
 using Application.Todos.Models;
 using Domain.Todos.Queries;
-using Client.Models;
 using Client.Services.Api;
-using Client.Extensions;
+using Client.Shared.Models;
+using Client.Shared.Extensions;
 
 namespace Client.Pages;
 

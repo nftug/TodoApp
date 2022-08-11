@@ -27,7 +27,7 @@ internal class TodoDataSourceSpecification : DataSourceSpecificationBase<Todo>
                 UpdatedOn = x.UpdatedOn,
                 OwnerUserId = x.OwnerUserId,
                 OwnerUser = x.OwnerUser != null
-                    ? new UserDataModel<Guid> { UserName = x.OwnerUser.UserName }
+                    ? new UserDataModel { UserName = x.OwnerUser.UserName }
                     : null,
                 Title = x.Title,
                 Description = x.Description,

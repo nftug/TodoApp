@@ -3,8 +3,7 @@ using Microsoft.AspNetCore.Identity;
 
 namespace Infrastructure.DataModels;
 
-public class UserDataModel<T> : IdentityUser<Guid>, IDataModel<User>
-    where T : struct
+public class UserDataModel : IdentityUser<Guid>, IDataModel<User>
 {
     public DateTime CreatedOn { get; set; }
     public DateTime UpdatedOn { get; set; }

@@ -1,6 +1,6 @@
 using System.ComponentModel.DataAnnotations;
-using Application.Users.Models;
 using Client.Services.Authentication;
+using Domain.Users.Entities;
 using Domain.Users.ValueObjects;
 using Microsoft.AspNetCore.Components;
 
@@ -17,17 +17,17 @@ public partial class LoginPage : ComponentBase
     [Parameter]
     public string? Redirect { get; set; }
 
-    public LoginCommand LoginCommand { get; set; } = new();
+    public LoginModel LoginModel { get; set; } = new();
     public bool IsLoading { get; set; }
 
     public async Task SubmitAsync()
     {
         IsLoading = true;
 
-        var model = new LoginModel
+        var model = new LoginCommand
         {
-            Email = LoginCommand.Email!,
-            Password = LoginCommand.Password
+            Email = LoginModel.Email!,
+            Password = LoginModel.Password
         };
         var result = await AuthService.LoginAsync(model);
 
@@ -38,7 +38,7 @@ public partial class LoginPage : ComponentBase
     }
 }
 
-public class LoginCommand
+public class LoginModel
 {
     [UserEmail]
     public string Email { get; set; } = string.Empty;

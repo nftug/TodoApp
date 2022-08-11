@@ -14,7 +14,7 @@ internal class UserDataSourceSpecification : DataSourceSpecificationBase<User>
 
     public override User ToDomain(IDataModel<User> origin, bool recursive = false)
     {
-        var _origin = (UserDataModel<Guid>)origin;
+        var _origin = (UserDataModel)origin;
 
         return new User(
             id: _origin.Id,

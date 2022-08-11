@@ -1,8 +1,7 @@
 using System.Text;
-using API.Models;
-using API.Services;
 using Infrastructure;
 using Infrastructure.DataModels;
+using Infrastructure.Shared.Services.AuthToken;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Options;
@@ -16,13 +15,13 @@ internal static class IdentityServiceExtension
         (this IServiceCollection services, IConfiguration config)
     {
         services
-            .AddDefaultIdentity<UserDataModel<Guid>>(opt =>
+            .AddDefaultIdentity<UserDataModel>(opt =>
                 opt.SignIn.RequireConfirmedAccount = false
             )
             .AddRoles<IdentityRole<Guid>>()
             .AddEntityFrameworkStores<DataContext>();
 
-        services.AddJwtService(config);
+        services.AddAuthTokenService(config);
 
         return services;
     }
@@ -31,7 +30,7 @@ internal static class IdentityServiceExtension
     // https://book2525stack.com/2020/08/31/aspnetcore-jwt/
     // https://zenn.dev/mosuma/articles/ebfb55b9b7d629
 
-    private static IServiceCollection AddJwtService
+    private static IServiceCollection AddAuthTokenService
         (this IServiceCollection services, IConfiguration config)
     {
         var jwtSettings = new JwtSettings();
@@ -59,7 +58,7 @@ internal static class IdentityServiceExtension
                     };
                 });
 
-        services.AddScoped<TokenService>();
+        services.AddScoped<AuthTokenService>();
 
         return services;
     }

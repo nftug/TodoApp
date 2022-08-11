@@ -1,4 +1,4 @@
-namespace Client.Extensions;
+namespace Client.Shared.Extensions;
 
 public static class ParamExtension
 {
@@ -9,5 +9,5 @@ public static class ParamExtension
     }
 
     public static int ParseAsPage(this string? value)
-        => (int)ParseAsIntParam(value, (x, _) => x > 0 ? x : 1)!;
+        => (int)value.ParseAsIntParam((x, _) => x > 0 ? x : 1)!;
 }

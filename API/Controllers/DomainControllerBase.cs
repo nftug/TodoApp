@@ -3,6 +3,7 @@ using Application.Shared.UseCases;
 using Domain.Shared.Entities;
 using Application.Shared.Interfaces;
 using Domain.Shared.Queries;
+using MediatR;
 
 namespace API.Controllers;
 
@@ -13,6 +14,10 @@ public abstract class DomainControllerBase<TDomain, TResultDTO, TCommand, TPatch
     where TPatchCommand : ICommand<TDomain>
     where TQueryParameter : IQueryParameter<TDomain>
 {
+    protected DomainControllerBase(ISender mediator) : base(mediator)
+    {
+    }
+
     protected abstract Commands<TDomain, TResultDTO, TCommand, TPatchCommand> Commands { get; }
     protected abstract Queries<TDomain, TResultDTO> Queries { get; }
 

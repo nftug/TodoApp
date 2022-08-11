@@ -1,5 +1,5 @@
 using System.Net.Http.Json;
-using Application.Users.Models;
+using Domain.Users.Entities;
 using Microsoft.AspNetCore.Components.Authorization;
 using MudBlazor;
 
@@ -22,11 +22,11 @@ public class AuthService : IAuthService
         _snackbar = snackbar;
     }
 
-    public async Task<LoginResult> LoginAsync(LoginModel loginModel)
+    public async Task<LoginResult> LoginAsync(LoginCommand command)
     {
         try
         {
-            var response = await _httpClient.PostAsJsonAsync("auth/login", loginModel);
+            var response = await _httpClient.PostAsJsonAsync("auth/login", command);
             response.EnsureSuccessStatusCode();
             var result = await response.Content.ReadFromJsonAsync<TokenModel>();
             if (result == null) throw new HttpRequestException();
