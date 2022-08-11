@@ -35,8 +35,6 @@ public partial class TodoEditDialog : ComponentBase
 
     private async Task SubmitTodo()
     {
-        if (!EditContext.Validate()) return;
-
         if (IsNewData)
         {
             var result = await TodoApiService.Create(Command);
@@ -52,5 +50,7 @@ public partial class TodoEditDialog : ComponentBase
     }
 
     private bool ValidateEditForm
-        => IsNewData ? (EditContext.IsModified() && EditContext.Validate()) : EditContext.Validate();
+        => IsNewData
+           ? EditContext.IsModified() && EditContext.Validate()
+           : EditContext.Validate();
 }

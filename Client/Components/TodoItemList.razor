@@ -29,7 +29,7 @@
         </MudTd>
         <MudTd DataLabel="開始日">@(context.StartDate?.ToShortDateString() ?? "-")</MudTd>
         <MudTd DataLabel="終了日">@(context.EndDate?.ToShortDateString() ?? "-")</MudTd>
-        <MudTd DataLabel="状態" style="text-align: center">
+        <MudTd DataLabel="状態" Style="text-align: center">
             <MudMenu Dense>
                 <ActivatorContent>
                     <MudChip Icon="@(GetTodoIcon(context))" Color="@(GetTodoChipColor(context))">
@@ -48,7 +48,7 @@
                 </ChildContent>
             </MudMenu>
         </MudTd>
-        <MudTd DataLabel="" style="text-align: center">
+        <MudTd DataLabel="" Style="text-align: center">
             <MudMenu Dense Icon="@Icons.Material.Filled.MoreVert" Disabled="@(!IsOwnedByUser(context))">
                 <MenuButton OnClick="@(() => EditItem(context))">
                     編集

@@ -25,7 +25,7 @@ public class Edit
                 title: new(command.Title),
                 description: new(command.Description),
                 period: new(command.StartDate, command.EndDate),
-                state: TodoState.CreateFromString(command.State)!
+                state: new(command.State)
             );
         }
 
@@ -44,9 +44,7 @@ public class Edit
                 title: command.Title != null ? new(command.Title) : origin.Title,
                 description: command.Description != null ? new(command.Description) : origin.Description,
                 period: period,
-                state: command.State != null
-                    ? TodoState.CreateFromString(command.State)!
-                    : origin.State
+                state: command.State != null ? new(command.State) : origin.State
             );
         }
     }

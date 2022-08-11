@@ -25,8 +25,8 @@ internal class TodoFilterSpecification : FilterSpecificationBase<Todo, TodoDataM
 
         ExpressionGroups.AddSimpleSearch(_param.UserId, x => x.OwnerUserId == _param.UserId);
 
-        var state = TodoState.CreateFromString(_param.State)?.Value;
-        ExpressionGroups.AddSimpleSearch(state, x => x.State == state);
+        var stateValue = new TodoState(_param.State).Value;
+        ExpressionGroups.AddSimpleSearch(_param.State, x => x.State == stateValue);
 
         ExpressionGroups.AddSearch(_param.Q, k =>
             ExpressionCombiner.OrElse(

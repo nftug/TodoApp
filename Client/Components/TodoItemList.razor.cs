@@ -24,11 +24,11 @@ public partial class TodoItemList : ComponentBase
     [Parameter]
     public IEnumerable<TodoResultDTO> Items { get; set; } = null!;
     [Parameter]
-    public EventCallback<TodoResultDTO> OnEditItem { get; set; }
+    public EventCallback OnEditItem { get; set; }
     [Parameter]
     public EventCallback OnDeleteItem { get; set; }
     [Parameter]
-    public EventCallback<TodoResultDTO> OnChangeState { get; set; }
+    public EventCallback OnChangeState { get; set; }
     [Parameter]
     public bool IsLoading { get; set; }
 
@@ -42,7 +42,7 @@ public partial class TodoItemList : ComponentBase
 
     private static Color GetTodoChipColor(TodoResultDTO item)
     {
-        var state = TodoState.CreateFromString(item.State);
+        var state = new TodoState(item.State);
         return state == TodoState.Doing
             ? Color.Tertiary
             : state == TodoState.Done
@@ -52,7 +52,7 @@ public partial class TodoItemList : ComponentBase
 
     private static string GetTodoIcon(TodoResultDTO item)
     {
-        var state = TodoState.CreateFromString(item.State);
+        var state = new TodoState(item.State);
         return state == TodoState.Doing
             ? Icons.Outlined.IndeterminateCheckBox
             : state == TodoState.Done
@@ -61,7 +61,7 @@ public partial class TodoItemList : ComponentBase
     }
 
     private bool IsDisabledChangeState(TodoResultDTO item, TodoState state)
-        => !IsOwnedByUser(item) || TodoState.CreateFromString(item.State) == state;
+        => !IsOwnedByUser(item) || new TodoState(item.State) == state;
 
     private bool IsOwnedByUser(TodoResultDTO item) => item.OwnerUserId == AuthStoreService.UserId;
 
@@ -93,7 +93,7 @@ public partial class TodoItemList : ComponentBase
         var newItem = await TodoApiService.ChangeState(item.Id, state);
         Snackbar.Add("Todoの状態を変更しました。", Severity.Success);
 
-        await OnChangeState.InvokeAsync(item);
+        await OnChangeState.InvokeAsync();
     }
 
     private void DoSearch()

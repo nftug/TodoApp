@@ -25,7 +25,7 @@ public class EditState : EditBase<Todo, TodoResultDTO, TodoStateCommand>
 
         protected override void Patch(Todo origin, TodoStateCommand command)
         {
-            origin.SetState(TodoState.CreateFromString(command.State)!);
+            origin.SetState(new(command.State));
         }
     }
 }

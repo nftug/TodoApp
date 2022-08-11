@@ -46,14 +46,14 @@ public partial class TodoPage : ComponentBase
         {
             if (showIndicator) IsLoading = true;
 
-            TodoItems = await TodoApiService.GetList(param);
+            TodoItems = await TodoApiService.GetList(param, showValidationError: true);
 
             IsLoading = false;
             StateHasChanged();
         });
     }
 
-    private void OnEditItem(TodoResultDTO item)
+    private void OnEditItem()
     {
         bool isParameterChanged =
             Page.ParseAsPage() != 1

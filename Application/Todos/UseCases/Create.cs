@@ -3,7 +3,6 @@ using Domain.Todos.Entities;
 using Application.Todos.Models;
 using Domain.Shared.Interfaces;
 using Domain.Services;
-using Domain.Todos.ValueObjects;
 
 namespace Application.Todos.UseCases;
 
@@ -22,7 +21,7 @@ public class Create
                 title: new(request.Item.Title),
                 description: new(request.Item.Description),
                 period: new(request.Item.StartDate, request.Item.EndDate),
-                state: TodoState.CreateFromString(request.Item.State)!,
+                state: new(request.Item.State),
                 ownerUserId: request.UserId
             );
 
