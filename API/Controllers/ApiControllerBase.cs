@@ -5,6 +5,7 @@ using Domain.Shared.Exceptions;
 
 namespace API.Controllers;
 
+[ApiController]
 public abstract class ApiControllerBase : ControllerBase
 {
     // private ISender? _mediator;

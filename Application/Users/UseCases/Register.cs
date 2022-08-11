@@ -3,6 +3,7 @@ using Domain.Shared.Exceptions;
 using Domain.Services;
 using Domain.Users.Entities;
 using Domain.Users.Services;
+using Domain.Shared.Interfaces;
 
 namespace Application.Users.UseCases;
 
@@ -23,9 +24,9 @@ public class Register
         private readonly IUserRepository _userRepository;
         private readonly IDomainService<User> _domainService;
 
-        public Handler(IUserRepository userRepository, IDomainService<User> domainService)
+        public Handler(IRepository<User> userRepository, IDomainService<User> domainService)
         {
-            _userRepository = userRepository;
+            _userRepository = (IUserRepository)userRepository;
             _domainService = domainService;
         }
 

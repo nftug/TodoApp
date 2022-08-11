@@ -18,8 +18,8 @@ public abstract class DomainControllerBase<TDomain, TResultDTO, TCommand, TPatch
     {
     }
 
-    protected abstract Commands<TDomain, TResultDTO, TCommand, TPatchCommand> Commands { get; }
-    protected abstract Queries<TDomain, TResultDTO> Queries { get; }
+    protected virtual Commands<TDomain, TResultDTO, TCommand, TPatchCommand> Commands => new();
+    protected virtual Queries<TDomain, TResultDTO> Queries => new();
 
     [HttpGet]
     public virtual async Task<IActionResult> GetList([FromQuery] TQueryParameter param)

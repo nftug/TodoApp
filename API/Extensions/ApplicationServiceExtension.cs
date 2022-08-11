@@ -1,6 +1,5 @@
 using MediatR;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.OpenApi.Models;
 using Infrastructure;
 using Domain.Comments.Entities;
 using Infrastructure.Comments;
@@ -21,11 +20,6 @@ internal static class ApplicationServiceExtension
     internal static IServiceCollection AddApplicationServices
         (this IServiceCollection services, IConfiguration config)
     {
-        services.AddSwaggerGen(c =>
-        {
-            c.SwaggerDoc("v1", new OpenApiInfo { Title = "WebAPIv5", Version = "v1" });
-        });
-
         services.AddDbContext<DataContext>(opt =>
         {
             // opt.UseInMemoryDatabase("TodoList");
@@ -49,7 +43,6 @@ internal static class ApplicationServiceExtension
         services.AddTransient<IRepository<Todo>, TodoRepository>();
         services.AddTransient<IRepository<Comment>, CommentRepository>();
         services.AddTransient<IRepository<User>, UserRepository>();
-        services.AddTransient<IUserRepository, UserRepository>();
 
         // Query services
         services.AddTransient<IFilterQueryService<Todo>, TodoFilterQueryService>();

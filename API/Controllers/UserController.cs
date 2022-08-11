@@ -9,7 +9,6 @@ using MediatR;
 namespace API.Controllers.Account;
 
 [Authorize]
-[ApiController]
 [Route("api/[controller]")]
 public class UserController : ApiControllerBase
 {

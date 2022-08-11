@@ -14,7 +14,13 @@ builder.RootComponents.Add<HeadOutlet>("head::after");
 
 var config = builder.Configuration;
 
-builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri("http://localhost:5011/api/") });
+if (builder.HostEnvironment.Environment == "Development")
+{
+    builder.Services.AddScoped(sp =>
+        new HttpClient { BaseAddress = new Uri("http://localhost:5011/api/") }
+    );
+}
+
 builder.Services.AddBlazoredLocalStorage();
 
 builder.Services.AddScoped<AuthenticationStateProvider, SpaAuthenticateProvider>();
