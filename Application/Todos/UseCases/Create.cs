@@ -7,7 +7,7 @@ using Domain.Services;
 namespace Application.Todos.UseCases;
 
 public class Create
-    : CreateBase<Todo, TodoResultDTO, TodoCommandDTO>
+    : CreateBase<Todo, TodoResultDTO, TodoCommand>
 {
     public class Handler : HandlerBase
     {

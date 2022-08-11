@@ -24,5 +24,6 @@ public class TodoTitle : ValueObject<TodoTitle>
 
 public class TodoTitleAttribute : ValueObjectAttributeBase<TodoTitle, string?>
 {
+    public TodoTitleAttribute(bool isPatch = false) : base(isPatch) { }
     protected override TodoTitle CreateValueObject(string? value) => new(value);
 }

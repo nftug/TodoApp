@@ -4,17 +4,17 @@ using Domain.Users.ValueObjects;
 
 namespace Application.Users.Models;
 
-public class UserCommandDTO : ICommandDTO<User>
+public class UserPatchCommand : ICommand<User>
 {
     public Guid? Id { get; set; }
-    [UserName]
+    [UserName(isPatch: true)]
     public string? UserName { get; set; } = string.Empty;
-    [UserEmail]
+    [UserEmail(isPatch: true)]
     public string? Email { get; set; } = string.Empty;
 
-    public UserCommandDTO() { }
+    public UserPatchCommand() { }
 
-    public UserCommandDTO(UserResultDTO.Me origin)
+    public UserPatchCommand(UserResultDTO.Me origin)
     {
         Id = origin.Id;
         UserName = origin.UserName;

@@ -4,19 +4,17 @@ using Domain.Comments.ValueObjects;
 
 namespace Application.Comments.Models;
 
-public class CommentCommandDTO : ICommandDTO<Comment>
+public class CommentPatchCommand : ICommand<Comment>
 {
     public Guid? Id { get; set; }
-    [CommentContent]
+    [CommentContent(isPatch: true)]
     public string? Content { get; set; } = null!;
-    public Guid TodoId { get; set; }
 
-    public CommentCommandDTO() { }
+    public CommentPatchCommand() { }
 
-    public CommentCommandDTO(CommentResultDTO origin)
+    public CommentPatchCommand(CommentResultDTO origin)
     {
         Id = origin.Id;
         Content = origin.Content;
-        TodoId = origin.TodoId;
     }
 }

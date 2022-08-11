@@ -1,12 +1,12 @@
 using Application.Shared.UseCases;
-using Application.Todos.Models;
-using Domain.Services;
-using Domain.Shared.Interfaces;
 using Domain.Todos.Entities;
+using Application.Todos.Models;
+using Domain.Shared.Interfaces;
+using Domain.Services;
 
 namespace Application.Todos.UseCases;
 
-public class EditState : EditBase<Todo, TodoResultDTO, TodoStateCommand>
+public class Put : EditBase<Todo, TodoResultDTO, TodoCommand>
 {
     public class Handler : HandlerBase
     {
@@ -17,9 +17,14 @@ public class EditState : EditBase<Todo, TodoResultDTO, TodoStateCommand>
 
         protected override TodoResultDTO CreateDTO(Todo command) => new(command);
 
-        protected override void Edit(Todo origin, TodoStateCommand command)
+        protected override void Edit(Todo origin, TodoCommand command)
         {
-            origin.SetState(new(command.State));
+            origin.Edit(
+                title: new(command.Title),
+                description: new(command.Description),
+                period: new(command.StartDate, command.EndDate),
+                state: new(command.State)
+            );
         }
     }
 }

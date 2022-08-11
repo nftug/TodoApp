@@ -14,7 +14,7 @@
 
     private async Task CreateItem()
     {
-        var parameters = new DialogParameters { ["Command"] = new TodoCommandDTO() };
+        var parameters = new DialogParameters { ["Command"] = new TodoCommand() };
         var options = new DialogOptions { MaxWidth = MaxWidth.Small };
         var dialog = DialogService.Show<TodoEditDialog>("Todoの作成", parameters, options);
         var result = await dialog.Result;

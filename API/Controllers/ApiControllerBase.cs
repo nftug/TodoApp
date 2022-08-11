@@ -10,7 +10,7 @@ public abstract class ApiControllerBase : ControllerBase
     private ISender? _mediator;
     protected ISender Mediator => _mediator ??= HttpContext.RequestServices.GetService<ISender>()!;
 
-    protected Guid _userId
+    protected Guid UserId
     {
         get
         {
@@ -32,9 +32,9 @@ public abstract class ApiControllerBase : ControllerBase
         {
             return NotFound();
         }
-        catch (BadRequestException)
+        catch (ForbiddenException)
         {
-            return BadRequest();
+            return Forbid();
         }
         catch (DomainException exc)
         {

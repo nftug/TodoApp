@@ -1,5 +1,5 @@
 namespace Domain.Shared.Exceptions;
 
-public class BadRequestException : Exception
+public class ForbiddenException : Exception
 {
 }

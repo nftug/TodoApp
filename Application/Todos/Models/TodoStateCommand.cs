@@ -4,7 +4,7 @@ using Domain.Todos.ValueObjects;
 
 namespace Application.Todos.Models;
 
-public class TodoStateCommand : ICommandDTO<Todo>
+public class TodoStateCommand : ICommand<Todo>
 {
     public Guid? Id { get; set; }
     [TodoState]

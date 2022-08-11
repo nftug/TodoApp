@@ -1,6 +1,5 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Application.Shared.Enums;
 using Domain.Comments.Queries;
 using Application.Users.UseCases;
 using Application.Users.Models;
@@ -16,35 +15,35 @@ public class UserController : ApiControllerBase
     [AllowAnonymous]
     [HttpGet("{id}")]
     public async Task<IActionResult> GetUserInfo(Guid id)
-        => await HandleRequest(new Details.Public.Query(id, _userId));
+        => await HandleRequest(new Details.Public.Query(id, UserId));
 
     [HttpGet("me")]
     public async Task<IActionResult> GetMyUserInfo()
-        => await HandleRequest(new Details.Me.Query(_userId, _userId));
+        => await HandleRequest(new Details.Me.Query(UserId, UserId));
 
     [HttpPut("me")]
-    public async Task<IActionResult> PutMyUserInfo(UserCommandDTO user)
-        => await HandleRequest(new Edit.Command(_userId, user, _userId, EditMode.Put));
+    public async Task<IActionResult> PutMyUserInfo(UserCommand user)
+        => await HandleRequest(new Put.Command(UserId, user, UserId));
 
     [HttpPatch("me")]
-    public async Task<IActionResult> PatchMyUserInfo(UserCommandDTO user)
-        => await HandleRequest(new Edit.Command(_userId, user, _userId, EditMode.Patch));
+    public async Task<IActionResult> PatchMyUserInfo(UserPatchCommand user)
+        => await HandleRequest(new Patch.Command(UserId, user, UserId));
 
     [HttpDelete("me")]
     public async Task<IActionResult> DeleteMyUser()
-        => await HandleRequest(new Delete.Command(_userId, _userId));
+        => await HandleRequest(new Delete.Command(UserId, UserId));
 
     [HttpGet("me/todo")]
     public async Task<IActionResult> GetMyTodo([FromQuery] TodoQueryParameter param)
     {
-        param.UserId = _userId;
-        return await HandleRequest(new Application.Todos.UseCases.List.Query(param, _userId));
+        param.UserId = UserId;
+        return await HandleRequest(new Application.Todos.UseCases.List.Query(param, UserId));
     }
 
     [HttpGet("me/comment")]
     public async Task<IActionResult> GetMyComment([FromQuery] CommentQueryParameter param)
     {
-        param.UserId = _userId;
-        return await HandleRequest(new Application.Comments.UseCases.List.Query(param, _userId));
+        param.UserId = UserId;
+        return await HandleRequest(new Application.Comments.UseCases.List.Query(param, UserId));
     }
 }

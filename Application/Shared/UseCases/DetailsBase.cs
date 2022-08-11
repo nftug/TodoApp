@@ -43,7 +43,7 @@ public abstract class DetailsBase<TDomain, TResultDTO>
                 throw new NotFoundException();
 
             if (!await _domain.CanShow(item, request.UserId))
-                throw new BadRequestException();
+                throw new ForbiddenException();
 
             return CreateDTO(item);
         }

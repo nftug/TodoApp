@@ -22,5 +22,6 @@ public class TodoDescription : ValueObject<TodoDescription>
 
 public class TodoDescriptionAttribute : ValueObjectAttributeBase<TodoDescription, string?>
 {
+    public TodoDescriptionAttribute(bool isPatch = false) : base(isPatch) { }
     protected override TodoDescription CreateValueObject(string? value) => new(value);
 }

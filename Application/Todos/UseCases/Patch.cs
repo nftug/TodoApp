@@ -7,8 +7,7 @@ using Domain.Services;
 
 namespace Application.Todos.UseCases;
 
-public class Edit
-    : EditBase<Todo, TodoResultDTO, TodoCommandDTO>
+public class Patch : EditBase<Todo, TodoResultDTO, TodoPatchCommand>
 {
     public class Handler : HandlerBase
     {
@@ -19,17 +18,7 @@ public class Edit
 
         protected override TodoResultDTO CreateDTO(Todo command) => new(command);
 
-        protected override void Put(Todo origin, TodoCommandDTO command)
-        {
-            origin.Edit(
-                title: new(command.Title),
-                description: new(command.Description),
-                period: new(command.StartDate, command.EndDate),
-                state: new(command.State)
-            );
-        }
-
-        protected override void Patch(Todo origin, TodoCommandDTO command)
+        protected override void Edit(Todo origin, TodoPatchCommand command)
         {
             TodoPeriod? period =
                 command.StartDate != null && command.EndDate != null

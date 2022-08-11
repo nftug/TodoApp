@@ -69,7 +69,7 @@ public partial class TodoItemList : ComponentBase
     {
         if (!IsOwnedByUser(item)) return;
 
-        var parameters = new DialogParameters { ["Command"] = new TodoCommandDTO(item) };
+        var parameters = new DialogParameters { ["Command"] = new TodoCommand(item) };
         var options = new DialogOptions { MaxWidth = MaxWidth.Small };
         var dialog = DialogService.Show<TodoEditDialog>("Todoの編集", parameters, options);
         var result = await dialog.Result;

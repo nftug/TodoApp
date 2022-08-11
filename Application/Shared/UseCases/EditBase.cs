@@ -1,6 +1,5 @@
 using MediatR;
 using Application.Shared.Interfaces;
-using Application.Shared.Enums;
 using Domain.Shared.Entities;
 using Domain.Shared.Exceptions;
 using Domain.Shared.Interfaces;
@@ -11,21 +10,19 @@ namespace Application.Shared.UseCases;
 public abstract class EditBase<TDomain, TResultDTO, TCommandDTO>
     where TDomain : ModelBase
     where TResultDTO : IResultDTO<TDomain>
-    where TCommandDTO : ICommandDTO<TDomain>
+    where TCommandDTO : ICommand<TDomain>
 {
     public class Command : IRequest<TResultDTO>
     {
         public Guid Id { get; init; }
         public TCommandDTO Item { get; init; }
         public Guid UserId { get; init; }
-        public EditMode EditMode { get; init; }
 
-        public Command(Guid id, TCommandDTO item, Guid userId, EditMode editMode)
+        public Command(Guid id, TCommandDTO item, Guid userId)
         {
             Id = id;
             Item = item;
             UserId = userId;
-            EditMode = editMode;
         }
     }
 
@@ -50,25 +47,20 @@ public abstract class EditBase<TDomain, TResultDTO, TCommandDTO>
             if (item == null)
                 throw new NotFoundException();
 
-            if (request.EditMode == EditMode.Put)
-                Put(item, request.Item);
-            else if (request.EditMode == EditMode.Patch)
-                Patch(item, request.Item);
+            Edit(item, request.Item);
 
             if (!await _domain.CanEdit(item, request.UserId))
-                throw new BadRequestException();
+                throw new ForbiddenException();
 
             var result = await _repository.UpdateAsync(item);
 
             if (result == null)
-                throw new DomainException("保存に失敗しました");
+                throw new NotFoundException();
 
             return CreateDTO(result);
         }
 
-        protected abstract void Put(TDomain origin, TCommandDTO command);
-
-        protected abstract void Patch(TDomain origin, TCommandDTO command);
+        protected abstract void Edit(TDomain origin, TCommandDTO command);
 
         protected abstract TResultDTO CreateDTO(TDomain item);
     }

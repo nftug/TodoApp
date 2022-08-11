@@ -10,7 +10,7 @@ namespace Application.Shared.UseCases;
 public abstract class CreateBase<TDomain, TResultDTO, TCommandDTO>
     where TDomain : ModelBase
     where TResultDTO : IResultDTO<TDomain>
-    where TCommandDTO : ICommandDTO<TDomain>
+    where TCommandDTO : ICommand<TDomain>
 {
     public class Command : IRequest<TResultDTO>
     {
@@ -40,7 +40,7 @@ public abstract class CreateBase<TDomain, TResultDTO, TCommandDTO>
         {
             var item = CreateDomain(request);
             if (!await _domain.CanCreate(item, request.UserId))
-                throw new BadRequestException();
+                throw new ForbiddenException();
 
             var result = await _repository.CreateAsync(item);
             return CreateDTO(result);

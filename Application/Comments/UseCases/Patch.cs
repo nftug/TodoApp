@@ -6,8 +6,8 @@ using Domain.Services;
 
 namespace Application.Comments.UseCases;
 
-public class Edit
-    : EditBase<Comment, CommentResultDTO, CommentCommandDTO>
+public class Patch
+    : EditBase<Comment, CommentResultDTO, CommentPatchCommand>
 {
     public class Handler : HandlerBase
     {
@@ -19,14 +19,9 @@ public class Edit
         protected override CommentResultDTO CreateDTO(Comment item)
             => new(item);
 
-        protected override void Patch(Comment origin, CommentCommandDTO item)
+        protected override void Edit(Comment origin, CommentPatchCommand item)
         {
             origin.Edit(item.Content != null ? new(item.Content) : origin.Content);
-        }
-
-        protected override void Put(Comment origin, CommentCommandDTO item)
-        {
-            origin.Edit(new(item.Content));
         }
     }
 }

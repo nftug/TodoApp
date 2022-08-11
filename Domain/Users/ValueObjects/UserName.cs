@@ -24,5 +24,6 @@ public class UserName : ValueObject<UserName>
 
 public class UserNameAttribute : ValueObjectAttributeBase<UserName, string?>
 {
+    public UserNameAttribute(bool isPatch = false) : base(isPatch) { }
     protected override UserName CreateValueObject(string? value) => new(value);
 }

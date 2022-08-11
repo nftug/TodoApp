@@ -23,5 +23,6 @@ public class UserEmail : ValueObject<UserEmail>
 
 public class UserEmailAttribute : ValueObjectAttributeBase<UserEmail, string?>
 {
+    public UserEmailAttribute(bool isPatch = false) : base(isPatch) { }
     protected override UserEmail CreateValueObject(string? value) => new(value);
 }

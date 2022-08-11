@@ -40,7 +40,7 @@ public abstract class DeleteBase<TDomain>
             if (item == null)
                 throw new NotFoundException();
             if (!await _domain.CanDelete(item, request.UserId))
-                throw new BadRequestException();
+                throw new ForbiddenException();
 
             await _repository.RemoveAsync(request.Id);
             return Unit.Value;

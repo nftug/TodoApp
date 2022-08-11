@@ -12,7 +12,7 @@ public partial class TodoEditDialog : ComponentBase
     public MudDialogInstance MudDialog { get; set; } = null!;
 
     [Parameter]
-    public TodoCommandDTO Command { get; set; } = null!;
+    public TodoCommand Command { get; set; } = null!;
 
     [Inject]
     private ISnackbar Snackbar { get; set; } = null!;

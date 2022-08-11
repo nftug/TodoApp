@@ -53,6 +53,7 @@ public class TodoState : ValueObject<TodoState>
 
 public class TodoStateAttribute : ValueObjectAttributeBase<TodoState, string?>
 {
+    public TodoStateAttribute(bool isPatch = false) : base(isPatch) { }
     protected override TodoState CreateValueObject(string? value)
         => new(value);
 }

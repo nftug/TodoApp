@@ -7,7 +7,7 @@ using MudBlazor;
 
 namespace Client.Services.Api;
 
-public class TodoApiService : ApiServiceBase<TodoResultDTO, TodoCommandDTO, TodoQueryParameter>
+public class TodoApiService : ApiServiceBase<TodoResultDTO, TodoCommand, TodoQueryParameter>
 {
     public TodoApiService(HttpClient httpClient, ISnackbar snackbar, NavigationManager navigation)
         : base(httpClient, snackbar, navigation)

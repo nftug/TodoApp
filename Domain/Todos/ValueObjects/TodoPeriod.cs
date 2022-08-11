@@ -27,17 +27,21 @@ public class TodoPeriodAttribute : ValidationAttribute
 {
     private string OtherProperty { get; }
     private ArgumentType Type { get; }
+    private bool IsPatch { get; }
 
-    public TodoPeriodAttribute(ArgumentType type, string otherProperty)
+    public TodoPeriodAttribute(ArgumentType type, string otherProperty, bool isPatch = false)
     {
         Type = type;
         OtherProperty = otherProperty;
+        IsPatch = isPatch;
     }
 
     protected override ValidationResult? IsValid(object? value, ValidationContext validationContext)
     {
         DateTime? _value = (DateTime?)value;
         string[] memberNames = new[] { validationContext.MemberName! };
+
+        if (IsPatch && _value == null) return ValidationResult.Success;
 
         var propertyInfo = validationContext.ObjectType.GetProperty(OtherProperty);
         DateTime? otherValue = (DateTime?)propertyInfo?.GetValue(validationContext.ObjectInstance, null);

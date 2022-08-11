@@ -24,5 +24,6 @@ public class CommentContent : ValueObject<CommentContent>
 
 public class CommentContentAttribute : ValueObjectAttributeBase<CommentContent, string?>
 {
+    public CommentContentAttribute(bool isPatch = false) : base(isPatch) { }
     protected override CommentContent CreateValueObject(string? value) => new(value);
 }
