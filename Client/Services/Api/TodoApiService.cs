@@ -20,6 +20,6 @@ public class TodoApiService : ApiServiceBase<TodoResultDTO, TodoCommandDTO, Todo
     {
         var command = new TodoStateCommand { State = state.DisplayValue.ToLower() };
         var response = await _httpClient.PutAsJsonAsync($"{Resource}/{id}/state", command);
-        return await HandleResponse(response);
+        return await HandleResponse<TodoResultDTO>(response, showValidationError: true);
     }
 }

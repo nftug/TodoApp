@@ -4,6 +4,9 @@ using Client.Models;
 using MudBlazor;
 using System.Net;
 using Microsoft.AspNetCore.Components;
+using System.Text.Json;
+using Client.Extensions;
+using Client.Shared.Exceptions;
 
 namespace Client.Services.Api;
 
@@ -23,7 +26,7 @@ public abstract class ApiServiceBase<TResultDTO, TCommandDTO, TQueryParameter>
 
     protected abstract string Resource { get; }
 
-    public virtual async Task<Pagination<TResultDTO>?> GetList(TQueryParameter param)
+    public virtual async Task<Pagination<TResultDTO>?> GetList(TQueryParameter param, bool showValidationError = false)
     {
         var props = param.GetType().GetProperties();
         var queries = props
@@ -36,77 +39,78 @@ public abstract class ApiServiceBase<TResultDTO, TCommandDTO, TQueryParameter>
              .ToDictionary(x => x.Name, x => x.Value);
         var uri = QueryHelpers.AddQueryString(Resource, queries);
 
-        try
-        {
-            return await _httpClient.GetFromJsonAsync<Pagination<TResultDTO>>(uri);
-        }
-        catch (HttpRequestException e)
-        {
-            HandleHttpRequestException(e);
-            throw e;
-        }
+        return await GetRequest<Pagination<TResultDTO>>(uri, showValidationError);
     }
 
-    public virtual async Task<TResultDTO?> Get(Guid id)
+    public virtual async Task<TResultDTO?> Get(Guid id, bool showValidationError = false)
+        => await GetRequest<TResultDTO>($"{Resource}/{id}", showValidationError);
+
+    private async Task<T?> GetRequest<T>(string uri, bool showValidationError = false)
     {
-        try
-        {
-            return await _httpClient.GetFromJsonAsync<TResultDTO>($"{Resource}/{id}");
-        }
-        catch (HttpRequestException e)
-        {
-            HandleHttpRequestException(e);
-            throw e;
-        }
+        var response = await _httpClient.GetAsync(uri);
+        return await HandleResponse<T>(response, showValidationError);
     }
 
-    public virtual async Task<TResultDTO?> Create(TCommandDTO command)
+    public virtual async Task<TResultDTO?> Create(TCommandDTO command, bool showValidationError = false)
     {
         var response = await _httpClient.PostAsJsonAsync(Resource, command);
-        return await HandleResponse(response);
+        return await HandleResponse<TResultDTO>(response, showValidationError);
     }
 
-    public virtual async Task<TResultDTO?> Put(Guid id, TCommandDTO command)
+    public virtual async Task<TResultDTO?> Put(Guid id, TCommandDTO command, bool showValidationError = false)
     {
         var response = await _httpClient.PutAsJsonAsync($"{Resource}/{id}", command);
-        return await HandleResponse(response);
+        return await HandleResponse<TResultDTO>(response, showValidationError);
     }
 
-    public virtual async Task<TResultDTO?> Delete(Guid id)
+    public virtual async Task<TResultDTO?> Delete(Guid id, bool showValidationError = false)
     {
         var response = await _httpClient.DeleteAsync($"{Resource}/{id}");
-        return await HandleResponse(response);
+        return await HandleResponse<TResultDTO>(response, showValidationError);
     }
 
-    protected virtual async Task<TResultDTO?> HandleResponse(HttpResponseMessage response)
+    protected async Task<T?> HandleResponse<T>(HttpResponseMessage response, bool showValidationError = false)
     {
         try
         {
             response.EnsureSuccessStatusCode();
-            return await response.Content.ReadFromJsonAsync<TResultDTO>();
+            return await response.Content.ReadFromJsonAsync<T>();
         }
         catch (HttpRequestException e)
         {
-            HandleHttpRequestException(e);
+            switch (response.StatusCode)
+            {
+                case HttpStatusCode.BadRequest:
+                    if (showValidationError) await HandleValidationError(response);
+                    throw await HttpValidationErrorException.CreateAsync(response);
+                case HttpStatusCode.Forbidden:
+                    _snackbar.Add("アクセスに必要な権限がありません。", Severity.Warning);
+                    break;
+                case HttpStatusCode.Unauthorized:
+                    _snackbar.Add("ログインが必要です。", Severity.Warning);
+                    var currentUri = _navigation.ToBaseRelativePath(_navigation.Uri);
+                    _navigation.NavigateTo($"/login?redirect={currentUri}", false, true);
+                    break;
+                case HttpStatusCode.InternalServerError:
+                    _snackbar.Add("サーバーエラーです。", Severity.Error);
+                    break;
+                default:
+                    _snackbar.Add("サーバーでエラーが発生しました。", Severity.Error);
+                    break;
+            }
             throw e;
         }
     }
 
-    protected void HandleHttpRequestException(HttpRequestException exception)
+    protected async Task HandleValidationError(HttpResponseMessage response)
     {
-        switch (exception.StatusCode)
+        var errorDetails = await response.GetErrorDetailsAsync();
+
+        if (errorDetails?.Errors == null) return;
+        foreach (var error in errorDetails.Errors)
         {
-            case HttpStatusCode.BadRequest:
-                _snackbar.Add("この操作を行う権限がありません。", Severity.Error);
-                break;
-            case HttpStatusCode.Unauthorized:
-                _snackbar.Add("ログインが必要です。", Severity.Warning);
-                var currentUri = _navigation.ToBaseRelativePath(_navigation.Uri);
-                _navigation.NavigateTo($"/login?redirect={currentUri}", false, true);
-                break;
-            case HttpStatusCode.InternalServerError:
-                _snackbar.Add("サーバーエラーです。", Severity.Error);
-                break;
+            _snackbar.Add($"{error.Key}で検証エラーが発生しました：<br>" +
+                string.Join("<br>", error.Value), Severity.Warning);
         }
     }
 }
