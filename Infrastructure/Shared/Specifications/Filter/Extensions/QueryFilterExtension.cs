@@ -5,7 +5,7 @@ namespace Infrastructure.Shared.Specifications.Filter.Extensions;
 
 internal static class QueryFilterExtension
 {
-    public static void AddSearch<T>(
+    public static ICollection<ExpressionGroup<T>> AddSearch<T>(
         this ICollection<ExpressionGroup<T>> expressionGroups,
         string? fieldValue,
         Func<Keyword, Expression<Func<T, bool>>> expressionFunc
@@ -24,9 +24,10 @@ internal static class QueryFilterExtension
         };
 
         expressionGroups.AddSearchField(searchField);
+        return expressionGroups;
     }
 
-    public static void AddSimpleSearch<T>(
+    public static ICollection<ExpressionGroup<T>> AddSearch<T>(
         this ICollection<ExpressionGroup<T>> expressionGroups,
         object? fieldValue,
         Expression<Func<T, bool>> expression
@@ -40,6 +41,7 @@ internal static class QueryFilterExtension
         };
 
         expressionGroups.AddSearchField(searchField);
+        return expressionGroups;
     }
 
     public static IQueryable<T> ApplyExpressionGroup<T>(

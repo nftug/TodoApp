@@ -1,5 +1,4 @@
 using Infrastructure.DataModels;
-using System.Text.RegularExpressions;
 using Domain.Todos.Entities;
 using Domain.Todos.Queries;
 using Domain.Shared.Queries;
@@ -16,51 +15,26 @@ internal class TodoFilterSpecification : FilterSpecificationBase<Todo, TodoDataM
     {
     }
 
-    protected override IQueryable<IDataModel<Todo>> GetQueryByParameter(
-        IQueryable<IDataModel<Todo>> source,
-        IQueryParameter<Todo> param
-    )
+    protected override void AddQueryByParameter(IQueryable<IDataModel<Todo>> source, IQueryParameter<Todo> param)
     {
         var _param = (TodoQueryParameter)param;
 
-        ExpressionGroups.AddSimpleSearch(_param.UserId, x => x.OwnerUserId == _param.UserId);
+        AddQuery(_param.UserId, x => x.OwnerUserId == _param.UserId);
 
         var stateValue = new TodoState(_param.State).Value;
-        ExpressionGroups.AddSimpleSearch(_param.State, x => x.State == stateValue);
+        AddQuery(_param.State, x => x.State == stateValue);
 
-        ExpressionGroups.AddSearch(_param.Q, k =>
-            ExpressionCombiner.OrElse(
-                Contains(k, "Title"),
-                Contains(k, "Description"),
-                ContainsInChildren<CommentDataModel>(k, "Comments", "Content")));
+        AddSearch(_param.Q, k => ExpressionCombiner.OrElse(
+            Contains(k, x => x.Title),
+            Contains(k, x => x.Description),
+            ContainsInChildren(k, x => x.Comments, y => y.Content)));
 
-        ExpressionGroups.AddSearch(_param.Title, k => Contains(k, "Title"));
+        AddContains(_param.Title, x => x.Title);
 
-        ExpressionGroups.AddSearch(_param.Description, k => Contains(k, "Description"));
+        AddContains(_param.Description, x => x.Description);
 
-        ExpressionGroups.AddSearch(_param.Comment, k =>
-            ContainsInChildren<CommentDataModel>(k, "Comments", "Content"));
+        AddContainsInChildren(_param.Comment, x => x.Comments, x => x.Content);
 
-        ExpressionGroups.AddSearch(_param.UserName, k => ContainsInChild(k, "OwnerUser", "UserName"));
-
-        return source.OfType<TodoDataModel>().ApplyExpressionGroup(ExpressionGroups);
-    }
-
-    protected override IQueryable<TodoDataModel> OrderQuery(
-        IQueryable<IDataModel<Todo>> query,
-        IQueryParameter<Todo> param
-    )
-    {
-        var _query = query.Cast<TodoDataModel>();
-        bool isDescending = Regex.IsMatch(param.Sort, "^-");
-        string orderBy = Regex.Replace(param.Sort, "^-", "");
-
-        return orderBy switch
-        {
-            "createdOn" => _query.OrderByAscDesc(x => x.CreatedOn, isDescending),
-            "updatedOn" => _query.OrderByAscDesc(x => x.UpdatedOn, isDescending),
-            "title" => _query.OrderByAscDesc(x => x.Title, isDescending),
-            _ => query.Cast<TodoDataModel>()
-        };
+        AddContains(_param.UserName, x => x.OwnerUser!.UserName);
     }
 }
