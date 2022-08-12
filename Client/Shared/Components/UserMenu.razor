@@ -8,9 +8,9 @@
 
 @implements IDisposable
 
-<MudMenu AnchorOrigin="Origin.BottomRight" FullWidth>
+<MudMenu AnchorOrigin="Origin.BottomRight">
     <ActivatorContent>
-        <div class="d-flex justify-end" style="width: 150px">
+        <div class="d-flex justify-end">
             <MudButton Variant="Variant.Text" EndIcon="@Icons.Filled.AccountCircle" Color="Color.Inherit">
                 @AuthStoreService.UserName
             </MudButton>
@@ -19,11 +19,11 @@
     <ChildContent>
         @if(AuthStoreService.IsLoggedIn)
         {
-            <MenuButton OnClick="@Logout">ログアウト</MenuButton>
+            <MudButton Class="mud-menu-button" OnClick="@Logout" StartIcon="@Icons.Filled.Logout">ログアウト</MudButton>
         }
         else
         {
-            <MenuButton Href="login">ログイン</MenuButton>
+            <MudButton Class="mud-menu-button" Href="login" StartIcon="@Icons.Filled.Login">ログイン</MudButton>
         }
     </ChildContent>
 </MudMenu>

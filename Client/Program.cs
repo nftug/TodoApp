@@ -7,6 +7,8 @@ using Client.Services.Api;
 using MudBlazor.Services;
 using Client;
 using MudBlazor;
+using Client.Services.UserPreferences;
+using Client.Services;
 
 var builder = WebAssemblyHostBuilder.CreateDefault(args);
 builder.RootComponents.Add<App>("#app");
@@ -26,6 +28,8 @@ builder.Services.AddBlazoredLocalStorage();
 builder.Services.AddScoped<AuthenticationStateProvider, SpaAuthenticateProvider>();
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddSingleton<AuthStoreService>();
+builder.Services.AddScoped<UserPreferencesService>();
+builder.Services.AddScoped<LayoutService>();
 
 builder.Services.AddScoped<TodoApiService>();
 

@@ -32,7 +32,7 @@ public partial class TodoItemList : ComponentBase
     [Parameter]
     public bool IsLoading { get; set; }
 
-    private MudMessageBox? DeleteConfirm { get; set; }
+    private MudMessageBox _deleteConfirm = null!;
     private string SearchText { get; set; } = string.Empty;
 
     protected override void OnParametersSet()
@@ -79,8 +79,7 @@ public partial class TodoItemList : ComponentBase
 
     private async Task DeleteItem(TodoResultDTO item)
     {
-        if (DeleteConfirm == null) return;
-        if (await DeleteConfirm.Show() == null) return;
+        if (await _deleteConfirm.Show() == null) return;
 
         await TodoApiService.Delete(item.Id);
         Snackbar.Add("Todoを削除しました。", Severity.Success);

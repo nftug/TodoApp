@@ -5,12 +5,16 @@
 @inject IDialogService DialogService
 
 <span class="todo-create-fab">
-    <MudFab Color="Color.Primary" StartIcon="@Icons.Material.Filled.Add" OnClick="@CreateItem" />
+    <MudTooltip Text="Todoを追加" @bind-IsVisible="@IsVisible">
+        <MudFab Color="Color.Primary" StartIcon="@Icons.Material.Filled.Add" OnClick="@CreateItem" />
+    </MudTooltip>
 </span>
 
 @code {
     [Parameter]
     public EventCallback<TodoResultDTO> OnCreateItem { get; set; }
+
+    private bool IsVisible { get; set; } = false;
 
     private async Task CreateItem()
     {
@@ -18,6 +22,10 @@
         var options = new DialogOptions { MaxWidth = MaxWidth.Small };
         var dialog = DialogService.Show<TodoEditDialog>("Todoの作成", parameters, options);
         var result = await dialog.Result;
+
+        // ダイアログを閉じるとツールチップが開くので抑制する
+        await Task.Delay(10);
+        IsVisible = false;
 
         if (!result.Cancelled) await OnCreateItem.InvokeAsync();
     }

@@ -10,6 +10,7 @@ public class SpaAuthenticateProvider : AuthenticationStateProvider
 {
     private readonly HttpClient _httpClient;
     private readonly ILocalStorageService _localStorage;
+    private const string Key = "tokenModel";
 
     public SpaAuthenticateProvider(HttpClient httpClient, ILocalStorageService localStorage)
     {
@@ -19,20 +20,18 @@ public class SpaAuthenticateProvider : AuthenticationStateProvider
 
     public async override Task<AuthenticationState> GetAuthenticationStateAsync()
     {
-        var savedToken = await _localStorage.GetItemAsync<string>("authToken");
-        var userName = await _localStorage.GetItemAsync<string>("userName");
-        var userId = await _localStorage.GetItemAsync<Guid>("userId");
+        var tokenModel = await _localStorage.GetItemAsync<TokenModel>(Key);
 
         // トークンが見つからなければ未ログイン扱いにする
-        if (string.IsNullOrWhiteSpace(savedToken))
+        if (tokenModel == null)
             return new AuthenticationState(new ClaimsPrincipal(new ClaimsIdentity()));
 
         // HttpClientのヘッダーにトークンを加える
-        _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("bearer", savedToken);
+        _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("bearer", tokenModel.Token);
 
         var claims = new List<Claim> {
-            new Claim(ClaimTypes.Name, userName),
-            new Claim(ClaimTypes.NameIdentifier, userId.ToString())
+            new Claim(ClaimTypes.Name, tokenModel.UserName),
+            new Claim(ClaimTypes.NameIdentifier, tokenModel.UserId.ToString())
         };
 
         var user = new ClaimsPrincipal(new ClaimsIdentity(claims, "User"));
@@ -41,19 +40,13 @@ public class SpaAuthenticateProvider : AuthenticationStateProvider
 
     public async Task MarkUserAsAuthenticated(TokenModel tokenModel)
     {
-        // ローカルストレージに認証情報を保持して変更通知を行う
-        await _localStorage.SetItemAsync("userName", tokenModel.UserName);
-        await _localStorage.SetItemAsync("authToken", tokenModel.Token);
-        await _localStorage.SetItemAsync("userId", tokenModel.UserId);
+        await _localStorage.SetItemAsync(Key, tokenModel);
         NotifyAuthenticationStateChanged(GetAuthenticationStateAsync());
     }
 
     public async Task MarkUserAsLoggedOut()
     {
-        // ローカルストレージの認証情報を削除して変更通知を行う
-        await _localStorage.RemoveItemAsync("userName");
-        await _localStorage.RemoveItemAsync("authToken");
-        await _localStorage.RemoveItemAsync("userId");
+        await _localStorage.RemoveItemAsync(Key);
         _httpClient.DefaultRequestHeaders.Authorization = null;
         NotifyAuthenticationStateChanged(GetAuthenticationStateAsync());
     }

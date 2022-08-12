@@ -39,29 +39,29 @@
                 <ChildContent>
                     @foreach (var state in TodoState.Status)
                     {
-                        <MenuButton
+                        <MudButton Class="mud-menu-button"
                             OnClick="@(() => ChangeState(context, state))"
                             Disabled="@(IsDisabledChangeState(context, state))">
                             @(state.DisplayValue)に切り替え
-                        </MenuButton>
+                        </MudButton>
                     }
                 </ChildContent>
             </MudMenu>
         </MudTd>
         <MudTd DataLabel="" Style="text-align: center">
             <MudMenu Dense Icon="@Icons.Material.Filled.MoreVert" Disabled="@(!IsOwnedByUser(context))">
-                <MenuButton OnClick="@(() => EditItem(context))">
+                <MudButton Class="mud-menu-button" StartIcon="@Icons.Filled.Edit" OnClick="@(() => EditItem(context))">
                     編集
-                </MenuButton>
-                <MenuButton OnClick="@(() => DeleteItem(context))">
+                </MudButton>
+                <MudButton Class="mud-menu-button" StartIcon="@Icons.Filled.Delete" OnClick="@(() => DeleteItem(context))">
                     削除
-                </MenuButton>
+                </MudButton>
             </MudMenu>
         </MudTd>
     </RowTemplate>
 </MudTable>
 
-<MudMessageBox @ref="DeleteConfirm" Title="Todoの削除" CancelText="キャンセル">
+<MudMessageBox @ref="_deleteConfirm" Title="Todoの削除" CancelText="キャンセル">
     <MessageContent>
         本当にこのTodoを削除しますか？
     </MessageContent>
