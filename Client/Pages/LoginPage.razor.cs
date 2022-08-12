@@ -18,11 +18,11 @@ public partial class LoginPage : ComponentBase
     public string? Redirect { get; set; }
 
     public LoginModel LoginModel { get; set; } = new();
-    public bool IsLoading { get; set; }
+    public bool _isLoading = false;
 
     public async Task SubmitAsync()
     {
-        IsLoading = true;
+        _isLoading = true;
 
         var model = new LoginCommand
         {
@@ -34,7 +34,7 @@ public partial class LoginPage : ComponentBase
         if (result.IsSuccessful)
             Navigation.NavigateTo(Redirect ?? "/");
 
-        IsLoading = false;
+        _isLoading = false;
     }
 }
 

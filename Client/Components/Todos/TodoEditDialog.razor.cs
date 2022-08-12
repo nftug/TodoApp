@@ -19,13 +19,14 @@ public partial class TodoEditDialog : ComponentBase
     [Inject]
     private TodoApiService TodoApiService { get; set; } = null!;
 
-    private EditContext EditContext = null!;
+    private EditContext _editContext = null!;
+    private bool _isSaving = false;
 
     private bool IsNewData => Command.Id == null;
 
     protected override void OnInitialized()
     {
-        EditContext = new EditContext(Command);
+        _editContext = new EditContext(Command);
     }
 
     private void Cancel()
@@ -37,12 +38,16 @@ public partial class TodoEditDialog : ComponentBase
     {
         if (IsNewData)
         {
+            _isSaving = true;
             var result = await TodoApiService.Create(Command);
+            _isSaving = false;
             if (result != null) Snackbar.Add("Todoを作成しました。", Severity.Success);
         }
         else
         {
+            _isSaving = true;
             var result = await TodoApiService.Put((Guid)Command.Id!, Command);
+            _isSaving = false;
             if (result != null) Snackbar.Add("Todoを編集しました。", Severity.Success);
         }
 
@@ -51,6 +56,6 @@ public partial class TodoEditDialog : ComponentBase
 
     private bool ValidateEditForm
         => IsNewData
-           ? EditContext.IsModified() && EditContext.Validate()
-           : EditContext.Validate();
+           ? _editContext.IsModified() && _editContext.Validate()
+           : _editContext.Validate();
 }

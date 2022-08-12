@@ -1,3 +1,4 @@
+@using Client.Components.Common
 @using Client.Services.Api
 
 <MudDialog>
@@ -9,7 +10,7 @@
     </TitleContent>
 
     <DialogContent>
-        <EditForm EditContext="@EditContext">
+        <EditForm EditContext="@_editContext">
             <DataAnnotationsValidator />
             <MudTextField @bind-Value="@Command.Title" Label="タイトル" For="@(() => Command.Title)" Class="mb-3" />
             <MudTextField @bind-Value="@Command.Description" Label="説明" Lines="5" For="@(() => Command.Description)" Class="mb-3" />
@@ -27,9 +28,10 @@
     </DialogContent>
 
     <DialogActions>
-        <MudButton OnClick="Cancel">キャンセル</MudButton>
+        <MudButton OnClick="Cancel" Disabled="@_isSaving">キャンセル</MudButton>
         <MudButton Color="Color.Primary" Variant="Variant.Filled" OnClick="@SubmitTodo"
-             Disabled="@(!ValidateEditForm)" StartIcon="@Icons.Filled.Save">
+             Disabled="@(!ValidateEditForm || _isSaving)" StartIcon="@Icons.Filled.Save">
+             <ButtonLoadingOverlay Visible="@_isSaving" />
             保存
         </MudButton>
     </DialogActions>

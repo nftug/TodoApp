@@ -5,8 +5,8 @@
 
 @if (Items == null) return;
 
-<MudPagination Count="Items.TotalPages" Selected="Page"
-    SelectedChanged="OnChangePage" @attributes="@Attributes" />
+<MudPagination Count="@Items.TotalPages" Selected="@_page"
+    SelectedChanged="@OnChangePage" @attributes="@Attributes" />
 
 @code {
     [Parameter]
@@ -15,16 +15,16 @@
     [Parameter(CaptureUnmatchedValues = true)]
     public Dictionary<string, object>? Attributes { get; set; }
 
-    private int Page { get; set; }
+    private int _page = 1;
 
     protected override void OnInitialized()
     {
-        Page = Items?.CurrentPage ?? 1;
+        _page = Items?.CurrentPage ?? 1;
     }
 
     private void OnChangePage(int value)
     {
-        Page = value;
+        _page = value;
         var uri = Navigation.GetUriWithQueryParameter("page", value);
         Navigation.NavigateTo(uri);
     }

@@ -24,8 +24,8 @@ public partial class TodoPage : ComponentBase
     [Parameter]
     public string? State { get; set; } = null!;
 
-    private Pagination<TodoResultDTO>? TodoItems { get; set; } = null;
-    private bool IsLoading { get; set; }
+    private Pagination<TodoResultDTO>? _todoItems;
+    private bool _isLoading = false;
 
     protected override void OnParametersSet()
     {
@@ -44,11 +44,11 @@ public partial class TodoPage : ComponentBase
 
         InvokeAsync(async () =>
         {
-            if (showIndicator) IsLoading = true;
+            if (showIndicator) _isLoading = true;
 
-            TodoItems = await TodoApiService.GetList(param, showValidationError: true);
+            _todoItems = await TodoApiService.GetList(param, showValidationError: true);
 
-            IsLoading = false;
+            _isLoading = false;
             StateHasChanged();
         });
     }

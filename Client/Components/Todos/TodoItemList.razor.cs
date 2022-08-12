@@ -33,11 +33,11 @@ public partial class TodoItemList : ComponentBase
     public bool IsLoading { get; set; }
 
     private MudMessageBox _deleteConfirm = null!;
-    private string SearchText { get; set; } = string.Empty;
+    private string _searchText { get; set; } = string.Empty;
 
     protected override void OnParametersSet()
     {
-        SearchText = Navigation.QueryString("q") ?? string.Empty;
+        _searchText = Navigation.QueryString("q") ?? string.Empty;
     }
 
     private static Color GetTodoChipColor(TodoResultDTO item)
@@ -97,7 +97,7 @@ public partial class TodoItemList : ComponentBase
 
     private void DoSearch()
     {
-        var querySuffix = !string.IsNullOrWhiteSpace(SearchText) ? $"?q={SearchText}" : null;
+        var querySuffix = !string.IsNullOrWhiteSpace(_searchText) ? $"?q={_searchText}" : null;
         var uri = $"{Navigation.Uri.Split('?')[0]}{querySuffix}";
         Navigation.NavigateTo(uri);
     }

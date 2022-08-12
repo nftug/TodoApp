@@ -1,14 +1,7 @@
 @page "/login"
+@using Client.Components.Common
 
 <PageTitle>ログイン</PageTitle>
-
-@if (IsLoading)
-{
-    <div class="d-flex justify-center mt-16 pt-16">
-        <MudProgressCircular Color="Color.Default" Indeterminate="true" />
-    </div>
-    return;
-}
 
 <MudContainer Class="my-8 py-8" MaxWidth="MaxWidth.ExtraSmall">
     <MudText Typo="Typo.h4" GutterBottom="true" class="mb-5">ログイン</MudText>
@@ -22,8 +15,10 @@
             For="@(() => LoginModel.Password)" InputType="InputType.Password" />
 
         <MudButton Class="mt-7" Variant="Variant.Filled" StartIcon="@Icons.Filled.Login"
-            Color="Color.Primary" FullWidth="true" ButtonType="ButtonType.Submit">
+            Color="Color.Primary" FullWidth="true" ButtonType="ButtonType.Submit"
+            Disabled="@_isLoading">
             ログイン
+            <ButtonLoadingOverlay Visible="@_isLoading" />
         </MudButton>
     </EditForm>
 </MudContainer>

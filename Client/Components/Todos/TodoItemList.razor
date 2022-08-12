@@ -5,7 +5,7 @@
     <ToolBarContent>
         <MudSpacer />
         <form class="d-flex justify-end" @onsubmit="@DoSearch">
-            <MudTextField @bind-Value="@SearchText" Placeholder="検索" Adornment="Adornment.Start"
+            <MudTextField @bind-Value="@_searchText" Placeholder="検索" Adornment="Adornment.Start"
                 Margin="Margin.Dense" AdornmentIcon="@Icons.Material.Filled.Search"
                 Class="mt-0 mb-4" Style="width: 300px" Clearable OnClearButtonClick="@DoSearch" />
         </form>

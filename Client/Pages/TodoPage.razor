@@ -8,7 +8,7 @@
 
 <MudText Typo="Typo.h3" GutterBottom="true">Todo List</MudText>
 
-@if (TodoItems == null)
+@if (_todoItems == null)
 {
     <div class="d-flex justify-center mt-16 pt-16">
         <MudProgressCircular Color="Color.Default" Indeterminate="true" />
@@ -16,17 +16,17 @@
 }
 else
 {
-    <MudText Class="mb-6">@(TodoItems.TotalItems) 個の項目が見つかりました。</MudText>
+    <MudText Class="mb-6">@(_todoItems.TotalItems) 個の項目が見つかりました。</MudText>
 
     <TodoItemList
-        IsLoading="@IsLoading"
-        Items="@TodoItems.Results"
+        IsLoading="@_isLoading"
+        Items="@_todoItems.Results"
         OnEditItem="@OnEditItem"
         OnDeleteItem="@(() => FetchData(showIndicator: false))"
         OnChangeState="@(() => FetchData(showIndicator: false))" />
 
     <div class="d-flex justify-center">
-        <PaginationLink Items="@TodoItems" class="mt-6" />
+        <PaginationLink Items="@_todoItems" class="mt-6" />
     </div>
 }
 
