@@ -61,18 +61,44 @@ public partial class TodoTable : ComponentBase
 
     private SortDirection GetSortDirection(string value)
     {
-        string sortKey = Regex.Replace(Parameter.Sort, "^-", "");
+        var regex = new Regex("^-");
+        string sortKey = regex.Replace(Parameter.Sort, "");
         if (value != sortKey) return SortDirection.None;
 
-        bool isDescending = Regex.IsMatch(Parameter.Sort, "^-");
+        bool isDescending = regex.IsMatch(Parameter.Sort);
         return isDescending ? SortDirection.Descending : SortDirection.Ascending;
+    }
+
+    private void SetSortDirection(string key, SortDirection sortDirection)
+    {
+        string? sortKey;
+
+        if (sortDirection != SortDirection.None)
+        {
+            string sortPrefix = sortDirection == SortDirection.Descending ? "-" : string.Empty;
+            Parameter.Sort = sortPrefix + key;
+            sortKey = Parameter.Sort;
+        }
+        else
+        {
+            Parameter.Sort = new TodoQueryParameter().Sort;
+            sortKey = null;
+        }
+
+        Navigation.NavigateTo(Navigation.GetUriWithQueryParameters(
+            new Dictionary<string, object?> { { "sort", sortKey }, { "page", null } }
+        ));
     }
 
     public async Task ReloadServerData()
     {
         if (_isLoading) return;
 
-        await Task.Delay(10);
+        // ページネーションの更新に必要
+        await Task.Delay(5);
+
+        // ソート状態を初期化する (ヘッダーのソート表示の更新に必要)
+        _table.Context.InitializeSorting();
         await _table.ReloadServerData();
     }
 
@@ -91,13 +117,6 @@ public partial class TodoTable : ComponentBase
 
     private async Task<TableData<TodoResultDTO>> ServerReload(TableState state)
     {
-        if (state.SortLabel != null)
-        {
-            string sortPrefix = state.SortDirection == SortDirection.Descending ? "-" : string.Empty;
-            Parameter.Sort = sortPrefix + state.SortLabel;
-            Navigation.NavigateTo(Navigation.GetUriWithQueryParameter("sort", Parameter.Sort));
-        }
-
         StateHasChanged();  // ローディング状態を更新する
         _isLoading = true;
         Data = await TodoApiService.GetList(Parameter, showValidationError: true);

@@ -16,16 +16,34 @@
 
     <HeaderContent>
         <MudTh Style="width: 100%">
-            <MudTableSortLabel T="TodoResultDTO" SortLabel="Title" InitialDirection="@(GetSortDirection("Title"))">タイトル</MudTableSortLabel>
+            <MudTableSortLabel T="TodoResultDTO" SortLabel="Title"
+                InitialDirection="@(GetSortDirection("Title"))" SortDirectionChanged="@(d => SetSortDirection("Title", d))">
+                タイトル
+            </MudTableSortLabel>
         </MudTh>
-        <MudTh Style="min-width: 150px">
-            <MudTableSortLabel T="TodoResultDTO" SortLabel="StartDate" InitialDirection="@(GetSortDirection("StartDate"))">開始日</MudTableSortLabel>
+        <MudTh Style="min-width: 110px">
+            <MudTableSortLabel T="TodoResultDTO" SortLabel="StartDate"
+                InitialDirection="@(GetSortDirection("StartDate"))" SortDirectionChanged="@(d => SetSortDirection("StartDate", d))">
+                開始日
+            </MudTableSortLabel>
         </MudTh>
-        <MudTh Style="min-width: 150px">
-            <MudTableSortLabel T="TodoResultDTO" SortLabel="EndDate" InitialDirection="@(GetSortDirection("EndDate"))">終了日</MudTableSortLabel>
+        <MudTh Style="min-width: 110px">
+            <MudTableSortLabel T="TodoResultDTO" SortLabel="EndDate"
+                InitialDirection="@(GetSortDirection("EndDate"))" SortDirectionChanged="@(d => SetSortDirection("EndDate", d))">
+                終了日
+            </MudTableSortLabel>
         </MudTh>
         <MudTh Style="width: 150px; text-align: center;">
-            <MudTableSortLabel T="TodoResultDTO" SortLabel="State" InitialDirection="@(GetSortDirection("State"))">状態</MudTableSortLabel>
+            <MudTableSortLabel T="TodoResultDTO" SortLabel="State"
+                InitialDirection="@(GetSortDirection("State"))" SortDirectionChanged="@(d => SetSortDirection("State", d))">
+                状態
+            </MudTableSortLabel>
+        </MudTh>
+        <MudTh Style="width: 110px; text-align: center;">
+            <MudTableSortLabel T="TodoResultDTO" SortLabel="UpdatedOn"
+                InitialDirection="@(GetSortDirection("UpdatedOn"))" SortDirectionChanged="@(d => SetSortDirection("UpdatedOn", d))">
+                更新日
+            </MudTableSortLabel>
         </MudTh>
         <MudTh Style="width: 50px; text-align: center;"></MudTh>
     </HeaderContent>
@@ -59,6 +77,7 @@
                 </ChildContent>
             </MudMenu>
         </MudTd>
+        <MudTd DataLabel="更新日">@(context.UpdatedOn.ToShortDateString())</MudTd>
         <MudTd DataLabel="" Style="text-align: center">
             <MudMenu Dense Icon="@Icons.Material.Filled.MoreVert" Disabled="@(!IsOwnedByUser(context))">
                 <MudButton Class="mud-menu-button" StartIcon="@Icons.Filled.Edit" OnClick="@(() => EditItem(context))">
