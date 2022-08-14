@@ -1,14 +1,16 @@
+using System.Text.RegularExpressions;
 using Application.Todos.Models;
 using Client.Services.Api;
 using Client.Services.Authentication;
-using Client.Shared.Extensions;
+using Client.Shared.Models;
+using Domain.Todos.Queries;
 using Domain.Todos.ValueObjects;
 using Microsoft.AspNetCore.Components;
 using MudBlazor;
 
 namespace Client.Components.Todos;
 
-public partial class TodoItemList : ComponentBase
+public partial class TodoTable : ComponentBase
 {
     [Inject]
     private TodoApiService TodoApiService { get; set; } = null!;
@@ -22,23 +24,15 @@ public partial class TodoItemList : ComponentBase
     private NavigationManager Navigation { get; set; } = null!;
 
     [Parameter]
-    public IEnumerable<TodoResultDTO> Items { get; set; } = null!;
+    public TodoQueryParameter Parameter { get; set; } = new TodoQueryParameter();
     [Parameter]
-    public EventCallback OnEditItem { get; set; }
-    [Parameter]
-    public EventCallback OnDeleteItem { get; set; }
-    [Parameter]
-    public EventCallback OnChangeState { get; set; }
-    [Parameter]
-    public bool IsLoading { get; set; }
+    public EventCallback OnLoaded { get; set; }
 
+    public Pagination<TodoResultDTO>? Data = null!;
+
+    private MudTable<TodoResultDTO> _table = null!;
     private MudMessageBox _deleteConfirm = null!;
-    private string _searchText { get; set; } = string.Empty;
-
-    protected override void OnParametersSet()
-    {
-        _searchText = Navigation.QueryString("q") ?? string.Empty;
-    }
+    private bool _isLoading = false;
 
     private static Color GetTodoChipColor(TodoResultDTO item)
     {
@@ -65,6 +59,58 @@ public partial class TodoItemList : ComponentBase
 
     private bool IsOwnedByUser(TodoResultDTO item) => item.OwnerUserId == AuthStoreService.UserId;
 
+    private SortDirection GetSortDirection(string value)
+    {
+        string sortKey = Regex.Replace(Parameter.Sort, "^-", "");
+        if (value != sortKey) return SortDirection.None;
+
+        bool isDescending = Regex.IsMatch(Parameter.Sort, "^-");
+        return isDescending ? SortDirection.Descending : SortDirection.Ascending;
+    }
+
+    public async Task ReloadServerData()
+    {
+        if (_isLoading) return;
+
+        await Task.Delay(10);
+        await _table.ReloadServerData();
+    }
+
+    public async Task RefreshTable()
+    {
+        bool isParameterChanged =
+            Parameter.Page != 1
+             || !string.IsNullOrEmpty(Parameter.Q)
+             || !string.IsNullOrEmpty(Parameter.State);
+
+        if (isParameterChanged)
+            Navigation.NavigateTo(Navigation.Uri.Split('?')[0]);
+        else
+            await _table.ReloadServerData();
+    }
+
+    private async Task<TableData<TodoResultDTO>> ServerReload(TableState state)
+    {
+        if (state.SortLabel != null)
+        {
+            string sortPrefix = state.SortDirection == SortDirection.Descending ? "-" : string.Empty;
+            Parameter.Sort = sortPrefix + state.SortLabel;
+            Navigation.NavigateTo(Navigation.GetUriWithQueryParameter("sort", Parameter.Sort));
+        }
+
+        StateHasChanged();  // ローディング状態を更新する
+        _isLoading = true;
+        Data = await TodoApiService.GetList(Parameter, showValidationError: true);
+        _isLoading = false;
+
+        var totalItems = (int)Data!.TotalItems;
+        var items = Data.Results;
+
+        await OnLoaded.InvokeAsync();
+
+        return new TableData<TodoResultDTO> { TotalItems = totalItems, Items = items };
+    }
+
     private async Task EditItem(TodoResultDTO item)
     {
         if (!IsOwnedByUser(item)) return;
@@ -74,7 +120,8 @@ public partial class TodoItemList : ComponentBase
         var dialog = DialogService.Show<TodoEditDialog>("Todoの編集", parameters, options);
         var result = await dialog.Result;
 
-        if (!result.Cancelled) await OnEditItem.InvokeAsync();
+        if (result.Cancelled) return;
+        await RefreshTable();
     }
 
     private async Task DeleteItem(TodoResultDTO item)
@@ -84,7 +131,7 @@ public partial class TodoItemList : ComponentBase
         await TodoApiService.Delete(item.Id);
         Snackbar.Add("Todoを削除しました。", Severity.Success);
 
-        await OnDeleteItem.InvokeAsync();
+        await _table.ReloadServerData();
     }
 
     private async Task ChangeState(TodoResultDTO item, TodoState state)
@@ -92,12 +139,12 @@ public partial class TodoItemList : ComponentBase
         var newItem = await TodoApiService.ChangeState(item.Id, state);
         Snackbar.Add("Todoの状態を変更しました。", Severity.Success);
 
-        await OnChangeState.InvokeAsync();
+        await _table.ReloadServerData();
     }
 
     private void DoSearch()
     {
-        var querySuffix = !string.IsNullOrWhiteSpace(_searchText) ? $"?q={_searchText}" : null;
+        var querySuffix = !string.IsNullOrWhiteSpace(Parameter.Q) ? $"?q={Parameter.Q}" : null;
         var uri = $"{Navigation.Uri.Split('?')[0]}{querySuffix}";
         Navigation.NavigateTo(uri);
     }

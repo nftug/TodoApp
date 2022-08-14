@@ -5,7 +5,7 @@ namespace Domain.Shared.Queries;
 public interface IQueryParameter<TDomain>
     where TDomain : ModelBase
 {
-    int? Page { get; init; }
-    int? Limit { get; init; }
-    string Sort { get; init; }
+    int? Page { get; set; }
+    int? Limit { get; set; }
+    string Sort { get; set; }
 }

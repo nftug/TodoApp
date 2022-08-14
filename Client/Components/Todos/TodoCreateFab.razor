@@ -14,7 +14,7 @@
     [Parameter]
     public EventCallback<TodoResultDTO> OnCreateItem { get; set; }
 
-    private bool _isVisible { get; set; } = false;
+    private bool _isVisible = false;
 
     private async Task CreateItem()
     {

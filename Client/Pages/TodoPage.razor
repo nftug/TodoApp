@@ -8,26 +8,11 @@
 
 <MudText Typo="Typo.h3" GutterBottom="true">Todo List</MudText>
 
-@if (_todoItems == null)
+@if (_table?.Data != null)
 {
-    <div class="d-flex justify-center mt-16 pt-16">
-        <MudProgressCircular Color="Color.Default" Indeterminate="true" />
-    </div>
-}
-else
-{
-    <MudText Class="mb-6">@(_todoItems.TotalItems) 個の項目が見つかりました。</MudText>
-
-    <TodoItemList
-        IsLoading="@_isLoading"
-        Items="@_todoItems.Results"
-        OnEditItem="@OnEditItem"
-        OnDeleteItem="@(() => FetchData(showIndicator: false))"
-        OnChangeState="@(() => FetchData(showIndicator: false))" />
-
-    <div class="d-flex justify-center">
-        <PaginationLink Items="@_todoItems" class="mt-6" />
-    </div>
+    <MudText Class="mb-6">@(_table.Data.TotalItems) 個の項目が見つかりました。</MudText>
 }
 
-<TodoCreateFab OnCreateItem="@(() => FetchData(showIndicator: false))" />
+<TodoTable @ref="@_table" Parameter="@_parameter" OnLoaded="StateHasChanged" />
+
+<TodoCreateFab OnCreateItem="@(() => _table!.RefreshTable())" />

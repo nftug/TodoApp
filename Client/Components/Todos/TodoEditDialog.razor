@@ -14,14 +14,14 @@
             <DataAnnotationsValidator />
             <MudTextField @bind-Value="@Command.Title" Label="タイトル" For="@(() => Command.Title)" Class="mb-3" />
             <MudTextField @bind-Value="@Command.Description" Label="説明" Lines="5" For="@(() => Command.Description)" Class="mb-3" />
-            <MudGrid>
+            <MudGrid Class="mb-3">
                 <MudItem xs="12" md="6">
                     <MudDatePicker @bind-Date="@Command.StartDate" Label="開始日" Clearable
-                        For="@(() => Command.StartDate)" Class="mb-3" />
+                        For="@(() => Command.StartDate)" DisableToolbar />
                 </MudItem>
                 <MudItem xs="12" md="6">
                     <MudDatePicker @bind-Date="@Command.EndDate" Label="終了日" Clearable
-                       For="@(() => Command.EndDate)" Class="mb-3" />
+                       For="@(() => Command.EndDate)" DisableToolbar />
                 </MudItem>
             </MudGrid>
         </EditForm>
