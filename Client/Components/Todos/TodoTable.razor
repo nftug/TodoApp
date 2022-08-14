@@ -3,45 +3,40 @@
 @using Application.Todos.Models
 
 <MudTable @ref="_table" ServerData="@(new Func<TableState, Task<TableData<TodoResultDTO>>>(ServerReload))"
-        Hover Elevation="0" AnchorOrigin="Origin.BottomLeft" >
+        Hover Elevation="0" AnchorOrigin="Origin.BottomLeft" SortLabel="並び替え">
 
     <ToolBarContent>
         <MudSpacer />
         <form class="d-flex justify-end" style="width: 300px" @onsubmit="@DoSearch">
             <MudTextField @bind-Value="@Parameter.Q" Placeholder="検索" Adornment="Adornment.Start"
                 Margin="Margin.Dense" AdornmentIcon="@Icons.Material.Filled.Search"
-                Class="mt-0" Clearable OnClearButtonClick="@DoSearch" />
+                Class="mt-0" Clearable OnClearButtonClick="@DoSearch" InputType="InputType.Search" />
         </form>
     </ToolBarContent>
 
     <HeaderContent>
         <MudTh Style="width: 100%">
-            <MudTableSortLabel T="TodoResultDTO" SortLabel="Title"
-                InitialDirection="@(GetSortDirection("Title"))" SortDirectionChanged="@(d => SetSortDirection("Title", d))">
+            <MudTableSortLabel T="TodoResultDTO" SortLabel="Title" InitialDirection="@(GetSortDirection("Title"))" >
                 タイトル
             </MudTableSortLabel>
         </MudTh>
         <MudTh Style="min-width: 110px">
-            <MudTableSortLabel T="TodoResultDTO" SortLabel="StartDate"
-                InitialDirection="@(GetSortDirection("StartDate"))" SortDirectionChanged="@(d => SetSortDirection("StartDate", d))">
+            <MudTableSortLabel T="TodoResultDTO" SortLabel="StartDate" InitialDirection="@(GetSortDirection("StartDate"))" >
                 開始日
             </MudTableSortLabel>
         </MudTh>
         <MudTh Style="min-width: 110px">
-            <MudTableSortLabel T="TodoResultDTO" SortLabel="EndDate"
-                InitialDirection="@(GetSortDirection("EndDate"))" SortDirectionChanged="@(d => SetSortDirection("EndDate", d))">
+            <MudTableSortLabel T="TodoResultDTO" SortLabel="EndDate" InitialDirection="@(GetSortDirection("EndDate"))" >
                 終了日
             </MudTableSortLabel>
         </MudTh>
         <MudTh Style="width: 150px; text-align: center;">
-            <MudTableSortLabel T="TodoResultDTO" SortLabel="State"
-                InitialDirection="@(GetSortDirection("State"))" SortDirectionChanged="@(d => SetSortDirection("State", d))">
+            <MudTableSortLabel T="TodoResultDTO" SortLabel="State" InitialDirection="@(GetSortDirection("State"))" >
                 状態
             </MudTableSortLabel>
         </MudTh>
         <MudTh Style="width: 110px; text-align: center;">
-            <MudTableSortLabel T="TodoResultDTO" SortLabel="UpdatedOn"
-                InitialDirection="@(GetSortDirection("UpdatedOn"))" SortDirectionChanged="@(d => SetSortDirection("UpdatedOn", d))">
+            <MudTableSortLabel T="TodoResultDTO" SortLabel="UpdatedOn" InitialDirection="@(GetSortDirection("UpdatedOn"))" >
                 更新日
             </MudTableSortLabel>
         </MudTh>

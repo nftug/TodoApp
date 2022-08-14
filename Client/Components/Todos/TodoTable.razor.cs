@@ -32,7 +32,6 @@ public partial class TodoTable : ComponentBase
 
     private MudTable<TodoResultDTO> _table = null!;
     private MudMessageBox _deleteConfirm = null!;
-    private bool _isLoading = false;
 
     private static Color GetTodoChipColor(TodoResultDTO item)
     {
@@ -69,31 +68,8 @@ public partial class TodoTable : ComponentBase
         return isDescending ? SortDirection.Descending : SortDirection.Ascending;
     }
 
-    private void SetSortDirection(string key, SortDirection sortDirection)
+    public async Task OnParameterChanged()
     {
-        string? sortKey;
-
-        if (sortDirection != SortDirection.None)
-        {
-            string sortPrefix = sortDirection == SortDirection.Descending ? "-" : string.Empty;
-            Parameter.Sort = sortPrefix + key;
-            sortKey = Parameter.Sort;
-        }
-        else
-        {
-            Parameter.Sort = new TodoQueryParameter().Sort;
-            sortKey = null;
-        }
-
-        Navigation.NavigateTo(Navigation.GetUriWithQueryParameters(
-            new Dictionary<string, object?> { { "sort", sortKey }, { "page", null } }
-        ));
-    }
-
-    public async Task ReloadServerData()
-    {
-        if (_isLoading) return;
-
         // ページネーションの更新に必要
         await Task.Delay(5);
 
@@ -107,7 +83,8 @@ public partial class TodoTable : ComponentBase
         bool isParameterChanged =
             Parameter.Page != 1
              || !string.IsNullOrEmpty(Parameter.Q)
-             || !string.IsNullOrEmpty(Parameter.State);
+             || !string.IsNullOrEmpty(Parameter.State)
+             || Parameter.Sort != new TodoQueryParameter().Sort;
 
         if (isParameterChanged)
             Navigation.NavigateTo(Navigation.Uri.Split('?')[0]);
@@ -117,10 +94,31 @@ public partial class TodoTable : ComponentBase
 
     private async Task<TableData<TodoResultDTO>> ServerReload(TableState state)
     {
+        string stateSort = state.SortDirection == SortDirection.Descending
+            ? $"-{state.SortLabel}" : state.SortLabel;
+
+        if (stateSort != Parameter.Sort)
+        {
+            string? sortKey;
+            if (state.SortDirection != SortDirection.None)
+            {
+                string sortPrefix = state.SortDirection == SortDirection.Descending ? "-" : string.Empty;
+                Parameter.Sort = sortPrefix + state.SortLabel;
+                sortKey = Parameter.Sort;
+            }
+            else
+            {
+                Parameter.Sort = new TodoQueryParameter().Sort;
+                sortKey = null;
+            }
+
+            Navigation.NavigateTo(Navigation.GetUriWithQueryParameters(
+                new Dictionary<string, object?> { { "sort", sortKey }, { "page", null } }
+            ));
+        }
+
         StateHasChanged();  // ローディング状態を更新する
-        _isLoading = true;
         Data = await TodoApiService.GetList(Parameter, showValidationError: true);
-        _isLoading = false;
 
         var totalItems = (int)Data!.TotalItems;
         var items = Data.Results;

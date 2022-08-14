@@ -38,7 +38,7 @@ public partial class TodoPage : ComponentBase
         {
             InvokeAsync(async () =>
             {
-                await _table.ReloadServerData();
+                await _table.OnParameterChanged();
             });
         }
     }
