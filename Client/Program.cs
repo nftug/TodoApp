@@ -9,6 +9,8 @@ using Client;
 using MudBlazor;
 using Client.Services.UserPreferences;
 using Client.Services;
+using Application.Todos.Models;
+using Domain.Todos.Queries;
 
 var builder = WebAssemblyHostBuilder.CreateDefault(args);
 builder.RootComponents.Add<App>("#app");
@@ -32,13 +34,13 @@ builder.Services.AddScoped<UserPreferencesService>();
 builder.Services.AddScoped<LayoutService>();
 builder.Services.AddSingleton<NavigationService>();
 
-builder.Services.AddScoped<TodoApiService>();
+builder.Services.AddScoped<IApiService<TodoResultDTO, TodoCommand, TodoQueryParameter>, TodoApiService>();
 
 builder.Services.AddMudServices(config =>
 {
     config.SnackbarConfiguration.PositionClass = Defaults.Classes.Position.TopCenter;
-    config.SnackbarConfiguration.PreventDuplicates = true;
-    config.SnackbarConfiguration.NewestOnTop = false;
+    config.SnackbarConfiguration.PreventDuplicates = false;
+    config.SnackbarConfiguration.NewestOnTop = true;
     config.SnackbarConfiguration.ShowCloseIcon = true;
     config.SnackbarConfiguration.VisibleStateDuration = 5000;
     config.SnackbarConfiguration.HideTransitionDuration = 200;

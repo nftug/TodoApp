@@ -1,5 +1,6 @@
 using Application.Todos.Models;
 using Client.Services.Api;
+using Domain.Todos.Queries;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Forms;
 using MudBlazor;
@@ -17,7 +18,7 @@ public partial class TodoEditDialog : ComponentBase
     [Inject]
     private ISnackbar Snackbar { get; set; } = null!;
     [Inject]
-    private TodoApiService TodoApiService { get; set; } = null!;
+    private IApiService<TodoResultDTO, TodoCommand, TodoQueryParameter> TodoApiService { get; set; } = null!;
 
     private EditContext _editContext = null!;
     private bool _isSaving = false;

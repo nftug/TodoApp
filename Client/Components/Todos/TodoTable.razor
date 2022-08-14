@@ -1,6 +1,10 @@
 @using Domain.Todos.ValueObjects
 @using Client.Components.Common
 @using Application.Todos.Models
+@using Domain.Todos.Entities
+@using Domain.Todos.Queries
+
+@inherits DataTableBase<Todo, TodoResultDTO, TodoCommand, TodoQueryParameter>
 
 <MudTable @ref="_table" ServerData="@(new Func<TableState, Task<TableData<TodoResultDTO>>>(ServerReload))"
         Hover Elevation="0" AnchorOrigin="Origin.BottomLeft" SortLabel="並び替え">

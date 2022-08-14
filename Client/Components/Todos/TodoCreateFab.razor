@@ -1,7 +1,9 @@
 @using Application.Todos.Models
 @using Client.Services.Api
+@using Domain.Todos.Entities
+@using Domain.Todos.Queries
 
-@inject TodoApiService TodoApiService
+@inject IApiService<TodoResultDTO, TodoCommand, TodoQueryParameter> TodoApiService
 @inject IDialogService DialogService
 
 <span class="todo-create-fab">

@@ -9,8 +9,7 @@ using Client.Shared.Extensions;
 
 namespace Client.Services.Api;
 
-public abstract class ApiServiceBase<TResultDTO, TCommandDTO, TQueryParameter>
-    where TQueryParameter : class
+public abstract class ApiServiceBase<TResultDTO, TCommandDTO, TQueryParameter> : IApiService<TResultDTO, TCommandDTO, TQueryParameter>
 {
     protected readonly HttpClient _httpClient;
     protected readonly ISnackbar _snackbar;
@@ -27,7 +26,7 @@ public abstract class ApiServiceBase<TResultDTO, TCommandDTO, TQueryParameter>
 
     public virtual async Task<Pagination<TResultDTO>?> GetList(TQueryParameter param, bool showValidationError = false)
     {
-        var props = param.GetType().GetProperties();
+        var props = param!.GetType().GetProperties();
         var queries = props
              .Select(prop => new
              {
