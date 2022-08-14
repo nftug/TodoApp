@@ -30,6 +30,7 @@ builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddSingleton<AuthStoreService>();
 builder.Services.AddScoped<UserPreferencesService>();
 builder.Services.AddScoped<LayoutService>();
+builder.Services.AddSingleton<NavigationService>();
 
 builder.Services.AddScoped<TodoApiService>();
 

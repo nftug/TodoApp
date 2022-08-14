@@ -17,11 +17,11 @@
             <MudGrid Class="mb-3">
                 <MudItem xs="12" md="6">
                     <MudDatePicker @bind-Date="@Command.StartDate" Label="開始日" Clearable
-                        For="@(() => Command.StartDate)" DisableToolbar />
+                        For="@(() => Command.StartDate)" DisableToolbar MaxDate="@Command.EndDate" />
                 </MudItem>
                 <MudItem xs="12" md="6">
                     <MudDatePicker @bind-Date="@Command.EndDate" Label="終了日" Clearable
-                       For="@(() => Command.EndDate)" DisableToolbar />
+                       For="@(() => Command.EndDate)" DisableToolbar MinDate="@Command.StartDate" />
                 </MudItem>
             </MudGrid>
         </EditForm>

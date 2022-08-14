@@ -6,12 +6,13 @@
 
 @if (Data == null) return;
 
-<MudPagination Count="@Data.TotalPages" Selected="@_page" SelectedChanged="@OnChangePage" @attributes="@Attributes" />
+<MudPagination Count="@Data.TotalPages" Selected="@_page" SelectedChanged="@OnSelectedChanged" @attributes="@Attributes" />
 
 @code {
     [Parameter]
     public Pagination<T>? Data { get; set; } = null!;
-
+    [Parameter]
+    public EventCallback<int> OnPageChanged { get; set; }
     [Parameter(CaptureUnmatchedValues = true)]
     public Dictionary<string, object>? Attributes { get; set; }
 
@@ -22,11 +23,13 @@
         _page = Data?.CurrentPage ?? Navigation.QueryString("page").ParseAsPage();
     }
 
-    private void OnChangePage(int value)
+    private void OnSelectedChanged(int value)
     {
         if (_page == value) return;
         _page = value;
         var uri = Navigation.GetUriWithQueryParameter("page", value);
         Navigation.NavigateTo(uri);
+
+        OnPageChanged.InvokeAsync(_page);
     }
 }
