@@ -15,7 +15,7 @@ internal class TodoFilterSpecification : FilterSpecificationBase<Todo, TodoDataM
     {
     }
 
-    protected override void AddQueryByParameter(IQueryable<IDataModel<Todo>> source, IQueryParameter<Todo> param)
+    protected override void AddQueryByParameter(IQueryParameter<Todo> param)
     {
         var _param = (TodoQueryParameter)param;
 

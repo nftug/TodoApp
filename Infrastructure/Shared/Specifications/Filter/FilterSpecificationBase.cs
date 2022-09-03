@@ -22,13 +22,12 @@ internal abstract class FilterSpecificationBase<TDomain, TDataModel> : IFilterSp
 
     protected List<ExpressionGroup<TDataModel>> ExpressionGroups { get; } = new();
 
-    protected abstract void AddQueryByParameter
-        (IQueryable<IDataModel<TDomain>> source, IQueryParameter<TDomain> param);
+    protected abstract void AddQueryByParameter(IQueryParameter<TDomain> param);
 
     public IQueryable<IDataModel<TDomain>> GetFilteredQuery
         (IQueryable<IDataModel<TDomain>> source, IQueryParameter<TDomain> param)
     {
-        AddQueryByParameter(source, param);
+        AddQueryByParameter(param);
         var query = source.OfType<TDataModel>().ApplyExpressionGroup(ExpressionGroups);
         return OrderQuery(query, param);
     }

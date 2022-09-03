@@ -13,7 +13,7 @@ internal class CommentFilterSpecification : FilterSpecificationBase<Comment, Com
     {
     }
 
-    protected override void AddQueryByParameter(IQueryable<IDataModel<Comment>> source, IQueryParameter<Comment> param)
+    protected override void AddQueryByParameter(IQueryParameter<Comment> param)
     {
         var _param = (CommentQueryParameter)param;
 
