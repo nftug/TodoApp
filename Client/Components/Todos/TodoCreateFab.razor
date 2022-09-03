@@ -6,7 +6,7 @@
 @inject IApiService<TodoResultDTO, TodoCommand, TodoQueryParameter> TodoApiService
 @inject IDialogService DialogService
 
-<span class="todo-create-fab">
+<span class="fab">
     <MudTooltip Text="Todoを追加" @bind-IsVisible="@_isVisible">
         <MudFab Color="Color.Primary" StartIcon="@Icons.Material.Filled.Add" OnClick="@CreateItem" />
     </MudTooltip>

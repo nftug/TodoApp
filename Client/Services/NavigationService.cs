@@ -5,8 +5,7 @@ namespace Client.Services;
 
 public class NavigationService
 {
-    public event Action? Notify;
-
+    public event Action? QueriesChanged;
     private NameValueCollection _queries = new();
     public NameValueCollection Queries
     {
@@ -15,7 +14,7 @@ public class NavigationService
         {
             if (value == _queries) return;
             _queries = value;
-            Notify?.Invoke();
+            QueriesChanged?.Invoke();
         }
     }
 
@@ -25,5 +24,23 @@ public class NavigationService
         Queries = pathSplitted.Length > 1
             ? HttpUtility.ParseQueryString(pathSplitted[1])
             : new();
+    }
+
+    public event Action? TitleChanged;
+    private string? _title;
+    public string? Title
+    {
+        get => _title;
+        private set
+        {
+            if (value == _title) return;
+            _title = value;
+            TitleChanged?.Invoke();
+        }
+    }
+
+    public void SetTitle(string? title)
+    {
+        Title = title;
     }
 }
