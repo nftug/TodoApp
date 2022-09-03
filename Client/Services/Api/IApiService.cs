@@ -1,4 +1,4 @@
-using Client.Shared.Models;
+using Domain.Shared.Models;
 
 namespace Client.Services.Api;
 

@@ -4,8 +4,8 @@ using MudBlazor;
 using System.Net;
 using Microsoft.AspNetCore.Components;
 using Client.Shared.Exceptions;
-using Client.Shared.Models;
 using Client.Shared.Extensions;
+using Domain.Shared.Models;
 
 namespace Client.Services.Api;
 

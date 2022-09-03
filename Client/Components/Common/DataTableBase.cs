@@ -1,7 +1,7 @@
 using System.Text.RegularExpressions;
 using Client.Services.Api;
-using Client.Shared.Models;
 using Domain.Shared.Entities;
+using Domain.Shared.Models;
 using Domain.Shared.Queries;
 using Microsoft.AspNetCore.Components;
 using MudBlazor;

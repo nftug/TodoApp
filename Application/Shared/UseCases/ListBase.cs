@@ -1,5 +1,5 @@
 using MediatR;
-using Pagination.EntityFrameworkCore.Extensions;
+using Domain.Shared.Models;
 using Application.Shared.Interfaces;
 using Domain.Shared.Entities;
 using Domain.Shared.Interfaces;

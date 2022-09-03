@@ -1,5 +1,8 @@
-// Copyright (c) MudBlazor 2021
-// MudBlazor licenses this file to you under the MIT license.
+// Copyright (c) 2021 MudBlazor
+// Reference: https://github.com/MudBlazor/MudBlazor
+// Modified by V-nyang
+
+// Released under the MIT License.
 // See the LICENSE file in the project root for more information.
 
 using Blazored.LocalStorage;
