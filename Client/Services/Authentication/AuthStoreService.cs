@@ -27,7 +27,7 @@ public class AuthStoreService
         }
     }
 
-    public string? UserName => User?.Identity?.Name ?? "ゲスト";
+    public string? UserName => User?.Identity?.Name;
 
     public bool IsLoggedIn => User?.Identity?.Name != null;
 }

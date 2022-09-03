@@ -12,7 +12,7 @@
     <ActivatorContent>
         <div class="d-flex justify-end">
             <MudButton Variant="Variant.Text" EndIcon="@Icons.Filled.AccountCircle" Color="Color.Inherit">
-                @AuthStoreService.UserName
+                @(AuthStoreService.UserName ?? "ゲスト")
             </MudButton>
         </div>
     </ActivatorContent>
