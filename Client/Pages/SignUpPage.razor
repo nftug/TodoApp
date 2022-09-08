@@ -17,20 +17,20 @@
 <MudContainer Class="my-8 py-8" MaxWidth="MaxWidth.ExtraSmall">
     <MudText Typo="Typo.h4" GutterBottom="true" class="mb-5">ユーザー登録</MudText>
 
-    <EditForm Model="@RegisterModel" OnValidSubmit="SubmitAsync">
+    <EditForm Model="@_registerCommand" OnValidSubmit="SubmitAsync">
         <DataAnnotationsValidator />
 
-        <MudTextField Class="my-2" FullWidth="true" Label="ユーザー名" @bind-Value="@RegisterModel.UserName"
-            For="@(() => RegisterModel.UserName)" />
-        <MudTextField Class="my-2" FullWidth="true" Label="Email" @bind-Value="@RegisterModel.Email"
-            For="@(() => RegisterModel.Email)" />
-        <MudTextField Class="my-2" FullWidth="true" Label="パスワード" @bind-Value="@RegisterModel.Password"
-            For="@(() => RegisterModel.Password)" InputType="InputType.Password" />
+        <MudTextField Class="my-2" FullWidth="true" Label="ユーザー名" @bind-Value="@_registerCommand.UserName"
+            For="@(() => _registerCommand.UserName)" />
+        <MudTextField Class="my-2" FullWidth="true" Label="Email" @bind-Value="@_registerCommand.Email"
+            For="@(() => _registerCommand.Email)" />
+        <MudTextField Class="my-2" FullWidth="true" Label="パスワード" @bind-Value="@_registerCommand.Password"
+            For="@(() => _registerCommand.Password)" InputType="InputType.Password" />
 
-        <MudButton Class="mt-7" Variant="Variant.Filled" StartIcon="@Icons.Filled.Login"
+        <MudButton Class="mt-7" Variant="Variant.Filled" StartIcon="@Icons.Filled.PersonAdd"
             Color="Color.Primary" FullWidth="true" ButtonType="ButtonType.Submit"
             Disabled="@_isLoading">
-            ログイン
+            ユーザー登録
             <ButtonLoadingOverlay Visible="@_isLoading" />
         </MudButton>
     </EditForm>

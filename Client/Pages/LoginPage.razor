@@ -17,13 +17,13 @@
 <MudContainer Class="my-8 py-8" MaxWidth="MaxWidth.ExtraSmall">
     <MudText Typo="Typo.h4" GutterBottom="true" class="mb-5">ログイン</MudText>
 
-    <EditForm Model="@LoginModel" OnValidSubmit="SubmitAsync">
+    <EditForm Model="@_loginCommand" OnValidSubmit="SubmitAsync">
         <DataAnnotationsValidator />
 
-        <MudTextField Class="my-2" FullWidth="true" Label="Email" @bind-Value="@LoginModel.Email"
-            For="@(() => LoginModel.Email)" />
-        <MudTextField Class="my-2" FullWidth="true" Label="パスワード" @bind-Value="@LoginModel.Password"
-            For="@(() => LoginModel.Password)" InputType="InputType.Password" />
+        <MudTextField Class="my-2" FullWidth="true" Label="Email" @bind-Value="@_loginCommand.Email"
+            For="@(() => _loginCommand.Email)" />
+        <MudTextField Class="my-2" FullWidth="true" Label="パスワード" @bind-Value="@_loginCommand.Password"
+            For="@(() => _loginCommand.Password)" InputType="InputType.Password" />
 
         <MudButton Class="mt-7" Variant="Variant.Filled" StartIcon="@Icons.Filled.Login"
             Color="Color.Primary" FullWidth="true" ButtonType="ButtonType.Submit"
@@ -36,7 +36,7 @@
     <MudDivider Class="my-6" />
 
     <div class="d-flex justify-center">
-        <MudText Typo="Typo.body2" Color="Color.Inherit">
+        <MudText Typo="Typo.body2">
             アカウントが未登録ですか？
             <MudLink Href="signup" Typo="Typo.body2">ユーザー登録</MudLink>
         </MudText>

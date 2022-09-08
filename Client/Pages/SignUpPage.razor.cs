@@ -15,13 +15,13 @@ public partial class SignUpPage : ComponentBase
     [Parameter]
     public string? Redirect { get; set; }
 
-    public RegisterCommand RegisterModel { get; set; } = new();
+    public RegisterCommand _registerCommand = new();
     public bool _isLoading = false;
 
     public async Task SubmitAsync()
     {
         _isLoading = true;
-        var result = await AuthService.RegisterAsync(RegisterModel);
+        var result = await AuthService.RegisterAsync(_registerCommand);
 
         if (result.IsSuccessful)
             Navigation.NavigateTo(Redirect ?? "/");

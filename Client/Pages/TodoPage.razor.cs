@@ -21,7 +21,7 @@ public partial class TodoPage : ComponentBase
     public string? Sort { get; set; } = null!;
 
     private TodoQueryParameter _parameter = new();
-    private TodoTable _table = null!;
+    private TodoTable? _table = null!;
 
     protected override void OnParametersSet()
     {

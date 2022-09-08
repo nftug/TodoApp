@@ -15,14 +15,13 @@ public partial class LoginPage : ComponentBase
     [Parameter]
     public string? Redirect { get; set; }
 
-    public LoginCommand LoginModel { get; set; } = new();
+    public LoginCommand _loginCommand = new();
     public bool _isLoading = false;
 
     public async Task SubmitAsync()
     {
         _isLoading = true;
-
-        var result = await AuthService.LoginAsync(LoginModel);
+        var result = await AuthService.LoginAsync(_loginCommand);
 
         if (result.IsSuccessful)
             Navigation.NavigateTo(Redirect ?? "/");
