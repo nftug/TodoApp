@@ -6,6 +6,7 @@ public interface IAuthService
 {
     Task<LoginResult> LoginAsync(LoginCommand loginModel);
     Task LogoutAsync();
+    Task<LoginResult> RegisterAsync(RegisterCommand registerModel);
 }
 
 public class LoginResult

@@ -59,4 +59,36 @@ public class AuthService : IAuthService
         await ((SpaAuthenticateProvider)_authenticationStateProvider).MarkUserAsLoggedOut();
         _snackbar.Add("ログアウトしました。", Severity.Info);
     }
+
+    public async Task<LoginResult> RegisterAsync(RegisterCommand command)
+    {
+        try
+        {
+            var response = await _httpClient.PostAsJsonAsync("auth/register", command);
+            response.EnsureSuccessStatusCode();
+            var result = await response.Content.ReadFromJsonAsync<TokenModel>();
+            if (result == null) throw new HttpRequestException();
+
+            var loginResult = new LoginResult
+            {
+                IsSuccessful = true,
+                Result = result
+            };
+
+            await ((SpaAuthenticateProvider)_authenticationStateProvider).MarkUserAsAuthenticated(result);
+            _snackbar.Add("ユーザー登録が完了しました。", Severity.Info);
+
+            return loginResult;
+        }
+        catch (HttpRequestException e)
+        {
+            _snackbar.Add("ユーザー登録に失敗しました。", Severity.Error);
+
+            return new LoginResult
+            {
+                IsSuccessful = false,
+                Error = e
+            };
+        }
+    }
 }

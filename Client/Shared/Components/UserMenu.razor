@@ -1,5 +1,4 @@
 @using Client.Services.Authentication
-@using Client.Components.Common
 
 @inject NavigationManager Navigation
 @inject IAuthService AuthService
@@ -24,6 +23,7 @@
         else
         {
             <MudButton Class="mud-menu-button" Href="login" StartIcon="@Icons.Filled.Login">ログイン</MudButton>
+            <MudButton Class="mud-menu-button" Href="signup" StartIcon="@Icons.Filled.PersonAdd">ユーザー登録</MudButton>
         }
     </ChildContent>
 </MudMenu>

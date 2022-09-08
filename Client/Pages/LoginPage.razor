@@ -1,5 +1,16 @@
 @page "/login"
+
 @using Client.Components.Common
+@using Client.Services.Authentication
+
+@inject AuthStoreService AuthStoreService
+@inject NavigationManager NavigationManager
+
+@if (AuthStoreService.IsLoggedIn)
+{
+    NavigationManager.NavigateTo(Redirect ?? "", false, true);
+    return;
+}
 
 <Title Value="Login" HideHeader="true" />
 
@@ -21,4 +32,13 @@
             <ButtonLoadingOverlay Visible="@_isLoading" />
         </MudButton>
     </EditForm>
+
+    <MudDivider Class="my-6" />
+
+    <div class="d-flex justify-center">
+        <MudText Typo="Typo.body2" Color="Color.Inherit">
+            アカウントが未登録ですか？
+            <MudLink Href="signup" Typo="Typo.body2">ユーザー登録</MudLink>
+        </MudText>
+    </div>
 </MudContainer>

@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Components;
 
 namespace Client.Pages;
 
-public partial class LoginPage : ComponentBase
+public partial class SignUpPage : ComponentBase
 {
     [Inject]
     protected IAuthService AuthService { get; set; } = null!;
@@ -15,14 +15,13 @@ public partial class LoginPage : ComponentBase
     [Parameter]
     public string? Redirect { get; set; }
 
-    public LoginCommand LoginModel { get; set; } = new();
+    public RegisterCommand RegisterModel { get; set; } = new();
     public bool _isLoading = false;
 
     public async Task SubmitAsync()
     {
         _isLoading = true;
-
-        var result = await AuthService.LoginAsync(LoginModel);
+        var result = await AuthService.RegisterAsync(RegisterModel);
 
         if (result.IsSuccessful)
             Navigation.NavigateTo(Redirect ?? "/");
