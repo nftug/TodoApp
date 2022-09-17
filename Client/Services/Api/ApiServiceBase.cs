@@ -6,6 +6,8 @@ using Microsoft.AspNetCore.Components;
 using Client.Shared.Exceptions;
 using Client.Shared.Extensions;
 using Domain.Shared.Models;
+using Client.Services.Authentication;
+using Microsoft.AspNetCore.Components.Authorization;
 
 namespace Client.Services.Api;
 
@@ -14,12 +16,19 @@ public abstract class ApiServiceBase<TResultDTO, TCommandDTO, TQueryParameter> :
     protected readonly HttpClient _httpClient;
     protected readonly ISnackbar _snackbar;
     protected readonly NavigationManager _navigation;
+    protected readonly SpaAuthenticateProvider _authenticationStateProvider;
 
-    protected ApiServiceBase(HttpClient httpClient, ISnackbar snackbar, NavigationManager navigation)
+    protected ApiServiceBase(
+        HttpClient httpClient,
+        ISnackbar snackbar,
+        NavigationManager navigation,
+        AuthenticationStateProvider authenticationStateProvider
+    )
     {
         _httpClient = httpClient;
         _snackbar = snackbar;
         _navigation = navigation;
+        _authenticationStateProvider = (SpaAuthenticateProvider)authenticationStateProvider;
     }
 
     protected abstract string Resource { get; }
@@ -86,6 +95,8 @@ public abstract class ApiServiceBase<TResultDTO, TCommandDTO, TQueryParameter> :
                     break;
                 case HttpStatusCode.Unauthorized:
                     _snackbar.Add("ログインが必要です。", Severity.Warning);
+                    await _authenticationStateProvider.MarkUserAsLoggedOut();
+
                     var currentUri = _navigation.ToBaseRelativePath(_navigation.Uri);
                     _navigation.NavigateTo($"/login?redirect={currentUri}", false, true);
                     break;

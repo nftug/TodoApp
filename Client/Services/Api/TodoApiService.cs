@@ -3,14 +3,19 @@ using Application.Todos.Models;
 using Domain.Todos.Queries;
 using Domain.Todos.ValueObjects;
 using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components.Authorization;
 using MudBlazor;
 
 namespace Client.Services.Api;
 
 public class TodoApiService : ApiServiceBase<TodoResultDTO, TodoCommand, TodoQueryParameter>
 {
-    public TodoApiService(HttpClient httpClient, ISnackbar snackbar, NavigationManager navigation)
-        : base(httpClient, snackbar, navigation)
+    public TodoApiService(
+        HttpClient httpClient,
+        ISnackbar snackbar,
+        NavigationManager navigation,
+        AuthenticationStateProvider authenticationStateProvider
+    ) : base(httpClient, snackbar, navigation, authenticationStateProvider)
     {
     }
 

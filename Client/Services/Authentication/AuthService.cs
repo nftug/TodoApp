@@ -7,7 +7,7 @@ namespace Client.Services.Authentication;
 
 public class AuthService : IAuthService
 {
-    private readonly AuthenticationStateProvider _authenticationStateProvider;
+    private readonly SpaAuthenticateProvider _authenticationStateProvider;
     private readonly HttpClient _httpClient;
     protected readonly ISnackbar _snackbar;
 
@@ -17,7 +17,7 @@ public class AuthService : IAuthService
         ISnackbar snackbar
     )
     {
-        _authenticationStateProvider = authenticationStateProvider;
+        _authenticationStateProvider = (SpaAuthenticateProvider)authenticationStateProvider;
         _httpClient = httpClient;
         _snackbar = snackbar;
     }
@@ -37,7 +37,7 @@ public class AuthService : IAuthService
                 Result = result
             };
 
-            await ((SpaAuthenticateProvider)_authenticationStateProvider).MarkUserAsAuthenticated(result);
+            await _authenticationStateProvider.MarkUserAsAuthenticated(result);
             _snackbar.Add("ログインしました。", Severity.Info);
 
             return loginResult;
@@ -56,7 +56,7 @@ public class AuthService : IAuthService
 
     public async Task LogoutAsync()
     {
-        await ((SpaAuthenticateProvider)_authenticationStateProvider).MarkUserAsLoggedOut();
+        await _authenticationStateProvider.MarkUserAsLoggedOut();
         _snackbar.Add("ログアウトしました。", Severity.Info);
     }
 
@@ -75,7 +75,7 @@ public class AuthService : IAuthService
                 Result = result
             };
 
-            await ((SpaAuthenticateProvider)_authenticationStateProvider).MarkUserAsAuthenticated(result);
+            await _authenticationStateProvider.MarkUserAsAuthenticated(result);
             _snackbar.Add("ユーザー登録が完了しました。", Severity.Info);
 
             return loginResult;
