@@ -2,9 +2,9 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Domain.Comments.Queries;
 using Application.Users.UseCases;
-using Application.Users.Models;
 using Domain.Todos.Queries;
 using MediatR;
+using Domain.Users.DTOs;
 
 namespace API.Controllers.Account;
 

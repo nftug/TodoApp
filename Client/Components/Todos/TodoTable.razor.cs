@@ -1,6 +1,6 @@
-using Application.Todos.Models;
 using Client.Services.Api;
 using Client.Services.Authentication;
+using Domain.Todos.DTOs;
 using Domain.Todos.Entities;
 using Domain.Todos.Queries;
 using Domain.Todos.ValueObjects;

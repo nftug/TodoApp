@@ -11,7 +11,8 @@ using Microsoft.AspNetCore.Components.Authorization;
 
 namespace Client.Services.Api;
 
-public abstract class ApiServiceBase<TResultDTO, TCommandDTO, TQueryParameter> : IApiService<TResultDTO, TCommandDTO, TQueryParameter>
+public abstract class ApiServiceBase<TResultDTO, TCommandDTO, TQueryParameter>
+    : IApiService<TResultDTO, TCommandDTO, TQueryParameter>
 {
     protected readonly HttpClient _httpClient;
     protected readonly ISnackbar _snackbar;

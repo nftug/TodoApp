@@ -1,9 +1,9 @@
 using System.Text.Json.Serialization;
-using Application.Comments.Models;
-using Application.Shared.Interfaces;
+using Domain.Comments.DTOs;
+using Domain.Shared.DTOs;
 using Domain.Todos.Entities;
 
-namespace Application.Todos.Models;
+namespace Domain.Todos.DTOs;
 
 public class TodoResultDTO : IResultDTO<Todo>
 {

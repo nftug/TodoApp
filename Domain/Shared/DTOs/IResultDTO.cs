@@ -1,6 +1,6 @@
 using Domain.Shared.Entities;
 
-namespace Application.Shared.Interfaces;
+namespace Domain.Shared.DTOs;
 
 public interface IResultDTO<TDomain>
     where TDomain : ModelBase

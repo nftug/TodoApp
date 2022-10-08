@@ -1,8 +1,8 @@
-using Application.Shared.Interfaces;
 using Domain.Comments.Entities;
 using Domain.Comments.ValueObjects;
+using Domain.Shared.DTOs;
 
-namespace Application.Comments.Models;
+namespace Domain.Comments.DTOs;
 
 public class CommentCommand : ICommand<Comment>
 {

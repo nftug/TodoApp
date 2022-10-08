@@ -1,8 +1,8 @@
 using System.Text.Json.Serialization;
-using Application.Shared.Interfaces;
+using Domain.Shared.DTOs;
 using Domain.Users.Entities;
 
-namespace Application.Users.Models;
+namespace Domain.Users.DTOs;
 
 public class UserResultDTO
 {

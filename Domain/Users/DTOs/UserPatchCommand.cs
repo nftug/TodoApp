@@ -1,8 +1,8 @@
-using Application.Shared.Interfaces;
+using Domain.Shared.DTOs;
 using Domain.Users.Entities;
 using Domain.Users.ValueObjects;
 
-namespace Application.Users.Models;
+namespace Domain.Users.DTOs;
 
 public class UserPatchCommand : ICommand<User>
 {

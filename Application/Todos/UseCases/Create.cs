@@ -1,8 +1,8 @@
 using Application.Shared.UseCases;
 using Domain.Todos.Entities;
-using Application.Todos.Models;
 using Domain.Shared.Interfaces;
 using Domain.Services;
+using Domain.Todos.DTOs;
 
 namespace Application.Todos.UseCases;
 

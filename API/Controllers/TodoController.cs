@@ -2,9 +2,9 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
 using Domain.Todos.Queries;
 using Application.Todos.UseCases;
-using Application.Todos.Models;
 using Domain.Todos.Entities;
 using MediatR;
+using Domain.Todos.DTOs;
 
 namespace API.Controllers;
 

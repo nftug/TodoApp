@@ -1,9 +1,9 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
 using Domain.Comments.Queries;
-using Application.Comments.Models;
 using Domain.Comments.Entities;
 using MediatR;
+using Domain.Comments.DTOs;
 
 namespace API.Controllers;
 

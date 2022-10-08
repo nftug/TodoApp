@@ -1,4 +1,4 @@
-using Application.Shared.Interfaces;
+using Domain.Shared.DTOs;
 using Domain.Shared.Entities;
 using Domain.Shared.Queries;
 

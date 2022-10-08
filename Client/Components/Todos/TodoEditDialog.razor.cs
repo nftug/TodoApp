@@ -1,5 +1,5 @@
-using Application.Todos.Models;
 using Client.Services.Api;
+using Domain.Todos.DTOs;
 using Domain.Todos.Queries;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Forms;

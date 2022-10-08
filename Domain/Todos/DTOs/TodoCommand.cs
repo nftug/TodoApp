@@ -1,26 +1,26 @@
-using Application.Shared.Interfaces;
+using Domain.Shared.DTOs;
 using Domain.Todos.Entities;
 using Domain.Todos.ValueObjects;
 
-namespace Application.Todos.Models;
+namespace Domain.Todos.DTOs;
 
-public class TodoPatchCommand : ICommand<Todo>
+public class TodoCommand : ICommand<Todo>
 {
     public Guid? Id { get; set; }
-    [TodoTitle(isPatch: true)]
+    [TodoTitle]
     public string? Title { get; set; }
-    [TodoDescription(isPatch: true)]
+    [TodoDescription]
     public string? Description { get; set; }
-    [TodoPeriod(ArgumentType.Start, "EndDate", isPatch: true)]
+    [TodoPeriod(ArgumentType.Start, "EndDate")]
     public DateTime? StartDate { get; set; }
-    [TodoPeriod(ArgumentType.End, "StartDate", isPatch: true)]
+    [TodoPeriod(ArgumentType.End, "StartDate")]
     public DateTime? EndDate { get; set; }
-    [TodoState(isPatch: true)]
+    [TodoState]
     public string? State { get; set; }
 
-    public TodoPatchCommand() { }
+    public TodoCommand() { }
 
-    public TodoPatchCommand(TodoResultDTO origin)
+    public TodoCommand(TodoResultDTO origin)
     {
         Id = origin.Id;
         Title = origin.Title;

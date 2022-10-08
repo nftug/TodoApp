@@ -1,9 +1,9 @@
 using Microsoft.AspNetCore.Mvc;
 using Application.Shared.UseCases;
 using Domain.Shared.Entities;
-using Application.Shared.Interfaces;
 using Domain.Shared.Queries;
 using MediatR;
+using Domain.Shared.DTOs;
 
 namespace API.Controllers;
 

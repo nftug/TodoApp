@@ -1,7 +1,7 @@
 using Application.Shared.UseCases;
-using Application.Users.Models;
 using Domain.Services;
 using Domain.Shared.Interfaces;
+using Domain.Users.DTOs;
 using Domain.Users.Entities;
 
 namespace Application.Users.UseCases;

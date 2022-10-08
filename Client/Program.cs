@@ -9,8 +9,8 @@ using Client;
 using MudBlazor;
 using Client.Services.UserPreferences;
 using Client.Services;
-using Application.Todos.Models;
 using Domain.Todos.Queries;
+using Domain.Todos.DTOs;
 
 var builder = WebAssemblyHostBuilder.CreateDefault(args);
 builder.RootComponents.Add<App>("#app");

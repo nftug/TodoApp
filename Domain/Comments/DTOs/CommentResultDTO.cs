@@ -1,8 +1,8 @@
 using System.Text.Json.Serialization;
-using Application.Shared.Interfaces;
 using Domain.Comments.Entities;
+using Domain.Shared.DTOs;
 
-namespace Application.Comments.Models;
+namespace Domain.Comments.DTOs;
 
 public class CommentResultDTO : IResultDTO<Comment>
 {

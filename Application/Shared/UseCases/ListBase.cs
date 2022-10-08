@@ -1,10 +1,10 @@
 using MediatR;
 using Domain.Shared.Models;
-using Application.Shared.Interfaces;
 using Domain.Shared.Entities;
 using Domain.Shared.Interfaces;
 using Domain.Services;
 using Domain.Shared.Queries;
+using Domain.Shared.DTOs;
 
 namespace Application.Shared.UseCases;
 

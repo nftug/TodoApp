@@ -1,5 +1,5 @@
 using System.Net.Http.Json;
-using Application.Todos.Models;
+using Domain.Todos.DTOs;
 using Domain.Todos.Queries;
 using Domain.Todos.ValueObjects;
 using Microsoft.AspNetCore.Components;

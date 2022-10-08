@@ -1,8 +1,8 @@
-using Application.Shared.Interfaces;
+using Domain.Shared.DTOs;
 using Domain.Todos.Entities;
 using Domain.Todos.ValueObjects;
 
-namespace Application.Todos.Models;
+namespace Domain.Todos.DTOs;
 
 public class TodoStateCommand : ICommand<Todo>
 {

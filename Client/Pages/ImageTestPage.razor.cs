@@ -1,14 +1,12 @@
 using Client.Shared.Extensions;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Forms;
-using MudBlazor;
 
 namespace Client.Pages;
 
 public partial class ImageTestPage : ComponentBase
 {
     private string? _imageBase64Source;
-    private IBrowserFile _fileToUpload;
 
     private bool _isLoading;
     private bool IsLoading
@@ -31,7 +29,6 @@ public partial class ImageTestPage : ComponentBase
         _imageBase64Source = null;
 
         using var stream = e.File.OpenReadStream(MaxFileSize);
-        _fileToUpload = e.File;
 
         IsLoading = true;
 

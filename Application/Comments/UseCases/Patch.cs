@@ -1,8 +1,8 @@
 using Domain.Comments.Entities;
 using Application.Shared.UseCases;
-using Application.Comments.Models;
 using Domain.Shared.Interfaces;
 using Domain.Services;
+using Domain.Comments.DTOs;
 
 namespace Application.Comments.UseCases;
 
