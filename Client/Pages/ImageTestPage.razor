@@ -1,0 +1,22 @@
+@page "/imagetest"
+
+<Title Value="Image Test" />
+
+<InputFile id="fileInput" OnChange="OnSelectedFile" hidden accept="image/*" />
+<MudFab HtmlTag="label" Color="Color.Secondary" Icon="@Icons.Filled.Image" Label="Load picture" for="fileInput" />
+<MudFab Class="ml-3" Color="Color.Error" Icon="@Icons.Filled.Delete" Label="Delete picture"
+    Disabled="_imageBase64Source == null" OnClick="@(() => { _imageBase64Source = null; })" />
+
+@if (IsLoading || _imageBase64Source != null)
+{
+    <div class="mt-6 d-flex justify-center">
+        @if (_imageBase64Source != null)
+        {
+            <MudImage Src="@_imageBase64Source" Class="rounded-sm" Width="700" />
+        }
+        else if (IsLoading)
+        {
+            <MudSkeleton SkeletonType="SkeletonType.Rectangle" Width="700px" Height="400px" />
+        }
+    </div>
+}

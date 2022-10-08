@@ -1,11 +1,11 @@
-.loader,
-.loader:after {
+.loading,
+.loading:after {
   border-radius: 50%;
   width: 10em;
   height: 10em;
 }
 
-.loader {
+.loading {
   margin: 60px auto;
   font-size: 10px;
   position: relative;
@@ -45,7 +45,7 @@
   }
 }
 
-.loading {
+.loading-container {
   position: absolute;
   top: 50%;
   left: 50%;
