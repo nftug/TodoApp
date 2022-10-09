@@ -6,7 +6,7 @@
 
 @if (Data == null) return;
 
-<MudPagination Count="@Data.TotalPages" Selected="@_page" SelectedChanged="@OnSelectedChanged" @attributes="@Attributes" />
+<MudPagination Count="@((int)Data.TotalPages!)" Selected="@_page" SelectedChanged="@OnSelectedChanged" @attributes="@Attributes" />
 
 @code {
     [Parameter]

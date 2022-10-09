@@ -25,12 +25,17 @@ public abstract class FilterQueryServiceBase<TDomain, TDataModel> : IFilterQuery
 
     public virtual async Task<List<TDomain>> GetPaginatedListAsync(IQueryParameter<TDomain> param)
     {
-        var (page, limit) = (param.Page, param.Limit);
+        var (page, startIndex, limit) = (param.Page, param.StartIndex, param.Limit);
 
         var query = FilterSpecification.GetFilteredQuery(DataSource.Source, param);
         var result = page != null && limit != null
             ? await query
                 .Skip(((int)page - 1) * (int)limit)
+                .Take((int)limit)
+                .ToListAsync()
+            : startIndex != null && limit != null
+            ? await query
+                .Skip((int)startIndex)
                 .Take((int)limit)
                 .ToListAsync()
             : await query.ToListAsync();

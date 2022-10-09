@@ -10,13 +10,13 @@ namespace Domain.Shared.Models;
 public class Pagination<T>
 {
     public long TotalItems { get; init; }
-    public int CurrentPage { get; init; }
+    public int? CurrentPage { get; init; }
     public int? NextPage { get; init; }
     public int? PreviousPage { get; init; }
-    public int TotalPages { get; init; }
+    public int? TotalPages { get; init; }
     public IEnumerable<T> Results { get; init; } = Enumerable.Empty<T>();
 
-    public Pagination(IEnumerable<T> results, long totalItems, int page = 1, int limit = 10)
+    public Pagination(IEnumerable<T> results, long totalItems, int? page = 1, int limit = 10)
     {
         if (limit <= 0)
         {

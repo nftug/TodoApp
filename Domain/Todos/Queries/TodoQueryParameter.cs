@@ -12,7 +12,8 @@ public class TodoQueryParameter : IQueryParameter<Todo>
     public string? UserName { get; set; }
     public string? State { get; set; }
     public Guid? UserId { get; set; }
-    public int? Page { get; set; } = 1;
+    public int? Page { get; set; }
+    public int? StartIndex { get; set; }
     public int? Limit { get; set; } = 10;
     public string Sort { get; set; } = "-UpdatedOn";
 }

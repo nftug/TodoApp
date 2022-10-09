@@ -46,8 +46,12 @@ public abstract class ListBase<TDomain, TResultDTO>
 
             var count = await _filterQueryService.GetCountAsync(queryParameter);
 
-            return new Pagination<TResultDTO>
-                (results, count, (int)queryParameter.Page!, (int)queryParameter.Limit!);
+            if (request.Param.Page != null)
+                return new Pagination<TResultDTO>
+                    (results, count, (int)queryParameter.Page!, (int)queryParameter.Limit!);
+            else
+                return new Pagination<TResultDTO>
+                    (results, count, null, (int)queryParameter.Limit!);
         }
 
         protected abstract TResultDTO CreateDTO(TDomain item);

@@ -8,7 +8,7 @@ namespace Client.Pages;
 public partial class ImageTestPage : ComponentBase
 {
     [Inject]
-    public ILocalStorageService LocalStorageService { get; set; } = null!;
+    private ILocalStorageService LocalStorageService { get; set; } = null!;
 
     private string? _imageBase64Source;
 

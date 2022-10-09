@@ -11,5 +11,6 @@ public class CommentQueryParameter : IQueryParameter<Comment>
     public Guid? UserId { get; set; }
     public int? Page { get; set; } = 1;
     public int? Limit { get; set; } = 10;
+    public int? StartIndex { get; set; }
     public string Sort { get; set; } = "-UpdatedOn";
 }
