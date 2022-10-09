@@ -4,20 +4,20 @@
 
 <MudText Typo="Typo.h4" GutterBottom="true" class="mb-5">Image Test</MudText>
 
-<InputFile id="fileInput" OnChange="OnSelectedFile" hidden accept="image/*" />
+<InputFile id="fileInput" OnChange="OnSelectedPicture" hidden accept="image/*" />
 
 <MudHidden Breakpoint="Breakpoint.MdAndUp">
     <MudGrid>
         <MudItem xs="6">
             <MudButton HtmlTag="label" Color="Color.Secondary" StartIcon="@Icons.Filled.Image" Variant="Variant.Filled"
                 FullWidth for="fileInput">
-                Load Picture
+                Load
             </MudButton>
         </MudItem>
         <MudItem xs="6">
             <MudButton Color="Color.Error" StartIcon="@Icons.Filled.Delete" Variant="Variant.Filled" FullWidth
-                Disabled="_imageBase64Source == null" OnClick="@(() => { _imageBase64Source = null; })">
-                Delete Picture
+                Disabled="_imageBase64Source == null" OnClick="OnDeletedPicture">
+                Delete
             </MudButton>
         </MudItem>
     </MudGrid>
@@ -31,7 +31,7 @@
         </MudItem>
         <MudItem>
             <MudFab DisableElevation Color="Color.Error" Icon="@Icons.Filled.Delete" Label="Delete picture"
-                Disabled="_imageBase64Source == null" OnClick="@(() => { _imageBase64Source = null; })"
+                Disabled="_imageBase64Source == null" OnClick="OnDeletedPicture"
                 Style="width: 220px;" />
         </MudItem>
     </MudGrid>
@@ -40,13 +40,18 @@
 @if (IsLoading || _imageBase64Source != null)
 {
     <div class="mt-6 d-flex justify-center">
-        @if (_imageBase64Source != null)
-        {
-            <MudImage Src="@_imageBase64Source" Class="rounded-sm" Width="700" Height="400" ObjectFit="ObjectFit.Contain" />
-        }
-        else if (IsLoading)
+        @if (IsLoading)
         {
             <MudSkeleton SkeletonType="SkeletonType.Rectangle" Width="700px" Height="400px" />
+        }
+        else
+        {
+            <MudHidden Breakpoint="Breakpoint.MdAndUp">
+                <MudImage Src="@_imageBase64Source" Class="rounded-sm" Fluid ObjectFit="ObjectFit.Contain" />
+            </MudHidden>
+            <MudHidden Breakpoint="Breakpoint.SmAndDown">
+                <MudImage Src="@_imageBase64Source" Class="rounded-sm" Width="700" Height="400" ObjectFit="ObjectFit.Contain" />
+            </MudHidden>
         }
     </div>
 }
