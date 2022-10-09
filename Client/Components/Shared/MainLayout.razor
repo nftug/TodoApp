@@ -27,10 +27,14 @@
     </MudDrawer>
 
     <MudMainContent>
-        <MudContainer MaxWidth="MaxWidth.Large" Class="my-8">
+        <MudContainer MaxWidth="MaxWidth.Large" Class="mt-8 mb-16 mb-lg-8">
             @Body
         </MudContainer>
     </MudMainContent>
+
+    <MudHidden Breakpoint="Breakpoint.MdAndUp">
+        <BottomAppBar />
+    </MudHidden>
 </MudLayout>
 
 @code {

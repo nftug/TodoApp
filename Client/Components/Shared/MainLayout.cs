@@ -9,7 +9,7 @@ using Client.Services;
 using Microsoft.AspNetCore.Components;
 using MudBlazor;
 
-namespace Client.Shared.Components;
+namespace Client.Components.Shared;
 
 public partial class MainLayout : LayoutComponentBase, IDisposable
 {

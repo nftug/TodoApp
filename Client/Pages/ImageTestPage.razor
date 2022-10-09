@@ -1,18 +1,38 @@
 @page "/imagetest"
 
-<Title Value="Image Test" />
+<Title Value="Image Test" HasBackButton />
 
 <InputFile id="fileInput" OnChange="OnSelectedFile" hidden accept="image/*" />
-<MudFab HtmlTag="label" Color="Color.Secondary" Icon="@Icons.Filled.Image" Label="Load picture" for="fileInput" />
-<MudFab Class="ml-3" Color="Color.Error" Icon="@Icons.Filled.Delete" Label="Delete picture"
-    Disabled="_imageBase64Source == null" OnClick="@(() => { _imageBase64Source = null; })" />
+
+<MudHidden Breakpoint="Breakpoint.MdAndUp">
+    <MudGrid>
+        <MudItem xs="6">
+            <MudButton HtmlTag="label" Color="Color.Secondary" StartIcon="@Icons.Filled.Image" Variant="Variant.Filled"
+                for="fileInput" FullWidth>
+                Load Picture
+            </MudButton>
+        </MudItem>
+        <MudItem xs="6">
+            <MudButton Color="Color.Error" StartIcon="@Icons.Filled.Delete" Variant="Variant.Filled" FullWidth
+                Disabled="_imageBase64Source == null" OnClick="@(() => { _imageBase64Source = null; })">
+                Delete Picture
+            </MudButton>
+        </MudItem>
+    </MudGrid>
+</MudHidden>
+
+<MudHidden Breakpoint="Breakpoint.SmAndDown">
+    <MudFab HtmlTag="label" Color="Color.Secondary" Icon="@Icons.Filled.Image" Label="Load picture" for="fileInput" />
+    <MudFab Class="ml-3" Color="Color.Error" Icon="@Icons.Filled.Delete" Label="Delete picture"
+        Disabled="_imageBase64Source == null" OnClick="@(() => { _imageBase64Source = null; })" />
+</MudHidden>
 
 @if (IsLoading || _imageBase64Source != null)
 {
     <div class="mt-6 d-flex justify-center">
         @if (_imageBase64Source != null)
         {
-            <MudImage Src="@_imageBase64Source" Class="rounded-sm" Width="700" />
+            <MudImage Src="@_imageBase64Source" Class="rounded-sm" Width="700" Height="400" ObjectFit="ObjectFit.Contain" />
         }
         else if (IsLoading)
         {

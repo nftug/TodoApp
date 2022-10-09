@@ -23,3 +23,19 @@
   z-index: 1000;
   position: fixed
 }
+
+@media screen and (max-width: 960px) {
+  .fab {
+    bottom: calc(var(--mud-appbar-height) - var(--mud-appbar-height) / 8 + 24px);
+    right: 24px;
+    flex: 1;
+    z-index: 1000;
+    position: fixed
+  }
+}
+
+@media screen and (min-width: 600px) and (max-width: 960px) {
+  .mud-appbar .mud-toolbar-appbar {
+    height: calc(var(--mud-appbar-height) - var(--mud-appbar-height) / 8);
+  }
+}

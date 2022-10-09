@@ -43,4 +43,22 @@ public class NavigationService
     {
         Title = title;
     }
+
+    public event Action? BackButtonChanged;
+    private bool _hasBackButton;
+    public bool HasBackButton
+    {
+        get => _hasBackButton;
+        private set
+        {
+            if (value == _hasBackButton) return;
+            _hasBackButton = value;
+            BackButtonChanged?.Invoke();
+        }
+    }
+
+    public void SetHasBackButton(bool value)
+    {
+        HasBackButton = value;
+    }
 }

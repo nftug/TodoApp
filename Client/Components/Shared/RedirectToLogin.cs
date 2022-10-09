@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Components;
 
-namespace Client.Shared.Components;
+namespace Client.Components.Shared;
 
 public class RedirectToLogin : ComponentBase
 {
