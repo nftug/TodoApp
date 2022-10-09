@@ -22,8 +22,8 @@
 </MudHidden>
 
 <MudHidden Breakpoint="Breakpoint.SmAndDown">
-    <MudFab HtmlTag="label" Color="Color.Secondary" Icon="@Icons.Filled.Image" Label="Load picture" for="fileInput" />
-    <MudFab Class="ml-3" Color="Color.Error" Icon="@Icons.Filled.Delete" Label="Delete picture"
+    <MudFab HtmlTag="label" Class="mx-2" DisableElevation Color="Color.Secondary" Icon="@Icons.Filled.Image" Label="Load picture" for="fileInput" />
+    <MudFab Class="mx-2" DisableElevation Color="Color.Error" Icon="@Icons.Filled.Delete" Label="Delete picture"
         Disabled="_imageBase64Source == null" OnClick="@(() => { _imageBase64Source = null; })" />
 </MudHidden>
 
