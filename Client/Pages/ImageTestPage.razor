@@ -1,6 +1,8 @@
 @page "/imagetest"
 
-<Title Value="Image Test" HasBackButton />
+<PageHeader Value="Image Test" HasBackButton />
+
+<MudText Typo="Typo.h4" GutterBottom="true" class="mb-5">Image Test</MudText>
 
 <InputFile id="fileInput" OnChange="OnSelectedFile" hidden accept="image/*" />
 
@@ -8,7 +10,7 @@
     <MudGrid>
         <MudItem xs="6">
             <MudButton HtmlTag="label" Color="Color.Secondary" StartIcon="@Icons.Filled.Image" Variant="Variant.Filled"
-                for="fileInput" FullWidth>
+                FullWidth for="fileInput">
                 Load Picture
             </MudButton>
         </MudItem>
@@ -22,9 +24,17 @@
 </MudHidden>
 
 <MudHidden Breakpoint="Breakpoint.SmAndDown">
-    <MudFab HtmlTag="label" Class="mx-2" DisableElevation Color="Color.Secondary" Icon="@Icons.Filled.Image" Label="Load picture" for="fileInput" />
-    <MudFab Class="mx-2" DisableElevation Color="Color.Error" Icon="@Icons.Filled.Delete" Label="Delete picture"
-        Disabled="_imageBase64Source == null" OnClick="@(() => { _imageBase64Source = null; })" />
+    <MudGrid Justify="Justify.Center">
+        <MudItem>
+            <MudFab HtmlTag="label" DisableElevation Color="Color.Secondary" Icon="@Icons.Filled.Image"
+                Label="Load picture" for="fileInput" Style="width: 220px;" />
+        </MudItem>
+        <MudItem>
+            <MudFab DisableElevation Color="Color.Error" Icon="@Icons.Filled.Delete" Label="Delete picture"
+                Disabled="_imageBase64Source == null" OnClick="@(() => { _imageBase64Source = null; })"
+                Style="width: 220px;" />
+        </MudItem>
+    </MudGrid>
 </MudHidden>
 
 @if (IsLoading || _imageBase64Source != null)
