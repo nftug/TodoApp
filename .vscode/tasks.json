@@ -36,6 +36,18 @@
         "${workspaceFolder}/API/API.csproj"
       ],
       "problemMatcher": "$msCompile"
+    },
+    {
+      "label": "buildClient",
+      "command": "dotnet",
+      "type": "process",
+      "args": [
+        "build",
+        "${workspaceFolder}/Client/Client.csproj",
+        "/property:GenerateFullPaths=true",
+        "/consoleloggerparameters:NoSummary"
+      ],
+      "problemMatcher": "$msCompile"
     }
   ]
 }

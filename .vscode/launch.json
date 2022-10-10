@@ -30,6 +30,17 @@
       "name": ".NET Core Attach",
       "type": "coreclr",
       "request": "attach"
+    },
+    {
+      "name": ".NET Core Debug Blazor Web Assembly in Chrome",
+      "type": "blazorwasm",
+      "request": "launch",
+      "program": "${workspaceFolder}/Client/bin/Debug/net6.0/Client.dll",
+      "hosted": true,
+
+      "url": "http://localhost:3000",
+      "webRoot": "${workspaceFolder}/Client",
+      "cwd": "${workspaceFolder}/Client"
     }
   ]
 }
