@@ -6,14 +6,24 @@ using Domain.Todos.Entities;
 using Domain.Todos.Queries;
 using Domain.Todos.ValueObjects;
 using Microsoft.AspNetCore.Components;
+using Microsoft.JSInterop;
 using MudBlazor;
 
 namespace Client.Pages;
 
 public partial class VirtualizationTestPage : ComponentBase
 {
-    private List<VirtualizedItem<TodoResultDTO>> CacheList { get; set; } = new();
-    private ApiVirtualize<Todo, TodoResultDTO, TodoCommand, TodoQueryParameter> _virtualize { get; set; } = null!;
+    private ApiVirtualize<Todo, TodoResultDTO, TodoCommand, TodoQueryParameter> _virtualize = null!;
+
+    [Inject]
+    private VirtualizeStoreService<TodoResultDTO> Store { get; set; } = null!;
+
+    protected async override Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (!firstRender) return;
+
+        await Store.ResumeCurrentAsync();
+    }
 
     private static Color GetTodoChipColor(TodoResultDTO item)
     {

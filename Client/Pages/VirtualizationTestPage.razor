@@ -18,12 +18,11 @@
                 TResultDTO="TodoResultDTO"
                 TCommandDTO="TodoCommand"
                 TQueryParameter="TodoQueryParameter"
-                CacheList="CacheList"
                 OverscanCount="10"
                 ItemSize="216">
                 <ItemContent>
                     <div class="col-12 col-md-6" @key="context.Id">
-                        <MudCard Style="height: 200px;" Class="mb-4 pr-2">
+                        <MudCard Style="height: 200px;" Class="mb-4 pr-2" @onclick=@(() => { Store.SetScrollYAndNavigateAsync(""); })>
                             <MudCardHeader style="display: block;">
                                 <div class="mb-2 d-flex justify-end">
                                     <MudText Typo="Typo.body2">

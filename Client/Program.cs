@@ -33,6 +33,7 @@ builder.Services.AddSingleton<AuthStoreService>();
 builder.Services.AddScoped<UserPreferencesService>();
 builder.Services.AddScoped<LayoutService>();
 builder.Services.AddSingleton<PageInfoService>();
+builder.Services.AddSingleton<VirtualizeStoreService<TodoResultDTO>>();
 
 builder.Services.AddScoped<IApiService<TodoResultDTO, TodoCommand, TodoQueryParameter>, TodoApiService>();
 

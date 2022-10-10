@@ -1,3 +1,4 @@
+using Client.Services;
 using Client.Services.Api;
 using Client.Shared.Models;
 using Domain.Shared.DTOs;
@@ -5,7 +6,6 @@ using Domain.Shared.Entities;
 using Domain.Shared.Queries;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web.Virtualization;
-using Microsoft.JSInterop;
 
 namespace Client.Components.Common;
 
@@ -17,6 +17,8 @@ public partial class ApiVirtualize<TModel, TResultDTO, TCommandDTO, TQueryParame
 {
     [Inject]
     private IApiService<TResultDTO, TCommandDTO, TQueryParameter> ApiService { get; set; } = null!;
+    [Inject]
+    private VirtualizeStoreService<TResultDTO> Store { get; set; } = null!;
 
     [Parameter]
     public RenderFragment<TResultDTO> ItemContent { get; set; } = null!;
@@ -26,10 +28,6 @@ public partial class ApiVirtualize<TModel, TResultDTO, TCommandDTO, TQueryParame
     public int OverscanCount { get; set; } = 4;
     [Parameter]
     public int ItemSize { get; set; } = 50;
-    [Parameter]
-    public List<VirtualizedItem<TResultDTO>> CacheList { get; set; } = new();
-    [Parameter]
-    public EventCallback<List<VirtualizedItem<TResultDTO>>> OnCacheListChanged { get; set; }
 
     private int? totalCount;
     private bool _doNotShow;
@@ -45,24 +43,26 @@ public partial class ApiVirtualize<TModel, TResultDTO, TCommandDTO, TQueryParame
             StartIndex = request.StartIndex
         };
 
-        if (CacheList.Count < request.StartIndex + request.Count)
+        if (Store.CacheList.Count < request.StartIndex + request.Count)
         {
             var paginated = await ApiService.GetList(queryParameter);
-            CacheList = CacheList.GetUnionList(paginated!.Results, request.StartIndex);
-            await OnCacheListChanged.InvokeAsync(CacheList);
+            Store.CacheList = Store.CacheList.GetUnionList(paginated!.Results, request.StartIndex);
         }
 
-        var results = CacheList.GetItems(request.StartIndex, request.Count);
+        var results = Store.CacheList.GetItems(request.StartIndex, request.Count);
 
         return new ItemsProviderResult<TResultDTO>(results, totalCount ??= 0);
     }
 
     public async Task RefreshDataAsync()
     {
+        totalCount = null;
+        Store.CacheList = new();
+
         _doNotShow = true;
         StateHasChanged();
 
-        await Task.Delay(10);
+        await Task.Delay(100);
 
         _doNotShow = false;
         StateHasChanged();
