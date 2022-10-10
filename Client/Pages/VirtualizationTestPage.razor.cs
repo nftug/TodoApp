@@ -1,12 +1,10 @@
 using Client.Components.Common;
 using Client.Services;
-using Client.Shared.Models;
 using Domain.Todos.DTOs;
 using Domain.Todos.Entities;
 using Domain.Todos.Queries;
 using Domain.Todos.ValueObjects;
 using Microsoft.AspNetCore.Components;
-using Microsoft.JSInterop;
 using MudBlazor;
 
 namespace Client.Pages;

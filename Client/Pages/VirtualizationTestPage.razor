@@ -18,11 +18,12 @@
                 TResultDTO="TodoResultDTO"
                 TCommandDTO="TodoCommand"
                 TQueryParameter="TodoQueryParameter"
+                @bind-CacheList="Store.CacheList"
                 OverscanCount="10"
-                ItemSize="216">
+                ItemSize="(float)224.5">
                 <ItemContent>
                     <div class="col-12 col-md-6" @key="context.Id">
-                        <MudCard Style="height: 200px;" Class="mb-4 pr-2" @onclick=@(() => { Store.SetScrollYAndNavigateAsync(""); })>
+                        <MudCard Class="mb-4 pr-2">
                             <MudCardHeader style="display: block;">
                                 <div class="mb-2 d-flex justify-end">
                                     <MudText Typo="Typo.body2">
@@ -40,8 +41,15 @@
                             </MudCardHeader>
 
                             <MudCardContent>
-                                <MudText Class="ml-3">@context.Description</MudText>
+                                <MudText Class="ml-3">@(context.Description ?? "説明がありません")</MudText>
                             </MudCardContent>
+
+                            <MudCardActions Class="d-flex justify-end">
+                                <MudButton Color="Color.Primary" StartIcon="@Icons.Filled.Pageview"
+                                    OnClick="@(async () => { await Store.SetScrollYAndNavigateAsync(""); })">
+                                    詳細
+                                </MudButton>
+                            </MudCardActions>
                         </MudCard>
                     </div>
                 </ItemContent>
