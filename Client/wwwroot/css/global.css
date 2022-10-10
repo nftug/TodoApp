@@ -24,18 +24,22 @@
   position: fixed
 }
 
-@media screen and (max-width: 960px) {
-  .fab {
+@media screen and (max-width: 600px) {
+  .mud-main-content-with-footer {
+    padding-bottom: calc(var(--mud-appbar-height) - var(--mud-appbar-height) / 8);
+  }
+
+  .fab-with-footer {
     bottom: calc(var(--mud-appbar-height) - var(--mud-appbar-height) / 8 + 24px);
-    right: 24px;
-    flex: 1;
-    z-index: 1000;
-    position: fixed
   }
 }
 
 @media screen and (min-width: 600px) and (max-width: 960px) {
-  .mud-appbar .mud-toolbar-appbar {
-    height: calc(var(--mud-appbar-height) - var(--mud-appbar-height) / 8);
+  .mud-main-content-with-footer {
+    padding-bottom: var(--mud-appbar-height);
+  }
+
+  .fab-with-footer {
+    bottom: calc(var(--mud-appbar-height) + 24px);
   }
 }

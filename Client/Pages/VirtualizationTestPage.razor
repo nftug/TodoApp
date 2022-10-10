@@ -1,38 +1,57 @@
 @page "/virtualization"
+@attribute [Authorize]
 
-<PageHeader Value="Virtualization Test" />
+@using Client.Components.Common
+@using Domain.Todos.Entities
+@using Domain.Todos.DTOs
+@using Domain.Todos.Queries
+@using Client.Components.Todos
 
-<MudText Typo="Typo.h3" GutterBottom="true" Class="d-none d-md-flex mb-6">Virtualization Test</MudText>
+<PageBase Title="Virtualization Test">
+    <ChildContent>
+        <MudText Typo="Typo.h4" GutterBottom="true" Class="d-none d-md-flex mb-6">Virtualization Test</MudText>
 
-<div class="row align-items-start">
-    <Virtualize ItemsProvider="@LoadTodos" OverscanCount="10" ItemSize="216">
-        <ItemContent>
-            <div class="col-12 col-md-6">
-                <MudCard Style="height: 200px;" Class="mb-4">
-                    <MudCardHeader>
-                        <MudChip Color="@GetTodoChipColor(context)" Class="mr-3">
-                            @context.State.ToUpper()
-                        </MudChip>
-                        <MudText Typo="Typo.h5">@context.Title</MudText>
-                    </MudCardHeader>
-                    <MudCardContent>
-                        <MudText Class="ml-3">@context.Description</MudText>
-                    </MudCardContent>
-                </MudCard>
-            </div>
-        </ItemContent>
+        <div class="row align-items-start">
+            <ApiVirtualize
+                TModel="Todo"
+                TResultDTO="TodoResultDTO"
+                TCommandDTO="TodoCommand"
+                TQueryParameter="TodoQueryParameter"
+                OverscanCount="10"
+                ItemSize="216">
+                <ItemContent>
+                    <div class="col-12 col-md-6">
+                        <MudCard Style="height: 200px;" Class="mb-4">
+                            <MudCardHeader>
+                                <MudChip Color="@GetTodoChipColor(context)" Class="mr-3">
+                                    @context.State.ToUpper()
+                                </MudChip>
+                                <MudText Typo="Typo.h5">@context.Title</MudText>
+                            </MudCardHeader>
+                            <MudCardContent>
+                                <MudText Class="ml-3">@context.Description</MudText>
+                            </MudCardContent>
+                        </MudCard>
+                    </div>
+                </ItemContent>
 
-        <Placeholder>
-            <div class="col-12 col-md-6">
-                <MudCard Style="height: 200px;" Class="mb-4">
-                    <MudCardHeader>
-                        <MudSkeleton Width="60%" Height="42px;" />
-                    </MudCardHeader>
-                    <MudCardContent>
-                        <MudSkeleton Width="105px" Height="40px" Class="ml-3" />
-                    </MudCardContent>
-                </MudCard>
-            </div>
-        </Placeholder>
-    </Virtualize>
-</div>
+                <Placeholder>
+                    <div class="col-12 col-md-6">
+                        <MudCard Style="height: 200px;" Class="mb-4">
+                            <MudCardHeader>
+                                <MudSkeleton Width="60%" Height="42px;" />
+                            </MudCardHeader>
+                            <MudCardContent>
+                                <MudSkeleton Width="105px" Height="40px" Class="ml-3" />
+                            </MudCardContent>
+                        </MudCard>
+                    </div>
+                </Placeholder>
+            </ApiVirtualize>
+        </div>
+    </ChildContent>
+
+    <FooterContent>
+        <TodoFooter />
+    </FooterContent>
+</PageBase>

@@ -1,0 +1,44 @@
+@using Client.Services
+
+@inject NavigationService NavigationService
+
+<PageTitle>@Title</PageTitle>
+
+<MudMainContent Class="@MainContentClass">
+    <MudContainer MaxWidth="MaxWidth" Class="@Class">
+        @ChildContent
+    </MudContainer>
+</MudMainContent>
+
+@if (FooterContent != null)
+{
+    <MudHidden Breakpoint="Breakpoint.MdAndUp">
+        <footer class="mud-appbar mud-appbar-fixed-bottom mud-elevation-1">
+            @FooterContent
+        </footer>
+    </MudHidden>
+}
+
+@code {
+    [Parameter]
+    public string? Title { get; set; }
+    [Parameter]
+    public bool HasBackButton { get; set; }
+    [Parameter]
+    public RenderFragment ChildContent { get; set; } = null!;
+    [Parameter]
+    public RenderFragment? FooterContent { get; set;}
+    [Parameter]
+    public string Class { get; set; } = "mt-8 mb-8";
+    [Parameter]
+    public MaxWidth MaxWidth { get; set; } = MaxWidth.Large;
+
+    private string MainContentClass =>
+        $"{(FooterContent != null ? "mud-main-content-with-footer" : null)}";
+
+    protected override void OnInitialized()
+    {
+        NavigationService.SetTitle(Title);
+        NavigationService.SetHasBackButton(HasBackButton);
+    }
+}

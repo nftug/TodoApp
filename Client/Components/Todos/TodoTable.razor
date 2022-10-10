@@ -91,7 +91,7 @@
 
     <PagerContent>
         <div class="d-flex justify-center">
-            <PaginationLink Data="@Data" Class="pa-4" />
+            <PaginationLink Data="Data" Limit="(int)(Parameter.Limit ?? 10)" Class="pa-4" />
         </div>
     </PagerContent>
 </MudTable>
