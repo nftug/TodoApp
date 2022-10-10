@@ -23,12 +23,14 @@ public partial class TodoPage : ComponentBase
     private TodoQueryParameter _parameter = new();
     private TodoTable? _table = null!;
 
-    protected override void OnParametersSet()
+    private const int Limit = 10;
+
+    protected override async Task OnParametersSetAsync()
     {
         _parameter = new TodoQueryParameter
         {
-            Limit = 10,
-            Page = Page.ParseAsPage(),
+            Limit = Limit,
+            StartIndex = Page.ParsePageAsStartIndex(Limit),
             Q = Q,
             State = State,
             Sort = Sort ?? new TodoQueryParameter().Sort
@@ -36,10 +38,7 @@ public partial class TodoPage : ComponentBase
 
         if (_table != null)
         {
-            InvokeAsync(async () =>
-            {
-                await _table.OnParameterChanged();
-            });
+            await _table.OnParameterChanged();
         }
     }
 }

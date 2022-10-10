@@ -8,6 +8,9 @@ public static class ParamExtension
         return func(_value, canParse);
     }
 
-    public static int ParseAsPage(this string? value)
-        => (int)value.ParseAsIntParam((x, _) => x > 0 ? x : 1)!;
+    public static int ParsePageAsStartIndex(this string? value, int limit)
+    {
+        var page = (int)value.ParseAsIntParam((x, _) => x > 0 ? x : 1)!;
+        return (page - 1) * limit;
+    }
 }

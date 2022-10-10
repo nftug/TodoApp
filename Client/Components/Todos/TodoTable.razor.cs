@@ -48,7 +48,7 @@ public partial class TodoTable : DataTableBase<Todo, TodoResultDTO, TodoCommand,
     public async Task RefreshTable()
     {
         bool isParameterChanged =
-            Parameter.Page != 1
+            Parameter.StartIndex > 0
              || !string.IsNullOrEmpty(Parameter.Q)
              || !string.IsNullOrEmpty(Parameter.State)
              || Parameter.Sort != new TodoQueryParameter().Sort;

@@ -1,0 +1,15 @@
+@using Domain.Shared.Entities
+
+@typeparam TModel
+@typeparam TResultDTO
+@typeparam TCommandDTO
+@typeparam TQueryParameter
+
+<Virtualize ItemsProvider="LoadList" OverscanCount="OverscanCount" ItemSize="ItemSize">
+    <ItemContent>
+        @ItemContent(context)
+    </ItemContent>
+    <Placeholder>
+        @Placeholder
+    </Placeholder>
+</Virtualize>

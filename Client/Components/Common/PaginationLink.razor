@@ -6,11 +6,13 @@
 
 @if (Data == null) return;
 
-<MudPagination Count="@((int)Data.TotalPages!)" Selected="@_page" SelectedChanged="@OnSelectedChanged" @attributes="@Attributes" />
+<MudPagination Count="@Data.TotalPages" Selected="@_page" SelectedChanged="@OnSelectedChanged" @attributes="@Attributes" />
 
 @code {
     [Parameter]
     public Pagination<T>? Data { get; set; } = null!;
+    [Parameter]
+    public int Limit { get; set; }
     [Parameter]
     public EventCallback<int> OnPageChanged { get; set; }
     [Parameter(CaptureUnmatchedValues = true)]
@@ -20,7 +22,7 @@
 
     protected override void OnParametersSet()
     {
-        _page = Data?.CurrentPage ?? Navigation.QueryString("page").ParseAsPage();
+        _page = Data?.CurrentPage ?? Navigation.QueryString("page").ParsePageAsStartIndex(Limit);
     }
 
     private void OnSelectedChanged(int value)
