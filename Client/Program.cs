@@ -32,7 +32,7 @@ builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddSingleton<AuthStoreService>();
 builder.Services.AddScoped<UserPreferencesService>();
 builder.Services.AddScoped<LayoutService>();
-builder.Services.AddSingleton<NavigationService>();
+builder.Services.AddSingleton<PageInfoService>();
 
 builder.Services.AddScoped<IApiService<TodoResultDTO, TodoCommand, TodoQueryParameter>, TodoApiService>();
 

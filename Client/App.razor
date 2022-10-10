@@ -1,7 +1,7 @@
 ﻿@using Client.Pages
 @using Client.Services
 
-@inject NavigationService NavigationService
+@inject PageInfoService PageInfoService
 
 <Router AppAssembly="@typeof(App).Assembly" OnNavigateAsync="@OnNavigateAsync">
     <Found Context="routeData">
@@ -27,6 +27,6 @@
     private void OnNavigateAsync(NavigationContext args)
     {
         if (args.Path == null) return;
-        NavigationService.SetQueries(args.Path);
+        PageInfoService.SetQueries(args.Path);
     }
 }

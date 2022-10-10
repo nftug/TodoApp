@@ -3,7 +3,7 @@ using System.Web;
 
 namespace Client.Services;
 
-public class NavigationService
+public class PageInfoService
 {
     public event Action? QueriesChanged;
     private NameValueCollection _queries = new();

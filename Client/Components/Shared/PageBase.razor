@@ -1,6 +1,6 @@
 @using Client.Services
 
-@inject NavigationService NavigationService
+@inject PageInfoService PageInfoService
 
 <PageTitle>@Title</PageTitle>
 
@@ -38,7 +38,7 @@
 
     protected override void OnInitialized()
     {
-        NavigationService.SetTitle(Title);
-        NavigationService.SetHasBackButton(HasBackButton);
+        PageInfoService.SetTitle(Title);
+        PageInfoService.SetHasBackButton(HasBackButton);
     }
 }
