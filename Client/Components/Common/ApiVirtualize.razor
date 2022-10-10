@@ -5,6 +5,11 @@
 @typeparam TCommandDTO
 @typeparam TQueryParameter
 
+@if (_doNotShow)
+{
+    return;
+}
+
 <Virtualize ItemsProvider="LoadList" OverscanCount="OverscanCount" ItemSize="ItemSize">
     <ItemContent>
         @ItemContent(context)

@@ -5,6 +5,7 @@ using Domain.Shared.Entities;
 using Domain.Shared.Queries;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web.Virtualization;
+using Microsoft.JSInterop;
 
 namespace Client.Components.Common;
 
@@ -31,17 +32,13 @@ public partial class ApiVirtualize<TModel, TResultDTO, TCommandDTO, TQueryParame
     public EventCallback<List<VirtualizedItem<TResultDTO>>> OnCacheListChanged { get; set; }
 
     private int? totalCount;
-
-    protected override async Task OnAfterRenderAsync(bool firstRender)
-    {
-        if (!firstRender) return;
-
-        TQueryParameter queryParameter = new() { Limit = 1 };
-        totalCount = (await ApiService.GetList(queryParameter))!.TotalItems;
-    }
+    private bool _doNotShow;
 
     private async ValueTask<ItemsProviderResult<TResultDTO>> LoadList(ItemsProviderRequest request)
     {
+        if (totalCount == null)
+            totalCount = (await ApiService.GetList(new() { Limit = 1 }))!.TotalItems;
+
         TQueryParameter queryParameter = new()
         {
             Limit = request.Count,
@@ -58,5 +55,16 @@ public partial class ApiVirtualize<TModel, TResultDTO, TCommandDTO, TQueryParame
         var results = CacheList.GetItems(request.StartIndex, request.Count);
 
         return new ItemsProviderResult<TResultDTO>(results, totalCount ??= 0);
+    }
+
+    public async Task RefreshDataAsync()
+    {
+        _doNotShow = true;
+        StateHasChanged();
+
+        await Task.Delay(10);
+
+        _doNotShow = false;
+        StateHasChanged();
     }
 }
