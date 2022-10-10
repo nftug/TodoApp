@@ -6,7 +6,14 @@
 
 <MudMainContent Class="@MainContentClass">
     <MudContainer MaxWidth="MaxWidth" Class="@Class">
-        @ChildContent
+        @if (MainContent != null)
+        {
+            @MainContent
+        }
+        else
+        {
+            @ChildContent
+        }
     </MudContainer>
 </MudMainContent>
 
@@ -26,6 +33,8 @@
     public bool HasBackButton { get; set; }
     [Parameter]
     public RenderFragment ChildContent { get; set; } = null!;
+    [Parameter]
+    public RenderFragment? MainContent { get; set; }
     [Parameter]
     public RenderFragment? FooterContent { get; set;}
     [Parameter]

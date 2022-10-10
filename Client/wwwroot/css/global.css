@@ -24,6 +24,12 @@
   position: fixed
 }
 
+.nowrap-with-ellipsis {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
 @media screen and (max-width: 600px) {
   .mud-main-content-with-footer {
     padding-bottom: calc(var(--mud-appbar-height) - var(--mud-appbar-height) / 8);
