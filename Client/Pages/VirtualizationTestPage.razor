@@ -41,7 +41,9 @@
                             </MudCardHeader>
 
                             <MudCardContent>
-                                <MudText Class="ml-3">@(context.Description ?? "説明がありません")</MudText>
+                                <div style="display: block;">
+                                    <MudText Class="ml-3 nowrap-with-ellipsis">@(context.Description ?? "説明がありません")</MudText>
+                                </div>
                             </MudCardContent>
 
                             <MudCardActions Class="d-flex justify-end">

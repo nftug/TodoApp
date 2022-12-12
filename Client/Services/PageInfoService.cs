@@ -26,6 +26,21 @@ public class PageInfoService
             : new();
     }
 
+    public event Action? RouteChanged;
+    public string? CurrentUri { get; private set; }
+    public string? PreviousUri { get; private set; }
+    public string? CurrentRoute => CurrentUri?.Split('?').First();
+    public string? PreviousRoute => PreviousUri?.Split('?').First();
+
+    public void SetCurrentUri(string currentUri)
+    {
+        PreviousUri = CurrentUri;
+        CurrentUri = currentUri;
+
+        if (CurrentRoute == PreviousRoute)
+            RouteChanged?.Invoke();
+    }
+
     public event Action? TitleChanged;
     private string? _title;
     public string? Title

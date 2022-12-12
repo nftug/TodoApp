@@ -38,8 +38,8 @@ public class VirtualizeStoreService<T>
 
     public async Task ResumeCurrentAsync()
     {
-        await Task.Delay(200);
+        await Task.Delay(500);
         await _jsRuntime.InvokeVoidAsync("setScrollY", ScrollY);
-        ScrollY = 0;
+        // ScrollY = 0;
     }
 }

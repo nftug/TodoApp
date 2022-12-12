@@ -18,7 +18,7 @@ public partial class TodoTable : DataTableBase<Todo, TodoResultDTO, TodoCommand,
     [Inject]
     private IDialogService DialogService { get; set; } = null!;
 
-    private MudMessageBox _deleteConfirm = null!;
+    private MudMessageBox? _deleteConfirm;
 
     private static Color GetTodoChipColor(TodoResultDTO item)
     {

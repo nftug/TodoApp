@@ -45,7 +45,7 @@ public partial class ApiVirtualize<TModel, TResultDTO, TCommandDTO, TQueryParame
             StartIndex = request.StartIndex
         };
 
-        if (CacheList.Count < request.StartIndex + request.Count)
+        if (CacheList.Count < _totalCount)
         {
             var paginated = await ApiService.GetList(queryParameter);
             CacheList = CacheList.GetUnionList(paginated!.Results, request.StartIndex);

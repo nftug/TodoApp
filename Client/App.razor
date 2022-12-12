@@ -28,5 +28,6 @@
     {
         if (args.Path == null) return;
         PageInfoService.SetQueries(args.Path);
+        PageInfoService.SetCurrentUri(args.Path);
     }
 }
