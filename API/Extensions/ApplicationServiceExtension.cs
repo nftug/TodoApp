@@ -1,17 +1,6 @@
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Infrastructure;
-using Domain.Comments.Entities;
-using Infrastructure.Comments;
-using Domain.Comments.Services;
-using Domain.Todos.Entities;
-using Infrastructure.Todos;
-using Domain.Users.Entities;
-using Infrastructure.Users;
-using Domain.Todos.Services;
-using Domain.Users.Services;
-using Domain.Shared.Interfaces;
-using Domain.Services;
 
 namespace API.Extensions;
 
@@ -39,19 +28,11 @@ internal static class ApplicationServiceExtension
 
         services.AddMediatR(typeof(Application.Todos.UseCases.List.Query).Assembly);
 
-        // repositories
-        services.AddTransient<IRepository<Todo>, TodoRepository>();
-        services.AddTransient<IRepository<Comment>, CommentRepository>();
-        services.AddTransient<IRepository<User>, UserRepository>();
+        var assemblies = System.Reflection.Assembly.GetExecutingAssembly()
+            .CollectReferencedAssemblies(new[] { "Domain", "Infrastructure" });
 
-        // Query services
-        services.AddTransient<IFilterQueryService<Todo>, TodoFilterQueryService>();
-        services.AddTransient<IFilterQueryService<Comment>, CommentFilterQueryService>();
-
-        // domain services
-        services.AddScoped<IDomainService<Todo>, TodoService>();
-        services.AddScoped<IDomainService<Comment>, CommentService>();
-        services.AddScoped<IDomainService<User>, UserService>();
+        services.AddAssemblyTypes(assemblies, ServiceLifetime.Transient, "Repository");
+        services.AddAssemblyTypes(assemblies, ServiceLifetime.Transient, "Service");
 
         return services;
     }
